@@ -215,6 +215,13 @@
                 <button class="btn" onclick="openSettingsScreen()" style="background: #475569; margin-top:0;">⚙️ ڕێکخستن</button>
             </div>
 
+            <!-- Daily Bonus Card -->
+            <div class="card" style="background: linear-gradient(135deg, #1e1b4b, #312e81); border-color: #818cf8;">
+                <h3 style="color: #a78bfa;">🎁 دیاریی ڕۆژانە</h3>
+                <p id="dailyBonusText">سوپرايزی ئەمڕۆت وەربگرە و کۆینی خۆڕایی ببەرەوە!</p>
+                <button class="btn" id="claimBonusBtn" style="background: linear-gradient(135deg, #10b981, #059669);" onclick="claimDailyBonus()">وەرگرتنی دیاری (50 💰)</button>
+            </div>
+
             <div class="section-header">
                 <span>🎮 یارییەکان</span>
             </div>
@@ -628,6 +635,46 @@
 
             updateShopUI();
             loadLeaderboard();
+            checkDailyBonus();
+        }
+
+        function checkDailyBonus() {
+            let today = new Date().toISOString().split('T')[0];
+            let lastClaimed = localStorage.getItem("daily_bonus_" + currentUser);
+
+            let bonusBtn = document.getElementById("claimBonusBtn");
+            let bonusText = document.getElementById("dailyBonusText");
+
+            if (lastClaimed === today) {
+                bonusBtn.disabled = true;
+                bonusBtn.innerText = "سەیری بەیانی بکەرەوە ⏳";
+                bonusBtn.style.background = "#475569";
+                bonusText.innerText = "دیاریی ئەمڕۆت وەرگرتووە! بەیانی وەرە بۆ دیاریی نوێ.";
+            } else {
+                bonusBtn.disabled = false;
+                bonusBtn.innerText = "وەرگرتنی دیاری (50 💰)";
+                bonusBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
+                bonusText.innerText = "سوپرايزی ئەمڕۆت وەربگرە و کۆینی خۆڕایی ببەرەوە!";
+            }
+        }
+
+        function claimDailyBonus() {
+            let today = new Date().toISOString().split('T')[0];
+            let lastClaimed = localStorage.getItem("daily_bonus_" + currentUser);
+
+            if (lastClaimed === today) {
+                alert("پێشتر دیاریی ئەمڕۆت وەرگرتووە!");
+                return;
+            }
+
+            totalCoins += 50;
+            localStorage.setItem("coins_" + currentUser, totalCoins);
+            localStorage.setItem("daily_bonus_" + currentUser, today);
+
+            playSound('buy');
+            alert("پیرۆزە! 50 کۆینت وەکو دیاریی ڕۆژانە وەرگرت 🪙");
+
+            loadUserData();
         }
 
         function openShopScreen() { loadUserData(); switchScreen("shopScreen"); }
