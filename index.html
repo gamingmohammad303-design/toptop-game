@@ -234,8 +234,8 @@
             <!-- Game 2: Quiz & Photos -->
             <div class="game-catalog-card">
                 <div class="game-thumbnail" style="background: radial-gradient(circle, #ec4899, #831843);">📸</div>
-                <h3 style="color: #f59e0b; font-size: 16px; margin: 0 0 4px 0;">یاری وێنە و شوێنەکانی کوردستان</h3>
-                <p style="font-size: 11px; color: #93c5fd; margin: 0 0 10px 0;">ئەم شوێنە کێیە یان هی کام شارە؟ زانیارییەکانت تاقی بکەرەوە</p>
+                <h3 style="color: #f59e0b; font-size: 16px; margin: 0 0 4px 0;">یاری وێنە و شوێنەکانی جیهان</h3>
+                <p style="font-size: 11px; color: #93c5fd; margin: 0 0 10px 0;">ئەم وێنەیە کامیانە و لە چ وڵاتێکە؟ زانیارییەکانت تاقی بکەرەوە</p>
                 <div class="game-meta-info">
                     <span>📅 دەرچوون: 2026/06/02</span>
                     <span style="color: #ec4899; font-weight: bold;">جۆری: وێنەیی</span>
@@ -337,7 +337,7 @@
 
         <!-- Quiz Screen (Photo & Places Mode) -->
         <div id="quizScreen" class="screen">
-            <div class="brand-title" style="font-size: 20px;">یاری وێنە و شوێنەکانی کوردستان</div>
+            <div class="brand-title" style="font-size: 20px;">یاری وێنە و شوێنەکانی جیهان</div>
             <div class="card" style="text-align: center; margin-top: 5px; padding: 12px;">
                 <div class="quiz-img-container">
                     <img id="quizImage" src="" alt="وێنەی پرسیار">
@@ -920,8 +920,33 @@
                 question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", 
                 options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], 
                 answer: 3 
+            },
+            {
+                image: "images/image_10.png",
+                question: "پەیکەری ئازادی لە چ وڵاتێکە؟",
+                options: ["فەرەنسا", "ئەمریکا", "بەریتانیا", "کەنەدا"],
+                answer: 1
+            },
+            {
+                image: "images/image_11.png",
+                question: "تاوەری ئێڤڵ لە چ وڵاتێکە؟",
+                options: ["ئیتالیا", "ئەمریکا", "فەرەنسا", "ئەڵمانیا"],
+                answer: 2
+            },
+            {
+                image: "images/image_12.png",
+                question: "ئەم دیمەنە سروشتییە لە چ وڵاتێکە؟",
+                options: ["سویسرا", "نەرویژ", "ئوسترالیا", "نەمسا"],
+                answer: 0
+            },
+            {
+                image: "images/image_13.png",
+                question: "ئەم شەقامە قەرەباڵغە لە چ وڵاتێکە؟",
+                options: ["هیندستان", "پاکیستان", "بەنگلادیش", "تایلەند"],
+                answer: 0
             }
         ];
+        
         let currentQ = 0;
         let quizScore = 0;
 
@@ -929,6 +954,7 @@
             currentQ = 0;
             quizScore = 0;
             document.getElementById("quizScoreResult").innerText = "";
+            document.getElementById("quizImage").style.display = "block";
             switchScreen("quizScreen");
             loadQuizQuestion();
         }
