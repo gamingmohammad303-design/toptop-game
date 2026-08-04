@@ -41,6 +41,7 @@
             color: #ffffff; border: none; padding: 13px; font-size: 15px;
             font-weight: bold; border-radius: 12px; cursor: pointer; margin-top: 10px;
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            transition: all 0.2s ease;
         }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .btn:active { transform: scale(0.97); }
@@ -85,7 +86,7 @@
             position: relative; overflow: hidden; margin-bottom: 12px;
         }
 
-        /* Player Styles */
+        /* Player Styles & New Skins */
         #player {
             width: 32px; height: 32px;
             position: absolute; bottom: 10px; left: 40px;
@@ -98,9 +99,16 @@
             border-left: 16px solid transparent;
             border-right: 16px solid transparent;
             border-bottom: 32px solid #f97316;
-            background: transparent !important;
-            box-shadow: none !important;
+            background: transparent !important; box-shadow: none !important;
             filter: drop-shadow(0 0 8px #f97316);
+        }
+        #player.shape-star {
+            background: #eab308; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            box-shadow: 0 0 15px #eab308;
+        }
+        #player.shape-diamond {
+            background: #06b6d4; transform: rotate(45deg);
+            box-shadow: 0 0 15px #06b6d4;
         }
 
         #player.shielded { outline: 4px solid #10b981; filter: drop-shadow(0 0 12px #10b981); }
@@ -133,6 +141,7 @@
             color: #ffffff; border: 4px solid #93c5fd; border-radius: 50%;
             font-size: 18px; font-weight: bold; cursor: pointer; display: flex;
             justify-content: center; align-items: center; margin: 0 auto;
+            touch-action: manipulation;
         }
         #gameOverBox {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -166,11 +175,15 @@
         .preview-shape-circle { width: 30px; height: 30px; background: #38bdf8; border-radius: 50%; margin: 5px auto; }
         .preview-shape-square { width: 30px; height: 30px; background: #a855f7; border-radius: 4px; margin: 5px auto; }
         .preview-shape-triangle {
-            width: 0; height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-bottom: 30px solid #f97316;
-            margin: 5px auto;
+            width: 0; height: 0; border-left: 15px solid transparent;
+            border-right: 15px solid transparent; border-bottom: 30px solid #f97316; margin: 5px auto;
+        }
+        .preview-shape-star {
+            width: 30px; height: 30px; background: #eab308;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); margin: 5px auto;
+        }
+        .preview-shape-diamond {
+            width: 24px; height: 24px; background: #06b6d4; transform: rotate(45deg); margin: 8px auto;
         }
     </style>
 </head>
@@ -240,9 +253,9 @@
             </div>
 
             <div class="card" style="background: linear-gradient(135deg, #1e1b4b, #312e81); border-color: #818cf8;">
-                <h3 style="color: #a78bfa;">🎁 دیاریی ڕۆژانە</h3>
+                <h3 style="color: #a78bfa;">🎁 دیاریی ڕۆژانە و بەخت</h3>
                 <p id="dailyBonusText">سوپرايزی ئەمڕۆت وەربگرە و کۆینی خۆڕایی ببەرەوە!</p>
-                <button class="btn" id="claimBonusBtn" style="background: linear-gradient(135deg, #10b981, #059669);" onclick="claimDailyBonus()">وەرگرتنی دیاری (50 💰)</button>
+                <button class="btn" id="claimBonusBtn" style="background: linear-gradient(135deg, #10b981, #059669);" onclick="claimDailyBonus()">وەرگرتنی دیاری (بەختی دەستپێک) 🎲</button>
             </div>
 
             <div class="section-header">
@@ -302,7 +315,7 @@
             </div>
         </div>
 
-        <!-- Shop Screen (Tied to Jumper Game) -->
+        <!-- Shop Screen -->
         <div id="shopScreen" class="screen">
             <div class="brand-title">بازاڕی شێوازەکانی بازدان</div>
             <div style="text-align: center; margin-bottom: 10px; color: #f59e0b; font-size: 14px;">
@@ -323,6 +336,16 @@
                     <div class="preview-shape-triangle"></div>
                     <p style="font-size: 11px;">سێگۆشە</p>
                     <button class="btn" id="btn-skin-triangle" style="padding: 5px; font-size: 11px;" onclick="handleShapeAction('triangle', 90)">کڕین (90💰)</button>
+                </div>
+                <div class="shop-item">
+                    <div class="preview-shape-star"></div>
+                    <p style="font-size: 11px;">ئەستێرە</p>
+                    <button class="btn" id="btn-skin-star" style="padding: 5px; font-size: 11px;" onclick="handleShapeAction('star', 150)">کڕین (150💰)</button>
+                </div>
+                <div class="shop-item">
+                    <div class="preview-shape-diamond"></div>
+                    <p style="font-size: 11px;">ئەڵماس</p>
+                    <button class="btn" id="btn-skin-diamond" style="padding: 5px; font-size: 11px;" onclick="handleShapeAction('diamond', 220)">کڕین (220💰)</button>
                 </div>
             </div>
             <button class="btn" style="background: #334155; margin-top: 15px;" onclick="switchScreen('jumperLandingScreen')">گەڕانەوە بۆ لاپەڕەی یاری</button>
@@ -659,7 +682,7 @@
                 bonusBtn.style.background = "#475569";
                 bonusText.innerText = "دیاریی ئەمڕۆت وەرگرتووە! بەیانی وەرە بۆ دیاریی نوێ.";
             } else {
-                bonusBtn.disabled = false; bonusBtn.innerText = "وەرگرتنی دیاری (50 💰)";
+                bonusBtn.disabled = false; bonusBtn.innerText = "وەرگرتنی دیاری (بەختی دەستپێک) 🎲";
                 bonusBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
                 bonusText.innerText = "سوپرايزی ئەمڕۆت وەربگرە و کۆینی خۆڕایی ببەرەوە!";
             }
@@ -670,11 +693,14 @@
             let lastClaimed = localStorage.getItem("daily_bonus_" + currentUser);
             if (lastClaimed === today) { alert("پێشتر دیاریی ئەمڕۆت وەرگرتووە!"); return; }
 
-            totalCoins += 50;
+            let rewards = [50, 75, 100, 150, 200];
+            let randomReward = rewards[Math.floor(Math.random() * rewards.length)];
+
+            totalCoins += randomReward;
             localStorage.setItem("coins_" + currentUser, totalCoins);
             localStorage.setItem("daily_bonus_" + currentUser, today);
             playSound('buy');
-            alert("پیرۆزە! 50 کۆینت وەکو دیاریی ڕۆژانە وەرگرت 🪙");
+            alert(`پیرۆزە! بەختەکەت کەمێک بەهێز بوو و ${randomReward} کۆینت وەک دیاری وەرگرت! 🪙`);
             loadUserData();
         }
 
@@ -683,36 +709,29 @@
         function backToHub() { stopGameSession(); loadUserData(); switchScreen("hubScreen"); }
 
         function updateShopUI() {
-            let btnCircle = document.getElementById("btn-skin-circle");
-            btnCircle.innerText = selectedShape === "circle" ? "هەڵبژێردراوە" : "هەڵبژاردن";
-            btnCircle.disabled = selectedShape === "circle";
-            btnCircle.style.background = selectedShape === "circle" ? "#10b981" : "";
+            let skins = [
+                { id: "circle", price: 0 },
+                { id: "square", price: 60 },
+                { id: "triangle", price: 90 },
+                { id: "star", price: 150 },
+                { id: "diamond", price: 220 }
+            ];
 
-            let btnSquare = document.getElementById("btn-skin-square");
-            if (ownedShapes.includes("square")) {
-                btnSquare.innerText = selectedShape === "square" ? "هەڵبژێردراوە" : "هەڵبژاردن";
-                btnSquare.onclick = function() { selectShape('square'); };
-                btnSquare.disabled = selectedShape === "square";
-                btnSquare.style.background = selectedShape === "square" ? "#10b981" : "";
-            } else {
-                btnSquare.innerText = "کڕین (60💰)";
-                btnSquare.onclick = function() { handleShapeAction('square', 60); };
-                btnSquare.disabled = false;
-                btnSquare.style.background = "";
-            }
-
-            let btnTriangle = document.getElementById("btn-skin-triangle");
-            if (ownedShapes.includes("triangle")) {
-                btnTriangle.innerText = selectedShape === "triangle" ? "هەڵبژێردراوە" : "هەڵبژاردن";
-                btnTriangle.onclick = function() { selectShape('triangle'); };
-                btnTriangle.disabled = selectedShape === "triangle";
-                btnTriangle.style.background = selectedShape === "triangle" ? "#10b981" : "";
-            } else {
-                btnTriangle.innerText = "کڕین (90💰)";
-                btnTriangle.onclick = function() { handleShapeAction('triangle', 90); };
-                btnTriangle.disabled = false;
-                btnTriangle.style.background = "";
-            }
+            skins.forEach(skin => {
+                let btn = document.getElementById("btn-skin-" + skin.id);
+                if (!btn) return;
+                if (ownedShapes.includes(skin.id)) {
+                    btn.innerText = selectedShape === skin.id ? "هەڵبژێردراوە" : "هەڵبژاردن";
+                    btn.onclick = function() { selectShape(skin.id); };
+                    btn.disabled = selectedShape === skin.id;
+                    btn.style.background = selectedShape === skin.id ? "#10b981" : "";
+                } else {
+                    btn.innerText = `کڕین (${skin.price}💰)`;
+                    btn.onclick = function() { handleShapeAction(skin.id, skin.price); };
+                    btn.disabled = false;
+                    btn.style.background = "";
+                }
+            });
         }
 
         function selectShape(shape) {
@@ -857,6 +876,7 @@
             if (!isGameActive) return;
 
             let baseSpeed = gameDifficulty === "easy" ? 3.2 : gameDifficulty === "hard" ? 6.0 : 4.5;
+            if (score > 200) baseSpeed += 1.0;
             let speed = speedActive ? baseSpeed * 1.7 : baseSpeed;
 
             obstacleX -= speed;
@@ -998,11 +1018,17 @@
         }
 
         function selectQuizAnswer(index) {
-            if (index === quizData[currentQ].answer) { quizScore++; }
+            if (index === quizData[currentQ].answer) { 
+                quizScore++;
+                playSound('select');
+            } else {
+                playSound('shieldbreak');
+            }
             currentQ++;
             if (currentQ < quizData.length) {
                 loadQuizQuestion();
             } else {
+                playSound('powerup');
                 document.getElementById("quizImage").style.display = "none";
                 document.getElementById("quizQuestion").innerText = "یارییەکە تەواو بوو!";
                 document.getElementById("quizOptions").innerHTML = "";
