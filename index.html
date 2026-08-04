@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>یاری تۆپ تۆپ - سیستەمی چوونەژوورەوەی پارێزراو</title>
+    <title>یاری تۆپ تۆپ - ڕێکخستنی پێشکەوتوو</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
@@ -119,7 +119,7 @@
 <body>
 
     <div class="container">
-        <!-- Auth Screen (Login / Register) -->
+        <!-- Auth Screen -->
         <div id="authScreen" class="screen active">
             <div class="brand-title">تۆپ تۆپ</div>
             <div class="card">
@@ -128,7 +128,6 @@
                     <button class="tab-btn" id="registerTabBtn" onclick="switchAuthMode('register')">حیسابی نوێ</button>
                 </div>
 
-                <!-- Register Form -->
                 <div id="registerForm" style="display: none;">
                     <p style="font-size: 12px;">وێنەی پڕۆفایلەکەت هەڵبژێرە و حیساب دروست بکە</p>
                     <div class="avatar-preview" onclick="document.getElementById('fileInput').click()">
@@ -152,7 +151,6 @@
                     <button class="btn" onclick="registerUser()">دروستکردنی حیساب</button>
                 </div>
 
-                <!-- Login Form -->
                 <div id="loginForm">
                     <p style="font-size: 12px;">بۆ چوونەژوورەوە، ناوی بەکارهێنەر و وشەی نهێنی بنووسە</p>
                     <div class="form-group" style="margin-top: 15px;">
@@ -187,7 +185,6 @@
                 <p>🛡️ قەڵغان، 🧲 موگناتیس و ⚡ بروسکە کۆبکەرەوە!</p>
                 <button class="btn" onclick="startGamePlay()">دەستپێکردنی یاری</button>
             </div>
-            <button class="btn" style="background: #b91c1c; margin-top: auto;" onclick="logoutUser()">دەرچوون لە حیساب</button>
         </div>
 
         <!-- Shop Screen -->
@@ -216,18 +213,27 @@
             <button class="btn" style="background: #334155; margin-top: 15px;" onclick="backToHub()">گەڕانەوە</button>
         </div>
 
-        <!-- Settings Screen -->
+        <!-- Settings Screen (Updated with stylish design & logout) -->
         <div id="settingsScreen" class="screen">
             <div class="brand-title">ڕێکخستنەکان</div>
+            
             <div class="card">
-                <label>ئاستی سەختی</label>
+                <h3>ئاستی سەختی یاری</h3>
+                <p>ئاستی گونجاو بۆ تواناکانت دیاری بکە</p>
                 <select id="difficultySelect" onchange="changeDifficulty(this.value)">
-                    <option value="easy">ئاسان</option>
-                    <option value="normal" selected>ئاسایی</option>
-                    <option value="hard">قورس</option>
+                    <option value="easy">ئاستی ئاسان</option>
+                    <option value="normal" selected>ئاستی ئاسایی</option>
+                    <option value="hard">ئاستی قورس</option>
                 </select>
             </div>
-            <button class="btn" style="background: #334155;" onclick="backToHub()">گەڕانەوە</button>
+
+            <div class="card" style="border-color: #f87171;">
+                <h3 style="color: #f87171;">بەڕێوەبردنی حیساب</h3>
+                <p>دەتوانیت لە حیسابەکەت دەربچیت و دواتر بە ئارەزووی خۆت بگەڕێیتەوە</p>
+                <button class="btn" style="background: linear-gradient(135deg, #ef4444, #b91c1c); margin-top: 5px;" onclick="logoutUser()">🚪 دەرچوون لە حیسابی ئێستا</button>
+            </div>
+
+            <button class="btn" style="background: #334155; margin-top: auto;" onclick="backToHub()">گەڕانەوە بۆ شاشەی سەرەکی</button>
         </div>
 
         <!-- Game Screen -->
