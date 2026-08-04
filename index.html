@@ -9,13 +9,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
-        /* ڕێگریکردن لە گەورەبوونی شاشە لە سەفاری (Safari Zoom Prevention) */
         * { 
             box-sizing: border-box; 
             user-select: none; 
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent; 
-            touch-action: manipulation; /* بەربەستکردنی دوو جار داگرتن بۆ Zoom */
+            touch-action: manipulation; 
         }
         
         html, body {
@@ -23,7 +22,7 @@
             background-color: #0c0a09; color: #f8fafc;
             font-family: 'Noto Sans Arabic', sans-serif;
             overflow: hidden; 
-            touch-action: none; /* هەموو ڕەفتارەکانی Zoom دەبەستێت */
+            touch-action: none; 
         }
 
         .container {
@@ -173,7 +172,6 @@
         }
         .quiz-img-container img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Canvas Style - ڕێگریکردن لە گەورەبوون (Preventing Zoom) */
         .flappy-container {
             flex: 1; width: 100%; display: flex; flex-direction: column;
             justify-content: center; align-items: center; position: relative;
@@ -183,7 +181,7 @@
             width: 100%; height: 100%; max-height: calc(100vh - 120px);
             background: #451a03; border: 3px solid #b45309; border-radius: 16px;
             box-shadow: 0 0 20px rgba(0,0,0,0.8); 
-            touch-action: none; /* هەموو جۆرە ڕەتکردنەوە و گەورەکردنێکی سەفاری لێرەدا دەوەستێت */
+            touch-action: none;
         }
 
         .flappy-overlay {
@@ -344,7 +342,7 @@
             <div class="game-catalog-card" style="margin-top: 10px;">
                 <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐓</div>
                 <h3>شاشەی یاری مریشک و قازەکان</h3>
-                <p>دیواری قاوەیی دارین، کۆنترۆڵی زۆر ئاسان و ئاستی گونجاو!</p>
+                <p>دیواری قاوەیی دارین، قەڵغان، کۆینی دیاری و ئاگربارانی فڕیو!</p>
                 <button class="btn" style="background: linear-gradient(135deg, #f59e0b, #b45309); font-size: 18px;" onclick="startFlappyGame()">▶ یاری بکە (فول سکرین)</button>
                 <button class="btn" style="background: #8b5cf6;" onclick="openFlappyShop()">🛒 شوپینگ (کڕینی مریشک و دیوار)</button>
                 <button class="btn" style="background: #3f3f46;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
@@ -512,14 +510,19 @@
         <div id="flappyScreen" class="screen">
             <div class="top-bar" style="margin-bottom: 6px;">
                 <button class="btn" style="width: auto; padding: 6px 12px; margin: 0; background: #3f3f46;" onclick="exitFlappyGame()">⬅️ دەرچوون</button>
-                <span style="font-weight: bold; color: #fbbf24;">کۆین: <span id="flappyScore">0</span></span>
+                <div style="font-weight: bold; color: #fbbf24; display:flex; gap:10px; font-size:12px;">
+                    <span>دیوار: <span id="flappyScore">0</span></span>
+                    <span id="flappyShieldText" style="display:none; color:#10b981;">🛡️ هەیە</span>
+                    <span id="flappyFireText" style="display:none; color:#f97316;">🔥 ئاگرباران</span>
+                </div>
             </div>
             <div class="flappy-container">
                 <canvas id="flappyCanvas"></canvas>
 
                 <div id="flappyGameOverOverlay" class="flappy-overlay">
                     <h2 style="color: #f87171; margin-top: 0;">یاری تەواو بوو! 🐔</h2>
-                    <p style="font-size: 14px; margin-bottom: 15px;">کۆینی کۆکراوە: <span id="flappyFinalScore" style="color: #fbbf24; font-weight: bold;">0</span></p>
+                    <p style="font-size: 14px; margin-bottom: 5px;">دیواری تێپەڕێنراو: <span id="flappyFinalScore" style="color: #fbbf24; font-weight: bold;">0</span></p>
+                    <p id="checkpointNote" style="font-size: 12px; color: #10b981; margin-bottom: 15px; display:none;">✨ دەستپێکردنەوە لە ئاستی 100 🛡️</p>
                     
                     <button class="btn" style="background: linear-gradient(135deg, #10b981, #059669); margin-bottom: 8px;" onclick="resetFlappyGame()">🔄 یاری دەکەیتەوە</button>
                     <button class="btn" style="background: #8b5cf6; margin-bottom: 8px;" onclick="exitFlappyGameToShop()">🛒 شوپینگ (فرۆشگا)</button>
@@ -530,11 +533,10 @@
     </div>
 
     <script>
-        // JavaScript Blocked Double-Tap Event
         document.addEventListener('touchend', function (event) {
             let now = (new Date()).getTime();
             if (now - lastTouchEnd <= 300) {
-                event.preventDefault(); // ڕێگری لە Double Tap Zoom
+                event.preventDefault(); 
             }
             lastTouchEnd = now;
         }, false);
@@ -547,7 +549,6 @@
         let tempAvatarBase64 = "";
         let settingsTempAvatar = "";
 
-        // Flappy Shop Variables
         let selectedBird = "goose"; 
         let ownedBirds = ["goose"];
         let selectedBg = "brown_wall"; 
@@ -603,6 +604,11 @@
                 osc.frequency.exponentialRampToValueAtTime(80, now + 0.3);
                 gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
                 osc.start(now); osc.stop(now + 0.3);
+            } else if (type === 'shield') {
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(600, now + 0.25);
+                gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                osc.start(now); osc.stop(now + 0.25);
             }
         }
 
@@ -1065,13 +1071,16 @@
             loadUserData(); renderFlappyShop();
         }
 
-        // ==================== Flappy Bird Engine ====================
+        // ==================== Flappy Bird Engine (Upgraded) ====================
         const fCanvas = document.getElementById("flappyCanvas");
         const fCtx = fCanvas.getContext("2d");
 
         let flappyScore = 0;
         let flappyState = "START";
         let flappyAnim;
+        let hasShield = false;
+        let hasFire = false;
+        let bonus100Awarded = false;
 
         function resizeCanvas() {
             fCanvas.width = fCanvas.parentElement.clientWidth;
@@ -1080,12 +1089,28 @@
 
         const fBird = {
             x: 50, y: 150, radius: 14, 
-            gravity: 0.22, 
-            jump: 5.5,     
+            gravity: 0.38, 
+            jump: 6.5,     
             velocity: 0,
             draw() {
                 fCtx.save();
                 fCtx.translate(this.x, this.y);
+
+                if (hasFire) {
+                    fCtx.fillStyle = "#f97316";
+                    fCtx.beginPath();
+                    fCtx.arc(-15, Math.random() * 6 - 3, 10, 0, Math.PI * 2);
+                    fCtx.fill();
+                }
+
+                if (hasShield) {
+                    fCtx.strokeStyle = "#10b981";
+                    fCtx.lineWidth = 3;
+                    fCtx.beginPath();
+                    fCtx.arc(0, 0, 20, 0, Math.PI * 2);
+                    fCtx.stroke();
+                }
+
                 let birdObj = birdCatalog.find(b => b.id === selectedBird) || birdCatalog[0];
                 fCtx.font = "26px serif";
                 fCtx.textAlign = "center";
@@ -1093,13 +1118,23 @@
                 fCtx.fillText(birdObj.icon, 0, 0);
                 fCtx.restore();
             },
-            flap() { this.velocity = -this.jump; playSound('jump'); },
+            flap() { 
+                this.velocity = -(hasFire ? this.jump * 1.2 : this.jump); 
+                playSound('jump'); 
+            },
             update() {
                 this.velocity += this.gravity;
                 this.y += this.velocity;
                 if (this.y + this.radius >= fCanvas.height - 15) { 
                     this.y = fCanvas.height - 15 - this.radius; 
-                    flappyGameOver(); 
+                    if (hasShield) {
+                        hasShield = false;
+                        this.velocity = -this.jump;
+                        playSound('shield');
+                        document.getElementById("flappyShieldText").style.display = "none";
+                    } else {
+                        flappyGameOver(); 
+                    }
                 }
                 if (this.y - this.radius <= 0) { 
                     this.y = this.radius; 
@@ -1113,14 +1148,13 @@
             position: [], 
             w: 48, 
             gap: 140, 
-            dx: 2.0,  
+            dx: 2.2,  
             draw() {
                 for (let i = 0; i < this.position.length; i++) {
                     let p = this.position[i];
                     let topY = p.y;
                     let bottomY = p.y + 250 + this.gap;
 
-                    // Wood Brown Wall
                     fCtx.fillStyle = "#5c2c06";
                     fCtx.fillRect(p.x, topY, this.w, 250);
                     fCtx.strokeStyle = "#b45309";
@@ -1137,7 +1171,8 @@
                 if (this.position.length === 0 || this.position[this.position.length - 1].x < fCanvas.width - 200) {
                     this.position.push({
                         x: fCanvas.width,
-                        y: -Math.floor(Math.random() * 120) - 90
+                        y: -Math.floor(Math.random() * 120) - 90,
+                        passed: false
                     });
                 }
                 for (let i = 0; i < this.position.length; i++) {
@@ -1147,17 +1182,50 @@
                     // Collision Check
                     if (fBird.x + fBird.radius > p.x && fBird.x - fBird.radius < p.x + this.w) {
                         if (fBird.y - fBird.radius < p.y + 250 || fBird.y + fBird.radius > bottomY) { 
-                            flappyGameOver(); 
+                            if (hasShield) {
+                                hasShield = false;
+                                playSound('shield');
+                                document.getElementById("flappyShieldText").style.display = "none";
+                                p.x = -100;
+                            } else {
+                                flappyGameOver(); 
+                            }
                         }
                     }
                     p.x -= this.dx;
-                    if (p.x + this.w <= 0) {
-                        this.position.shift();
+
+                    if (!p.passed && p.x + this.w < fBird.x) {
+                        p.passed = true;
                         flappyScore++; 
-                        totalCoins++;
+                        totalCoins += 1; // 1 Coin per wall passed
                         playSound('coin');
+
+                        // Shield Bonus every 10 walls
+                        if (flappyScore > 0 && flappyScore % 10 === 0) {
+                            hasShield = true;
+                            playSound('shield');
+                            document.getElementById("flappyShieldText").style.display = "inline";
+                        }
+
+                        // 100 Coins Bonus at Score 100
+                        if (flappyScore >= 100 && !bonus100Awarded) {
+                            bonus100Awarded = true;
+                            totalCoins += 100;
+                            playSound('buy');
+                        }
+
+                        // Fire Flying Ability at Score 104
+                        if (flappyScore >= 104) {
+                            hasFire = true;
+                            document.getElementById("flappyFireText").style.display = "inline";
+                        }
+
                         document.getElementById("flappyScore").innerText = flappyScore;
                         localStorage.setItem("coins_" + currentUser, totalCoins);
+                    }
+
+                    if (p.x + this.w <= 0) {
+                        this.position.shift();
                         i--;
                     }
                 }
@@ -1182,13 +1250,36 @@
             playSound('gameover');
             stopBackgroundMusic();
             document.getElementById("flappyFinalScore").innerText = flappyScore;
+            
+            let cpNote = document.getElementById("checkpointNote");
+            if (flappyScore >= 100) {
+                cpNote.style.display = "block";
+            } else {
+                cpNote.style.display = "none";
+            }
+
             document.getElementById("flappyGameOverOverlay").classList.add("show");
         }
 
         function resetFlappyGame() {
             document.getElementById("flappyGameOverOverlay").classList.remove("show");
             fBird.reset(); fPipes.reset();
-            flappyScore = 0; document.getElementById("flappyScore").innerText = 0;
+            
+            if (flappyScore >= 100) {
+                flappyScore = 100;
+                hasShield = true;
+                bonus100Awarded = true;
+                document.getElementById("flappyShieldText").style.display = "inline";
+            } else {
+                flappyScore = 0;
+                hasShield = false;
+                bonus100Awarded = false;
+                document.getElementById("flappyShieldText").style.display = "none";
+            }
+
+            hasFire = false;
+            document.getElementById("flappyFireText").style.display = "none";
+            document.getElementById("flappyScore").innerText = flappyScore;
             flappyState = "PLAYING";
             startBackgroundMusic();
         }
@@ -1200,6 +1291,11 @@
             flappyState = "START";
             fBird.reset(); fPipes.reset();
             flappyScore = 0;
+            hasShield = false;
+            hasFire = false;
+            bonus100Awarded = false;
+            document.getElementById("flappyShieldText").style.display = "none";
+            document.getElementById("flappyFireText").style.display = "none";
             document.getElementById("flappyScore").innerText = 0;
             cancelAnimationFrame(flappyAnim);
             flappyLoop();
@@ -1231,7 +1327,6 @@
             }
         }
 
-        // Event listener 
         fCanvas.addEventListener("pointerdown", (e) => { 
             e.preventDefault(); 
             handleFlappyAction(); 
