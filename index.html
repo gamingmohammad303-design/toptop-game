@@ -351,12 +351,27 @@
             <button class="btn" style="background: #334155; margin-top: 15px;" onclick="switchScreen('jumperLandingScreen')">گەڕانەوە بۆ لاپەڕەی یاری</button>
         </div>
 
-        <!-- Settings Screen -->
+        <!-- Settings Screen (Enhanced) -->
         <div id="settingsScreen" class="screen">
             <div class="brand-title">ڕێکخستنەکان</div>
             
             <div class="card">
-                <h3>ئاستی سەختی یاری</h3>
+                <h3>👤 دەستکاری زانیارییەکانی پڕۆفایل</h3>
+                <div class="avatar-preview" onclick="document.getElementById('settingsFileInput').click()" style="margin-bottom: 8px;">
+                    <img id="settingsAvatarPreview" src="" alt="Avatar" style="display:none;" />
+                    <span id="settingsAvatarPlaceholder" style="font-size: 24px;">📷</span>
+                </div>
+                <input type="file" id="settingsFileInput" accept="image/*" style="display:none;" onchange="handleSettingsImageUpload(event)">
+                
+                <div class="form-group">
+                    <label>ناوی بەکارهێنەر</label>
+                    <input type="text" id="settingsUsernameInput" placeholder="ناوی نوێ...">
+                </div>
+                <button class="btn" style="background: linear-gradient(135deg, #10b981, #059669); margin-top: 5px;" onclick="saveProfileChanges()">پاشەکەوتکردنی گۆڕانکارییەکان</button>
+            </div>
+
+            <div class="card">
+                <h3>🎮 ئاستی سەختی یاری</h3>
                 <select id="difficultySelect" onchange="changeDifficulty(this.value)">
                     <option value="easy">ئاستی ئاسان</option>
                     <option value="normal" selected>ئاستی ئاسایی</option>
@@ -365,16 +380,30 @@
             </div>
 
             <div class="card">
-                <h3>مۆسیقای پاشبنەما (Background Music)</h3>
+                <h3>🎵 مۆسیقای پاشبنەما (Background Music)</h3>
                 <select id="musicToggleSelect" onchange="toggleBackgroundMusic(this.value)">
                     <option value="on" selected>هەڵکردن 🎵</option>
                     <option value="off">کوژاندنەوە 🔇</option>
                 </select>
             </div>
 
+            <div class="card">
+                <h3>🔊 دەنگەکانی یاری (Sound Effects)</h3>
+                <select id="sfxToggleSelect" onchange="toggleSoundEffects(this.value)">
+                    <option value="on" selected>هەڵکردن 🔊</option>
+                    <option value="off">کوژاندنەوە 🔇</option>
+                </select>
+            </div>
+
+            <div class="card" style="border-color: #f59e0b;">
+                <h3 style="color: #f59e0b;">🏆 خاڵەکان و داتاکان</h3>
+                <p style="font-size: 11px;">سڕینەوەی بەرزترین خاڵی تۆمارکراوت لە یاری بازدان</p>
+                <button class="btn" style="background: #d97706;" onclick="resetUserHighscore()">پاكکردنەوەی خاڵەکان (Reset Highscore)</button>
+            </div>
+
             <div class="card" style="border-color: #f87171;">
-                <h3 style="color: #f87171;">بەڕێوەبردنی حیساب</h3>
-                <button class="btn" style="background: linear-gradient(135deg, #ef4444, #b91c1c); margin-top: 5px;" onclick="logoutUser()">🚪 دەرچوون لە حیسابی ئێستا</button>
+                <h3 style="color: #f87171;">🚪 بەڕێوەبردنی حیساب</h3>
+                <button class="btn" style="background: linear-gradient(135deg, #ef4444, #b91c1c); margin-top: 5px;" onclick="logoutUser()">دەرچوون لە حیسابی ئێستا</button>
             </div>
 
             <button class="btn" style="background: #334155; margin-top: auto;" onclick="backToHub()">گەڕانەوە بۆ شاشەی سەرەکی</button>
@@ -431,6 +460,7 @@
         let selectedShape = "circle";
         let ownedShapes = ["circle"];
         let tempAvatarBase64 = "";
+        let settingsTempAvatar = "";
 
         let isGameActive = false;
         let score = 0;
@@ -462,11 +492,13 @@
         let gameDifficulty = "normal";
 
         let musicEnabled = true;
+        let sfxEnabled = true;
         let bgMusicInterval = null;
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type) {
+            if (!sfxEnabled) return;
             if (audioCtx.state === 'suspended') audioCtx.resume();
             
             const osc = audioCtx.createOscillator();
@@ -543,11 +575,22 @@
             else if (isGameActive) startBackgroundMusic();
         }
 
+        function toggleSoundEffects(val) {
+            sfxEnabled = (val === 'on');
+            localStorage.setItem("top_top_sfx", val);
+        }
+
         window.onload = function() {
             let savedMusic = localStorage.getItem("top_top_music");
             if (savedMusic) {
                 musicEnabled = (savedMusic === 'on');
                 document.getElementById("musicToggleSelect").value = savedMusic;
+            }
+
+            let savedSfx = localStorage.getItem("top_top_sfx");
+            if (savedSfx) {
+                sfxEnabled = (savedSfx === 'on');
+                document.getElementById("sfxToggleSelect").value = savedSfx;
             }
 
             let savedUser = localStorage.getItem("top_top_active_user");
@@ -592,6 +635,20 @@
                     let imgTag = document.getElementById("avatarImgTag");
                     let textTag = document.getElementById("avatarPlaceholderText");
                     imgTag.src = tempAvatarBase64; imgTag.style.display = "block"; textTag.style.display = "none";
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleSettingsImageUpload(event) {
+            let file = event.target.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    settingsTempAvatar = e.target.result;
+                    let imgTag = document.getElementById("settingsAvatarPreview");
+                    let textTag = document.getElementById("settingsAvatarPlaceholder");
+                    imgTag.src = settingsTempAvatar; imgTag.style.display = "block"; textTag.style.display = "none";
                 }
                 reader.readAsDataURL(file);
             }
@@ -660,9 +717,78 @@
                 avatarEl.innerHTML = currentUser.charAt(0).toUpperCase();
             }
 
+            // Populate settings inputs
+            document.getElementById("settingsUsernameInput").value = currentUser;
+            let settingsImgTag = document.getElementById("settingsAvatarPreview");
+            let settingsTextTag = document.getElementById("settingsAvatarPlaceholder");
+            if (profile.avatar) {
+                settingsImgTag.src = profile.avatar;
+                settingsImgTag.style.display = "block";
+                settingsTextTag.style.display = "none";
+                settingsTempAvatar = profile.avatar;
+            } else {
+                settingsImgTag.style.display = "none";
+                settingsTextTag.style.display = "block";
+                settingsTempAvatar = "";
+            }
+
             updateShopUI();
             loadLeaderboard();
             checkDailyBonus();
+        }
+
+        function saveProfileChanges() {
+            let newName = document.getElementById("settingsUsernameInput").value.trim();
+            if (!newName) { alert("تکایە ناوی بەکارهێنەر بە بەتاڵی جێمەهێڵە!"); return; }
+
+            let oldProfileData = localStorage.getItem("user_profile_" + currentUser);
+            let profile = oldProfileData ? JSON.parse(oldProfileData) : {};
+
+            if (newName !== currentUser) {
+                if (localStorage.getItem("user_profile_" + newName)) {
+                    alert("ئەم ناوە پێشتر بەکارهێنراوە!"); return;
+                }
+                
+                // Migrate data
+                let coinsVal = localStorage.getItem("coins_" + currentUser);
+                let shapeVal = localStorage.getItem("shape_" + currentUser);
+                let ownedVal = localStorage.getItem("owned_shapes_" + currentUser);
+                let scoreVal = localStorage.getItem("highscore_" + currentUser);
+                let bonusVal = localStorage.getItem("daily_bonus_" + currentUser);
+
+                localStorage.removeItem("user_profile_" + currentUser);
+                localStorage.removeItem("coins_" + currentUser);
+                localStorage.removeItem("shape_" + currentUser);
+                localStorage.removeItem("owned_shapes_" + currentUser);
+                localStorage.removeItem("highscore_" + currentUser);
+                localStorage.removeItem("daily_bonus_" + currentUser);
+
+                currentUser = newName;
+                localStorage.setItem("top_top_active_user", currentUser);
+
+                if (coinsVal) localStorage.setItem("coins_" + currentUser, coinsVal);
+                if (shapeVal) localStorage.setItem("shape_" + currentUser, shapeVal);
+                if (ownedVal) localStorage.setItem("owned_shapes_" + currentUser, ownedVal);
+                if (scoreVal) localStorage.setItem("highscore_" + currentUser, scoreVal);
+                if (bonusVal) localStorage.setItem("daily_bonus_" + currentUser, bonusVal);
+            }
+
+            profile.username = currentUser;
+            if (settingsTempAvatar) profile.avatar = settingsTempAvatar;
+
+            localStorage.setItem("user_profile_" + currentUser, JSON.stringify(profile));
+            playSound('select');
+            alert("زانیارییەکانت بە سەرکەوتوویی نوێکرانەوە!");
+            loadUserData();
+        }
+
+        function resetUserHighscore() {
+            if (confirm("دڵنیایت لە سڕینەوەی بەرزترین خاڵەکانت؟")) {
+                localStorage.removeItem("highscore_" + currentUser);
+                playSound('shieldbreak');
+                alert("خاڵەکانت سڕدرانەوە!");
+                loadUserData();
+            }
         }
 
         function applyPlayerShapeUI() {
@@ -705,7 +831,7 @@
         }
 
         function openShopScreen() { loadUserData(); switchScreen("shopScreen"); }
-        function openSettingsScreen() { switchScreen("settingsScreen"); }
+        function openSettingsScreen() { loadUserData(); switchScreen("settingsScreen"); }
         function backToHub() { stopGameSession(); loadUserData(); switchScreen("hubScreen"); }
 
         function updateShopUI() {
