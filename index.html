@@ -101,10 +101,6 @@
         }
         #player.shape-diamond { background: #06b6d4; transform: rotate(45deg); box-shadow: 0 0 15px #06b6d4; }
 
-        #player.shielded { outline: 4px solid #10b981; filter: drop-shadow(0 0 12px #10b981); }
-        #player.magnetized { outline: 4px solid #f59e0b; filter: drop-shadow(0 0 12px #f59e0b); }
-        #player.speedboosted { outline: 4px solid #eab308; filter: drop-shadow(0 0 15px #eab308); }
-
         #obstacle {
             width: 22px; height: 40px; background: linear-gradient(135deg, #f87171, #b91c1c);
             border-radius: 8px; position: absolute; bottom: 10px; left: 800px;
@@ -113,13 +109,6 @@
             width: 20px; height: 20px; background: radial-gradient(circle, #fde047, #ca8a04);
             border-radius: 50%; position: absolute; bottom: 55px; left: 950px; box-shadow: 0 0 12px #facc15;
         }
-        .powerup {
-            width: 24px; height: 24px; border-radius: 6px; position: absolute; bottom: 60px;
-            display: flex; justify-content: center; align-items: center; font-size: 13px; font-weight: bold; color: #fff;
-        }
-        #shieldItem { background: #10b981; box-shadow: 0 0 10px #10b981; left: 1400px; }
-        #magnetItem { background: #f59e0b; box-shadow: 0 0 10px #f59e0b; left: 2000px; }
-        #speedItem { background: #eab308; box-shadow: 0 0 12px #eab308; left: 2800px; }
 
         .game-stats {
             display: flex; justify-content: space-between; font-size: 12px;
@@ -160,7 +149,6 @@
         }
         .quiz-img-container img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Canvas Style */
         .flappy-container {
             flex: 1; width: 100%; display: flex; flex-direction: column;
             justify-content: center; align-items: center; position: relative;
@@ -171,7 +159,6 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.8); touch-action: manipulation;
         }
 
-        /* Overlay for Flappy Bird Game Over */
         .flappy-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(12, 10, 9, 0.9); display: none;
@@ -180,7 +167,6 @@
         }
         .flappy-overlay.show { display: flex; }
 
-        /* Snake Game Canvas & Controls */
         #snakeCanvas {
             width: 100%; height: 260px; background: #18181b;
             border: 3px solid #10b981; border-radius: 16px;
@@ -277,7 +263,7 @@
             <div class="game-catalog-card">
                 <div class="game-thumbnail">🔵</div>
                 <h3 style="color: #fbbf24; font-size: 16px; margin: 0 0 4px 0;">یاری بازدان (تۆپ تۆپ)</h3>
-                <p style="font-size: 11px; color: #d6d3d1; margin: 0 0 10px 0;">قەڵغان، موگناتیس و بروسکە کۆبکەرەوە و خاڵ تۆمار بکە</p>
+                <p style="font-size: 11px; color: #d6d3d1; margin: 0 0 10px 0;">قەڵغان و کۆین کۆبکەرەوە و خاڵ تۆمار بکە</p>
                 <div class="game-meta-info">
                     <span>📅 دەرچوون: 2026/06/01</span>
                     <span style="color: #fbbf24; font-weight: bold;">ئاست: ئاسایی</span>
@@ -297,7 +283,7 @@
                 <button class="btn" style="background: linear-gradient(135deg, #ec4899, #be185d);" onclick="openQuizLanding()">کردنەوەی بەش</button>
             </div>
 
-            <!-- Game 3 (Flappy Bird) -->
+            <!-- Game 3 -->
             <div class="game-catalog-card">
                 <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐓</div>
                 <h3 style="color: #fbbf24; font-size: 16px; margin: 0 0 4px 0;">یاری باڵندە و مریشکەکان (HD)</h3>
@@ -309,7 +295,7 @@
                 <button class="btn" style="background: linear-gradient(135deg, #f59e0b, #b45309);" onclick="openFlappyLanding()">کردنەوەی بەش</button>
             </div>
 
-            <!-- Game 4 (Snake Game - NEW) -->
+            <!-- Game 4 (Snake Game) -->
             <div class="game-catalog-card">
                 <div class="game-thumbnail" style="background: radial-gradient(circle, #10b981, #064e3b);">🐍</div>
                 <h3 style="color: #fbbf24; font-size: 16px; margin: 0 0 4px 0;">یاری مارەکە (Snake Game)</h3>
@@ -365,7 +351,7 @@
             </div>
         </div>
 
-        <!-- Snake Landing Page (NEW) -->
+        <!-- Snake Landing Page -->
         <div id="snakeLandingScreen" class="screen">
             <div class="brand-title">یاری مارەکە 🐍</div>
             <div class="game-catalog-card" style="margin-top: 20px;">
@@ -494,9 +480,6 @@
         <div id="gameScreen" class="screen">
             <div class="game-stats">
                 <span>خاڵ: <span id="currentScore">0</span></span>
-                <span>🛡️: <span id="shieldTimer">0</span>s</span>
-                <span>🧲: <span id="magnetTimer">0</span>s</span>
-                <span>⚡: <span id="speedTimer">0</span>s</span>
                 <span>💰: <span id="currentCoins">0</span></span>
             </div>
 
@@ -504,9 +487,6 @@
                 <div id="player" class="shape-circle"></div>
                 <div id="obstacle"></div>
                 <div id="coinItem"></div>
-                <div id="shieldItem" class="powerup">🛡️</div>
-                <div id="magnetItem" class="powerup">🧲</div>
-                <div id="speedItem" class="powerup">⚡</div>
 
                 <div id="gameOverBox">
                     <h2 style="color: #f87171;">یاری تەواو بوو!</h2>
@@ -543,7 +523,6 @@
             <div class="flappy-container">
                 <canvas id="flappyCanvas"></canvas>
 
-                <!-- Game Over Box with requested buttons -->
                 <div id="flappyGameOverOverlay" class="flappy-overlay">
                     <h2 style="color: #f87171; margin-top: 0;">یاری تەواو بوو! 🐔</h2>
                     <p style="font-size: 14px; margin-bottom: 15px;">کۆینی کۆکراوە: <span id="flappyFinalScore" style="color: #fbbf24; font-weight: bold;">0</span></p>
@@ -555,7 +534,7 @@
             </div>
         </div>
 
-        <!-- Snake Game Fullscreen Screen (NEW) -->
+        <!-- Snake Game Fullscreen Screen -->
         <div id="snakeScreen" class="screen">
             <div class="top-bar" style="margin-bottom: 6px;">
                 <button class="btn" style="width: auto; padding: 6px 12px; margin: 0; background: #3f3f46;" onclick="exitSnakeGame()">⬅️ دەرچوون</button>
@@ -565,7 +544,7 @@
             <div style="position: relative; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                 <canvas id="snakeCanvas"></canvas>
 
-                <!-- Touch Controls for Mobile -->
+                <!-- Touch Controls (Corrected Direction mapping) -->
                 <div class="snake-controls">
                     <div></div>
                     <button class="snake-btn" onclick="setSnakeDir('UP')">⬆️</button>
@@ -575,7 +554,6 @@
                     <button class="snake-btn" onclick="setSnakeDir('RIGHT')">➡️</button>
                 </div>
 
-                <!-- Snake Game Over Overlay -->
                 <div id="snakeGameOverOverlay" class="flappy-overlay">
                     <h2 style="color: #f87171; margin-top: 0;">یاری تەواو بوو! 🐍</h2>
                     <p style="font-size: 14px; margin-bottom: 15px;">خاڵ: <span id="snakeFinalScore" style="color: #fbbf24; font-weight: bold;">0</span></p>
@@ -595,7 +573,6 @@
         let tempAvatarBase64 = "";
         let settingsTempAvatar = "";
 
-        // Flappy Shop Variables
         let selectedBird = "goose"; 
         let ownedBirds = ["goose"];
         let selectedBg = "brown_wall"; 
@@ -1115,7 +1092,7 @@
             loadUserData(); renderFlappyShop();
         }
 
-        // ==================== Flappy Bird Engine (EASY DIFFICULTY) ====================
+        // ==================== Flappy Bird Engine ====================
         const fCanvas = document.getElementById("flappyCanvas");
         const fCtx = fCanvas.getContext("2d");
 
@@ -1130,8 +1107,8 @@
 
         const fBird = {
             x: 50, y: 150, radius: 14, 
-            gravity: 0.22, // Reduced gravity for smoother/easier fall
-            jump: 5.5,     // Soft, manageable jump height
+            gravity: 0.22,
+            jump: 5.5,
             velocity: 0,
             draw() {
                 fCtx.save();
@@ -1162,15 +1139,14 @@
         const fPipes = {
             position: [], 
             w: 48, 
-            gap: 140, // Expanded gap for easier passage
-            dx: 2.0,  // Reduced pipe movement speed
+            gap: 140,
+            dx: 2.0,
             draw() {
                 for (let i = 0; i < this.position.length; i++) {
                     let p = this.position[i];
                     let topY = p.y;
                     let bottomY = p.y + 250 + this.gap;
 
-                    // Wood Brown Wall Texture
                     fCtx.fillStyle = "#5c2c06";
                     fCtx.fillRect(p.x, topY, this.w, 250);
                     fCtx.strokeStyle = "#b45309";
@@ -1194,7 +1170,6 @@
                     let p = this.position[i];
                     let bottomY = p.y + 250 + this.gap;
 
-                    // Collision Check
                     if (fBird.x + fBird.radius > p.x && fBird.x - fBird.radius < p.x + this.w) {
                         if (fBird.y - fBird.radius < p.y + 250 || fBird.y + fBird.radius > bottomY) { 
                             flappyGameOver(); 
@@ -1220,7 +1195,6 @@
             fCtx.fillStyle = bgObj.color;
             fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
 
-            // Wood / Wall Lines
             fCtx.strokeStyle = "rgba(255,255,255,0.06)";
             fCtx.lineWidth = 2;
             for (let y = 0; y < fCanvas.height; y += 35) {
@@ -1330,7 +1304,7 @@
             });
         }
 
-        // ==================== Game 4: Snake Game Engine (NEW) ====================
+        // ==================== Game 4: Snake Game Engine (Direction Fixed) ====================
         const sCanvas = document.getElementById("snakeCanvas");
         const sCtx = sCanvas ? sCanvas.getContext("2d") : null;
         let snake = [], snakeDir = "RIGHT", nextSnakeDir = "RIGHT";
@@ -1368,6 +1342,7 @@
         }
 
         function setSnakeDir(dir) {
+            // Correct mapping: Right goes right, Left goes left, Up goes up, Down goes down
             if (dir === "LEFT" && snakeDir !== "RIGHT") nextSnakeDir = "LEFT";
             else if (dir === "UP" && snakeDir !== "DOWN") nextSnakeDir = "UP";
             else if (dir === "RIGHT" && snakeDir !== "LEFT") nextSnakeDir = "RIGHT";
@@ -1402,19 +1377,16 @@
             if (snakeDir === "RIGHT") headX += gridBox;
             if (snakeDir === "DOWN") headY += gridBox;
 
-            // Wall Collision
             if (headX < 0 || headX >= sCanvas.width || headY < 0 || headY >= sCanvas.height) {
                 return snakeGameOver();
             }
 
-            // Self Collision
             for (let i = 0; i < snake.length; i++) {
                 if (headX === snake[i].x && headY === snake[i].y) {
                     return snakeGameOver();
                 }
             }
 
-            // Eat Food
             let newHead = { x: headX, y: headY };
             if (headX === food.x && headY === food.y) {
                 snakeScore++;
@@ -1436,7 +1408,6 @@
             sCtx.fillStyle = "#18181b";
             sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
 
-            // Draw Grid Lines
             sCtx.strokeStyle = "rgba(255,255,255,0.03)";
             for (let x = 0; x < sCanvas.width; x += gridBox) {
                 sCtx.beginPath(); sCtx.moveTo(x, 0); sCtx.lineTo(x, sCanvas.height); sCtx.stroke();
@@ -1445,13 +1416,11 @@
                 sCtx.beginPath(); sCtx.moveTo(0, y); sCtx.lineTo(sCanvas.width, y); sCtx.stroke();
             }
 
-            // Draw Food (Apple)
             sCtx.fillStyle = "#ef4444";
             sCtx.beginPath();
             sCtx.arc(food.x + gridBox/2, food.y + gridBox/2, gridBox/2 - 1, 0, Math.PI * 2);
             sCtx.fill();
 
-            // Draw Snake
             for (let i = 0; i < snake.length; i++) {
                 sCtx.fillStyle = i === 0 ? "#34d399" : "#10b981";
                 sCtx.fillRect(snake[i].x + 1, snake[i].y + 1, gridBox - 2, gridBox - 2);
