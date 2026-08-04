@@ -278,6 +278,12 @@
                     <p style="font-size: 11px;">سەوزی زومڕودی</p>
                     <button class="btn" id="btn-skin-green" style="padding: 5px; font-size: 11px;" onclick="handleSkinAction('#10b981', 40, 'green')">کڕین (40💰)</button>
                 </div>
+                <!-- شێوازی نوێ: زێڕینی تایبەت -->
+                <div class="shop-item">
+                    <div style="width: 30px; height: 30px; background: #f59e0b; border-radius: 50%; margin: 5px auto; box-shadow: 0 0 10px #f59e0b;"></div>
+                    <p style="font-size: 11px;">زێڕینی تایبەت</p>
+                    <button class="btn" id="btn-skin-gold" style="padding: 5px; font-size: 11px;" onclick="handleSkinAction('#f59e0b', 60, 'gold')">کڕین (60💰)</button>
+                </div>
             </div>
             <button class="btn" style="background: #334155; margin-top: 15px;" onclick="backToHub()">گەڕانەوە</button>
         </div>
@@ -696,6 +702,14 @@
                 btnGreen.onclick = function() { selectSkin('#10b981'); };
                 btnGreen.disabled = playerColor === "#10b981";
                 btnGreen.style.background = playerColor === "#10b981" ? "#10b981" : "";
+            }
+
+            let btnGold = document.getElementById("btn-skin-gold");
+            if (ownedSkins.includes("gold")) {
+                btnGold.innerText = playerColor === "#f59e0b" ? "هەڵبژێردراوە" : "هەڵبژاردن";
+                btnGold.onclick = function() { selectSkin('#f59e0b'); };
+                btnGold.disabled = playerColor === "#f59e0b";
+                btnGold.style.background = playerColor === "#f59e0b" ? "#10b981" : "";
             }
 
             let btnDefault = document.getElementById("btn-skin-default");
