@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>پلاتفۆرمی تۆپتۆپ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Noto Sans Arabic', sans-serif;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+            touch-action: manipulation;
+            user-select: none;
+        }
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            box-sizing: border-box;
+            text-align: center;
+            position: relative;
+        }
+        h1, h2 {
+            color: #38bdf8;
+            margin-top: 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: right;
+        }
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: #94a3b8;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background: #0f172a;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+            font-family: 'Noto Sans Arabic', sans-serif;
+        }
+        input:focus, select:focus {
+            border-color: #38bdf8;
+        }
+        .hint {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 3px;
+            display: block;
+        }
+        .btn {
+            width: 100%;
+            background-color: #38bdf8;
+            color: #0f172a;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn:active {
+            background-color: #0284c7;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .game-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: right;
+        }
+        .game-card h3 {
+            margin: 0 0 5px 0;
+            color: #eab308;
+            font-size: 18px;
+        }
+        .game-card p {
+            margin: 0 0 10px 0;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+        .leaderboard-box {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 15px;
+            text-align: right;
+        }
+        .leaderboard-box h4 {
+            margin: 0 0 8px 0;
+            color: #38bdf8;
+            font-size: 14px;
+        }
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 4px 0;
+            border-bottom: 1px solid #1e293b;
+            color: #94a3b8;
+        }
+        .game-arena {
+            background: linear-gradient(to bottom, #1e293b, #0f172a);
+            border: 2px solid #334155;
+            border-radius: 12px;
+            height: 210px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 15px;
+            transition: background 0.5s ease;
+        }
+        #player {
+            width: 28px;
+            height: 28px;
+            background-color: #38bdf8;
+            border-radius: 6px;
+            position: absolute;
+            bottom: 10px;
+            left: 35px;
+        }
+        #obstacle {
+            width: 20px;
+            height: 35px;
+            background-color: #ef4444;
+            border-radius: 4px;
+            position: absolute;
+            bottom: 10px;
+            left: 370px;
+        }
+        #coin {
+            width: 16px;
+            height: 16px;
+            background-color: #eab308;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 50px;
+            left: 390px;
+            box-shadow: 0 0 8px #eab308;
+        }
+        .score-box {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #eab308;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .back-btn, .settings-btn {
+            background: #475569;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .settings-box {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: right;
+            margin-bottom: 12px;
+        }
+        .toggle-switch {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .shop-box {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 15px;
+            text-align: right;
+        }
+        .shop-box h4 {
+            margin: 0 0 8px 0;
+            color: #eab308;
+            font-size: 14px;
+        }
+        .skin-options {
+            display: flex;
+            gap: 8px;
+        }
+        .skin-btn {
+            flex: 1;
+            padding: 6px;
+            border: 1px solid #475569;
+            background: #1e293b;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        .skin-btn.active {
+            border-color: #38bdf8;
+            background: #0f172a;
+        }
+        .round-jump-btn {
+            width: 95px;
+            height: 95px;
+            background: linear-gradient(135deg, #38bdf8, #0284c7);
+            color: #0f172a;
+            border: 4px solid #bae6fd;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+            touch-action: manipulation;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+        .round-jump-btn:active {
+            transform: scale(0.92);
+            box-shadow: 0 2px 10px rgba(56, 189, 248, 0.6);
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+        }
+
+        #gameOverScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(4px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 16px;
+            box-sizing: border-box;
+            padding: 20px;
+            z-index: 10;
+        }
+        #gameOverScreen h2 {
+            color: #ef4444;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .game-over-stats {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 12px;
+            width: 100%;
+            max-width: 280px;
+            margin-bottom: 15px;
+            text-align: right;
+            font-size: 14px;
+            color: #94a3b8;
+            box-sizing: border-box;
+        }
+        .game-over-stats span {
+            color: #eab308;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- 1. شاشەی تۆمارکردن -->
+        <div id="authScreen">
+            <h1>تۆپتۆپ</h1>
+            <p style="color: #94a3b8; font-size: 13px; margin-bottom: 20px;">تکایە هەژمارێک دروست بکە بۆ دەستپێکردن</p>
+            
+            <div class="form-group">
+                <label>ناوی بەکارهێنەر (Username)</label>
+                <input type="text" id="usernameInput" placeholder="بۆ نموونە: ahmad123">
+                <span class="hint">تەنها پیت و ژمارەی ئینگلیزی ڕێگەپێدراوە.</span>
+            </div>
+            
+            <div class="form-group">
+                <label>وشەی تێپەڕ (Password)</label>
+                <input type="password" id="passwordInput" placeholder="رمزەکەت بنووسە...">
+                <span class="hint">لانیکەم 4 پیت یان ژمارە.</span>
+            </div>
+            
+            <button class="btn" onclick="loginUser()">چوونەژوورەوە</button>
+        </div>
+
+        <!-- 2. شاشەی لیست و هاب -->
+        <div id="hubScreen" class="hidden">
+            <div class="top-bar">
+                <button class="settings-btn" onclick="openSettings()">⚙️ ڕێکخستن</button>
+                <h2 id="welcomeText" style="font-size: 15px; margin: 0;"></h2>
+            </div>
+            
+            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 8px; margin-bottom: 12px; font-size: 13px; text-align: right; color: #eab308;">
+                💰 دراوەکانی کۆکراوە: <span id="totalCoinsHub" style="font-weight: bold;">0</span>
+            </div>
+
+            <div class="shop-box">
+                <h4>🎨 شێوازی یاریزان (Skins)</h4>
+                <div class="skin-options">
+                    <button class="skin-btn active" id="skin_sky" onclick="changeSkin('#38bdf8')">شینی ئاسمانی</button>
+                    <button class="skin-btn" id="skin_gold" onclick="changeSkin('#eab308')">زێڕین</button>
+                    <button class="skin-btn" id="skin_green" onclick="changeSkin('#22c55e')">سەوزی هێمن</button>
+                </div>
+            </div>
+
+            <div class="leaderboard-box">
+                <h4>🏆 باشترین یاریزانەکان</h4>
+                <div id="leaderboardList">
+                    <div class="score-row"><span>هیچ تۆمارێک نییە</span><span>0</span></div>
+                </div>
+            </div>
+            
+            <div class="game-card">
+                <h3>یاری بازدانی خێرا (تۆپتۆپ)</h3>
+                <p>کۆسپەکان ببڕە و کوینەکان کۆبکەرەوە!</p>
+                <button class="btn" style="margin-top: 5px; padding: 8px;" onclick="startToptopGame()">دەستپێکردنی یاری</button>
+            </div>
+        </div>
+
+        <!-- 3. شاشەی سێتینگ (نوێکراوە) -->
+        <div id="settingsScreen" class="hidden">
+            <div class="top-bar">
+                <button class="back-btn" onclick="returnToHub()">← گەڕانەوە</button>
+                <h2 style="font-size: 16px; margin: 0; color: #38bdf8;">ڕێکخستنەکانی یاری</h2>
+            </div>
+
+            <div class="settings-box">
+                <div class="toggle-switch">
+                    <span style="font-size: 14px;">دەنگی یاری (Sound FX)</span>
+                    <input type="checkbox" id="soundToggle" checked style="width: 20px; height: 20px; cursor: pointer; accent-color: #38bdf8;" onclick="toggleSound()">
+                </div>
+            </div>
+
+            <div class="settings-box" style="text-align: right;">
+                <label style="margin-bottom: 8px;">ئاستی قورسیی یاری (Difficulty):</label>
+                <select id="difficultySelect" onchange="changeDifficulty()">
+                    <option value="easy">ئاسانی (هێواش)</option>
+                    <option value="normal" selected>ناوەند (ئاسایی)</option>
+                    <option value="hard">قورس (خێرا)</option>
+                </select>
+            </div>
+
+            <div class="settings-box" style="text-align: right;">
+                <label style="margin-bottom: 8px;">ڕووکاری پاشبنەما (Arena Theme):</label>
+                <select id="themeSelect" onchange="changeTheme()">
+                    <option value="classic" selected>شەوی کلاسیکی</option>
+                    <option value="sunset">خۆرنشینی سوور</option>
+                    <option value="matrix">ماتریۆکسی سەوز</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 4. شاشەی یارییەکە -->
+        <div id="gameScreen" class="hidden">
+            <button class="back-btn" onclick="returnToHub()" style="float: right; margin-bottom: 10px;">← گەڕانەوە</button>
+            <div style="clear: both;"></div>
+            
+            <div class="score-box">
+                <span>خاڵ: <span id="score">0</span></span>
+                <span>💰 کوین: <span id="coins">0</span></span>
+            </div>
+
+            <div class="game-arena" id="gameArena">
+                <div id="player"></div>
+                <div id="obstacle"></div>
+                <div id="coin"></div>
+
+                <div id="gameOverScreen" class="hidden">
+                    <h2>یاری تەواو بوو!</h2>
+                    <div class="game-over-stats">
+                        <div>خاڵەکانت: <span id="finalScore">0</span></div>
+                        <div style="margin-top: 5px;">بەررزترین ئاستت: <span id="bestScore">0</span></div>
+                        <div style="margin-top: 5px;">کۆینە کۆکراوەکان: <span id="finalCoins">0</span></div>
+                    </div>
+                    <button class="btn" style="max-width: 280px; margin-bottom: 8px;" onclick="startToptopGame()">یاری دیسان بکەرەوە</button>
+                    <button class="btn" style="max-width: 280px; background-color: #475569; color: white;" onclick="returnToHub()">گەڕانەوە بۆ سەرەتا</button>
+                </div>
+            </div>
+
+            <button class="round-jump-btn" onclick="jumpPlayer()">بازدان</button>
+        </div>
+
+    </div>
+
+    <script>
+        let currentUsername = "";
+        let score = 0;
+        let coins = 0;
+        let totalCoins = 0;
+        let isPlaying = false;
+        
+        let obstacleLeft = 370;
+        let coinLeft = 390;
+        
+        let playerY = 10;
+        let playerVelocityY = 0;
+        let isJumping = false;
+        const gravity = 0.55;
+        const jumpForce = 11;
+
+        let playerColor = "#38bdf8";
+        let animationFrameId;
+        let scoreInterval;
+        let soundEnabled = true;
+
+        // ڕێکخستنە نوێیەکان
+        let difficultyMultiplier = 1.0;
+        let selectedTheme = "classic";
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            if (!soundEnabled) return;
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            if (type === 'jump') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.15);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.15);
+            } else if (type === 'coin') {
+                oscillator.type = 'triangle';
+                oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'hit') {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+                oscillator.frequency.linearRampToValueAtTime(40, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = document.getElementById("soundToggle").checked;
+        }
+
+        function changeDifficulty() {
+            const diff = document.getElementById("difficultySelect").value;
+            if (diff === 'easy') difficultyMultiplier = 0.8;
+            else if (diff === 'normal') difficultyMultiplier = 1.0;
+            else if (diff === 'hard') difficultyMultiplier = 1.35;
+        }
+
+        function changeTheme() {
+            selectedTheme = document.getElementById("themeSelect").value;
+            updateEnvironment();
+        }
+
+        function openSettings() {
+            document.getElementById("hubScreen").classList.add("hidden");
+            document.getElementById("settingsScreen").classList.remove("hidden");
+        }
+
+        function changeSkin(color) {
+            playerColor = color;
+            document.getElementById("player").style.backgroundColor = color;
+            
+            document.querySelectorAll('.skin-btn').forEach(btn => btn.classList.remove('active'));
+            if(color === '#38bdf8') document.getElementById('skin_sky').classList.add('active');
+            if(color === '#eab308') document.getElementById('skin_gold').classList.add('active');
+            if(color === '#22c55e') document.getElementById('skin_green').classList.add('active');
+        }
+
+        function loginUser() {
+            const username = document.getElementById("usernameInput").value.trim();
+            const password = document.getElementById("passwordInput").value.trim();
+
+            const usernameRegex = /^[A-Za-z0-9]+$/;
+            if (!usernameRegex.test(username)) {
+                alert("ناوی بەکارهێنەر هەڵەیە! تکایە تەنها پیت و ژمارەی ئینگلیزی بەکاربهێنە.");
+                return;
+            }
+
+            const passwordRegex = /^[A-Za-z0-9]{4,}$/;
+            if (!passwordRegex.test(password)) {
+                alert("وشەی تێپەڕ هەڵەیە! دەبێت لانیکەم 4 پیت یان ژمارە بێت.");
+                return;
+            }
+
+            currentUsername = username;
+            document.getElementById("welcomeText").innerText = "سڵاو، " + currentUsername;
+            
+            loadUserData();
+            updateLeaderboardUI();
+            document.getElementById("authScreen").classList.add("hidden");
+            document.getElementById("hubScreen").classList.remove("hidden");
+        }
+
+        function loadUserData() {
+            let savedCoins = localStorage.getItem("toptop_coins_" + currentUsername);
+            totalCoins = savedCoins ? parseInt(savedCoins) : 0;
+            document.getElementById("totalCoinsHub").innerText = totalCoins;
+        }
+
+        function saveUserData() {
+            localStorage.setItem("toptop_coins_" + currentUsername, totalCoins);
+            document.getElementById("totalCoinsHub").innerText = totalCoins;
+        }
+
+        function getLeaderboard() {
+            let data = localStorage.getItem("toptop_leaderboard");
+            return data ? JSON.parse(data) : [];
+        }
+
+        function saveScoreToLeaderboard(name, finalScore) {
+            let list = getLeaderboard();
+            let existingUser = list.find(item => item.name === name);
+            
+            let best = finalScore;
+            if (existingUser) {
+                if (finalScore > existingUser.score) {
+                    existingUser.score = finalScore;
+                } else {
+                    best = existingUser.score;
+                }
+            } else {
+                list.push({ name: name, score: finalScore });
+            }
+
+            list.sort((a, b) => b.score - a.score);
+            list = list.slice(0, 3);
+            localStorage.setItem("toptop_leaderboard", JSON.stringify(list));
+            return best;
+        }
+
+        function updateLeaderboardUI() {
+            let list = getLeaderboard();
+            let container = document.getElementById("leaderboardList");
+            container.innerHTML = "";
+
+            if (list.length === 0) {
+                container.innerHTML = `<div class="score-row"><span>هیچ تۆمارێک نییە</span><span>0</span></div>`;
+                return;
+            }
+
+            list.forEach((item, index) => {
+                container.innerHTML += `<div class="score-row"><span>${index + 1}. ${item.name}</span><span>${item.score} خاڵ</span></div>`;
+            });
+        }
+
+        function startToptopGame() {
+            document.getElementById("gameOverScreen").classList.add("hidden");
+            document.getElementById("hubScreen").classList.add("hidden");
+            document.getElementById("gameScreen").classList.remove("hidden");
+            document.getElementById("player").style.backgroundColor = playerColor;
+            
+            resetGameVariables();
+            isPlaying = true;
+            
+            animationFrameId = requestAnimationFrame(gameLoop);
+            
+            scoreInterval = setInterval(() => {
+                if (isPlaying) {
+                    score++;
+                    document.getElementById("score").innerText = score;
+                    updateEnvironment();
+                }
+            }, 300);
+        }
+
+        function returnToHub() {
+            isPlaying = false;
+            cancelAnimationFrame(animationFrameId);
+            clearInterval(scoreInterval);
+            document.getElementById("gameOverScreen").classList.add("hidden");
+            updateLeaderboardUI();
+            loadUserData();
+            document.getElementById("gameScreen").classList.add("hidden");
+            document.getElementById("settingsScreen").classList.add("hidden");
+            document.getElementById("hubScreen").classList.remove("hidden");
+        }
+
+        function resetGameVariables() {
+            score = 0;
+            coins = 0;
+            obstacleLeft = 370;
+            coinLeft = 390;
+            playerY = 10;
+            playerVelocityY = 0;
+            isJumping = false;
+            document.getElementById("score").innerText = 0;
+            document.getElementById("coins").innerText = 0;
+            document.getElementById("obstacle").style.left = obstacleLeft + "px";
+            document.getElementById("coin").style.left = coinLeft + "px";
+            document.getElementById("coin").style.display = "block";
+            document.getElementById("player").style.bottom = playerY + "px";
+            updateEnvironment();
+        }
+
+        function updateEnvironment() {
+            let arena = document.getElementById("gameArena");
+            let obs = document.getElementById("obstacle");
+
+            if (selectedTheme === "sunset") {
+                arena.style.background = "linear-gradient(to bottom, #7c2d12, #431407)";
+                obs.style.backgroundColor = "#fb923c";
+            } else if (selectedTheme === "matrix") {
+                arena.style.background = "linear-gradient(to bottom, #064e3b, #022c22)";
+                obs.style.backgroundColor = "#34d399";
+            } else {
+                // Classic Theme
+                if (score >= 100) {
+                    arena.style.background = "linear-gradient(to bottom, #7f1d1d, #450a0a)";
+                    obs.style.backgroundColor = "#eab308";
+                } else if (score >= 20) {
+                    arena.style.background = "linear-gradient(to bottom, #311026, #0f172a)";
+                    obs.style.backgroundColor = "#a855f7";
+                } else {
+                    arena.style.background = "linear-gradient(to bottom, #1e293b, #0f172a)";
+                    obs.style.backgroundColor = "#ef4444";
+                }
+            }
+        }
+
+        function gameLoop() {
+            if (!isPlaying) return;
+
+            let baseSpeed = 4.2;
+            if (score >= 100) baseSpeed = 7.0;
+            else if (score >= 50) baseSpeed = 5.8;
+            else if (score >= 20) baseSpeed = 5.0;
+
+            let speed = baseSpeed * difficultyMultiplier;
+
+            obstacleLeft -= speed;
+            if (obstacleLeft < -25) {
+                obstacleLeft = 370;
+            }
+            document.getElementById("obstacle").style.left = obstacleLeft + "px";
+
+            coinLeft -= speed;
+            if (coinLeft < -25) {
+                coinLeft = 400 + Math.random() * 120;
+                document.getElementById("coin").style.display = "block";
+            }
+            document.getElementById("coin").style.left = coinLeft + "px";
+
+            if (isJumping) {
+                playerVelocityY -= gravity;
+                playerY += playerVelocityY;
+
+                if (playerY <= 10) {
+                    playerY = 10;
+                    isJumping = false;
+                    playerVelocityY = 0;
+                }
+                document.getElementById("player").style.bottom = playerY + "px";
+            }
+
+            let coinElem = document.getElementById("coin");
+            if (coinElem.style.display !== "none" && coinLeft > 25 && coinLeft < 60 && playerY > 30 && playerY < 90) {
+                coins++;
+                totalCoins++;
+                document.getElementById("coins").innerText = coins;
+                coinElem.style.display = "none";
+                playSound('coin');
+                saveUserData();
+            }
+
+            let currentObsHeight = parseInt(window.getComputedStyle(document.getElementById("obstacle")).getPropertyValue("height"));
+            if (obstacleLeft > 25 && obstacleLeft < 55 && playerY < (currentObsHeight + 5)) {
+                gameOver();
+                return;
+            }
+
+            animationFrameId = requestAnimationFrame(gameLoop);
+        }
+
+        function jumpPlayer() {
+            if (!isPlaying || isJumping) return;
+            playSound('jump');
+            isJumping = true;
+            playerVelocityY = jumpForce;
+        }
+
+        function gameOver() {
+            isPlaying = false;
+            cancelAnimationFrame(animationFrameId);
+            clearInterval(scoreInterval);
+            playSound('hit');
+            
+            let bestScore = saveScoreToLeaderboard(currentUsername, score);
+            saveUserData();
+            
+            document.getElementById("finalScore").innerText = score;
+            document.getElementById("bestScore").innerText = bestScore;
+            document.getElementById("finalCoins").innerText = coins;
+            document.getElementById("gameOverScreen").classList.remove("hidden");
+        }
+    </script>
+
+</body>
+</html>
+
