@@ -109,20 +109,20 @@
 
         #obstacle {
             width: 22px; height: 40px; background: linear-gradient(135deg, #f87171, #b91c1c);
-            border-radius: 8px; position: absolute; bottom: 10px; left: 600px;
+            border-radius: 8px; position: absolute; bottom: 10px; left: 800px;
         }
         #coinItem {
             width: 20px; height: 20px; background: radial-gradient(circle, #fde047, #ca8a04);
-            border-radius: 50%; position: absolute; bottom: 55px; left: 700px; box-shadow: 0 0 12px #facc15;
+            border-radius: 50%; position: absolute; bottom: 55px; left: 950px; box-shadow: 0 0 12px #facc15;
         }
         .powerup {
             width: 24px; height: 24px; border-radius: 6px; position: absolute;
             bottom: 60px; display: flex; justify-content: center; align-items: center;
             font-size: 13px; font-weight: bold; color: #fff;
         }
-        #shieldItem { background: #10b981; box-shadow: 0 0 10px #10b981; left: 1100px; }
-        #magnetItem { background: #f59e0b; box-shadow: 0 0 10px #f59e0b; left: 1700px; }
-        #speedItem { background: #eab308; box-shadow: 0 0 12px #eab308; left: 2400px; }
+        #shieldItem { background: #10b981; box-shadow: 0 0 10px #10b981; left: 1400px; }
+        #magnetItem { background: #f59e0b; box-shadow: 0 0 10px #f59e0b; left: 2000px; }
+        #speedItem { background: #eab308; box-shadow: 0 0 12px #eab308; left: 2800px; }
 
         .game-stats {
             display: flex; justify-content: space-between; font-size: 12px;
@@ -163,7 +163,6 @@
         }
         .quiz-img-container img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Custom Shop Icons */
         .preview-shape-circle { width: 30px; height: 30px; background: #38bdf8; border-radius: 50%; margin: 5px auto; }
         .preview-shape-square { width: 30px; height: 30px; background: #a855f7; border-radius: 4px; margin: 5px auto; }
         .preview-shape-triangle {
@@ -286,19 +285,16 @@
                 💰 کۆینی بەردەست: <span id="shopTotalCoins">0</span>
             </div>
             <div class="shop-grid">
-                <!-- دائیرەیی بنەڕەتی -->
                 <div class="shop-item">
                     <div class="preview-shape-circle"></div>
                     <p style="font-size: 11px;">بازنەیی (بنەڕەتی)</p>
                     <button class="btn" id="btn-skin-circle" style="padding: 5px; font-size: 11px;" onclick="selectShape('circle')">هەڵبژاردن</button>
                 </div>
-                <!-- چوارگۆشە -->
                 <div class="shop-item">
                     <div class="preview-shape-square"></div>
                     <p style="font-size: 11px;">چوارگۆشە</p>
                     <button class="btn" id="btn-skin-square" style="padding: 5px; font-size: 11px;" onclick="handleShapeAction('square', 60)">کڕین (60💰)</button>
                 </div>
-                <!-- سێگۆشە -->
                 <div class="shop-item">
                     <div class="preview-shape-triangle"></div>
                     <p style="font-size: 11px;">سێگۆشە</p>
@@ -399,12 +395,11 @@
         const gravity = 0.6;
         const jumpStrength = 11;
 
-        // به ڕبه سته كان درەنگتر دێن (فاستەر / فاصلەی زیاتر)
-        let obstacleX = 600;
-        let coinX = 750;
-        let shieldX = 1200;
-        let magnetX = 1800;
-        let speedX = 2500;
+        let obstacleX = 800;
+        let coinX = 950;
+        let shieldX = 1400;
+        let magnetX = 2000;
+        let speedX = 2800;
 
         let shieldActive = false;
         let magnetActive = false;
@@ -661,13 +656,11 @@
         function backToHub() { stopGameSession(); loadUserData(); switchScreen("hubScreen"); }
 
         function updateShopUI() {
-            // Circle
             let btnCircle = document.getElementById("btn-skin-circle");
             btnCircle.innerText = selectedShape === "circle" ? "هەڵبژێردراوە" : "هەڵبژاردن";
             btnCircle.disabled = selectedShape === "circle";
             btnCircle.style.background = selectedShape === "circle" ? "#10b981" : "";
 
-            // Square
             let btnSquare = document.getElementById("btn-skin-square");
             if (ownedShapes.includes("square")) {
                 btnSquare.innerText = selectedShape === "square" ? "هەڵبژێردراوە" : "هەڵبژاردن";
@@ -681,7 +674,6 @@
                 btnSquare.style.background = "";
             }
 
-            // Triangle
             let btnTriangle = document.getElementById("btn-skin-triangle");
             if (ownedShapes.includes("triangle")) {
                 btnTriangle.innerText = selectedShape === "triangle" ? "هەڵبژێردراوە" : "هەڵبژاردن";
@@ -755,9 +747,8 @@
             applyPlayerShapeUI();
 
             score = 0; coins = 0; 
-            // بەربەستەکان مەودایان زۆرترە تا درەنگتر دەربکەون
-            obstacleX = 600; coinX = 750;
-            shieldX = 1200; magnetX = 1800; speedX = 2500;
+            obstacleX = 800; coinX = 950;
+            shieldX = 1400; magnetX = 2000; speedX = 2800;
             
             shieldActive = false; magnetActive = false; speedActive = false;
             shieldTimeLeft = 0; magnetTimeLeft = 0; speedTimeLeft = 0;
@@ -841,13 +832,12 @@
             let baseSpeed = gameDifficulty === "easy" ? 3.2 : gameDifficulty === "hard" ? 6.0 : 4.5;
             let speed = speedActive ? baseSpeed * 1.7 : baseSpeed;
 
-            // جووڵەی بەربەستەکان بە مەودای فراوان و درەنگتر
             obstacleX -= speed;
-            if (obstacleX < -30) obstacleX = 500 + Math.random() * 200;
+            if (obstacleX < -30) obstacleX = 650 + Math.random() * 300;
             document.getElementById("obstacle").style.left = obstacleX + "px";
 
             coinX -= speed;
-            if (coinX < -30) { coinX = 550 + Math.random() * 250; document.getElementById("coinItem").style.display = "block"; }
+            if (coinX < -30) { coinX = 700 + Math.random() * 300; document.getElementById("coinItem").style.display = "block"; }
             
             if (magnetActive && coinX < 260) {
                 coinX -= 5;
@@ -862,15 +852,15 @@
             document.getElementById("coinItem").style.left = coinX + "px";
 
             shieldX -= speed;
-            if (shieldX < -30) shieldX = 1100 + Math.random() * 700;
+            if (shieldX < -30) shieldX = 1300 + Math.random() * 800;
             document.getElementById("shieldItem").style.left = shieldX + "px";
 
             magnetX -= speed;
-            if (magnetX < -30) magnetX = 1700 + Math.random() * 800;
+            if (magnetX < -30) magnetX = 1900 + Math.random() * 900;
             document.getElementById("magnetItem").style.left = magnetX + "px";
 
             speedX -= speed;
-            if (speedX < -30) speedX = 2300 + Math.random() * 900;
+            if (speedX < -30) speedX = 2500 + Math.random() * 1000;
             document.getElementById("speedItem").style.left = speedX + "px";
 
             if (isJumping) {
@@ -879,7 +869,6 @@
                 document.getElementById("player").style.bottom = playerY + "px";
             }
 
-            // کۆکردنەوەی کۆین
             if (document.getElementById("coinItem").style.display !== "none" && coinX > 25 && coinX < 60 && playerY > 25 && playerY < 85) {
                 coins++; totalCoins++;
                 playSound('coin');
@@ -887,7 +876,6 @@
                 document.getElementById("coinItem").style.display = "none";
             }
 
-            // کۆکردنەوەی قەڵغان (درع)
             if (shieldX > 25 && shieldX < 60 && playerY > 30) {
                 shieldActive = true; shieldTimeLeft = 8;
                 playSound('powerup');
@@ -896,7 +884,6 @@
                 shieldX = -40;
             }
 
-            // کۆکردنەوەی موگناتیس
             if (magnetX > 25 && magnetX < 60 && playerY > 30) {
                 magnetActive = true; magnetTimeLeft = 8;
                 playSound('powerup');
@@ -905,7 +892,6 @@
                 magnetX = -40;
             }
 
-            // کۆکردنەوەی بروسکە
             if (speedX > 25 && speedX < 60 && playerY > 30) {
                 speedActive = true; speedTimeLeft = 5;
                 playSound('powerup');
@@ -915,16 +901,14 @@
                 speedX = -40;
             }
 
-            // پێکدادان لەگەڵ بەربەست
             if (obstacleX > 25 && obstacleX < 55 && playerY < 45) {
                 if (shieldActive) {
-                    // ئەگەر درعت هەبێت، تەنها درعەکەت دەشکێت و یاری ناکەویت!
                     shieldActive = false;
                     shieldTimeLeft = 0;
                     document.getElementById("shieldTimer").innerText = 0;
                     document.getElementById("player").classList.remove("shielded");
                     playSound('shieldbreak');
-                    obstacleX = 550 + Math.random() * 200; // بەربەستەکە دوور دەکەوێتەوە
+                    obstacleX = 700 + Math.random() * 250;
                 } else {
                     playSound('gameover');
                     triggerGameOver();
