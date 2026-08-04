@@ -9,107 +9,97 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
-        * { box-sizing: border-box; user-select: none; }
+        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
         html, body {
-            width: 100%; height: 100vh; margin: 0; padding: 0;
-            background-color: #030712; color: #f8fafc;
+            width: 100vw; height: 100vh; margin: 0; padding: 0;
+            background-color: #0c0a09; color: #f8fafc;
             font-family: 'Noto Sans Arabic', sans-serif;
             overflow: hidden; touch-action: manipulation;
         }
         .container {
-            width: 100%; height: 100%;
-            background: linear-gradient(135deg, #090d16, #0f172a);
-            display: flex; flex-direction: column; padding: 16px; position: relative; overflow-y: auto;
+            width: 100vw; height: 100vh;
+            background: linear-gradient(135deg, #1c1917, #0c0a09);
+            display: flex; flex-direction: column; padding: 12px; position: relative; overflow: hidden;
         }
         .brand-title {
-            text-align: center; font-size: 28px; font-weight: 900;
-            background: linear-gradient(135deg, #38bdf8, #60a5fa, #93c5fd);
+            text-align: center; font-size: 26px; font-weight: 900;
+            background: linear-gradient(135deg, #f59e0b, #d97706, #b45309);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin: 8px 0 14px 0; filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.4));
+            margin: 4px 0 10px 0; filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.3));
         }
-        .screen { display: none; flex: 1; flex-direction: column; }
+        .screen { display: none; flex: 1; flex-direction: column; height: 100%; overflow-y: auto; }
         .screen.active { display: flex; }
         .form-group { margin-bottom: 12px; text-align: right; }
-        label { display: block; font-size: 12px; margin-bottom: 6px; color: #93c5fd; }
+        label { display: block; font-size: 12px; margin-bottom: 6px; color: #fcd34d; }
         input, select {
-            width: 100%; padding: 12px 14px; background: #1e293b;
-            border: 1px solid #3b82f6; border-radius: 12px; color: #fff;
+            width: 100%; padding: 12px 14px; background: #27272a;
+            border: 1px solid #d97706; border-radius: 12px; color: #fff;
             font-size: 14px; outline: none; font-family: 'Noto Sans Arabic', sans-serif;
         }
         .btn {
-            width: 100%; background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            color: #ffffff; border: none; padding: 13px; font-size: 15px;
-            font-weight: bold; border-radius: 12px; cursor: pointer; margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-            transition: all 0.2s ease;
+            width: 100%; background: linear-gradient(135deg, #d97706, #b45309);
+            color: #ffffff; border: none; padding: 12px; font-size: 15px;
+            font-weight: bold; border-radius: 12px; cursor: pointer; margin-top: 8px;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
+            transition: transform 0.1s ease;
         }
-        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-        .btn:active { transform: scale(0.97); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn:active { transform: scale(0.96); }
         .top-bar {
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 15px; background: rgba(30, 41, 59, 0.8);
-            padding: 10px 16px; border-radius: 14px; border: 1px solid #3b82f6;
+            margin-bottom: 12px; background: rgba(39, 39, 42, 0.9);
+            padding: 10px 16px; border-radius: 14px; border: 1px solid #d97706;
         }
         .card {
-            background: rgba(30, 41, 59, 0.75); border-radius: 14px;
-            padding: 16px; margin-bottom: 14px; text-align: right;
-            border: 1px solid #3b82f6; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            background: rgba(39, 39, 42, 0.8); border-radius: 14px;
+            padding: 14px; margin-bottom: 12px; text-align: right;
+            border: 1px solid #78350f; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
-        .card h3 { margin: 0 0 6px 0; color: #f59e0b; font-size: 15px; }
-        .card p { margin: 0 0 10px 0; font-size: 12px; color: #93c5fd; }
+        .card h3 { margin: 0 0 6px 0; color: #fbbf24; font-size: 15px; }
+        .card p { margin: 0 0 8px 0; font-size: 12px; color: #d6d3d1; }
         
         .section-header {
-            font-size: 20px; font-weight: 900; color: #38bdf8;
-            margin: 10px 0 14px 0; border-bottom: 2px solid rgba(56, 189, 248, 0.3);
-            padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center;
+            font-size: 18px; font-weight: 900; color: #fbbf24;
+            margin: 6px 0 10px 0; border-bottom: 2px solid rgba(251, 191, 36, 0.3);
+            padding-bottom: 4px; display: flex; justify-content: space-between; align-items: center;
         }
         .game-catalog-card {
-            background: linear-gradient(145deg, #1e293b, #0f172a);
-            border: 1px solid #3b82f6; border-radius: 18px; padding: 16px;
-            margin-bottom: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); text-align: center;
+            background: linear-gradient(145deg, #27272a, #18181b);
+            border: 1px solid #d97706; border-radius: 18px; padding: 14px;
+            margin-bottom: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.5); text-align: center;
         }
         .game-thumbnail {
-            width: 90px; height: 90px; background: radial-gradient(circle, #38bdf8, #1d4ed8);
-            border-radius: 50%; margin: 0 auto 12px auto; display: flex;
-            justify-content: center; align-items: center; font-size: 38px;
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.5); border: 3px solid #93c5fd;
+            width: 75px; height: 75px; background: radial-gradient(circle, #f59e0b, #78350f);
+            border-radius: 50%; margin: 0 auto 10px auto; display: flex;
+            justify-content: center; align-items: center; font-size: 34px;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); border: 3px solid #fcd34d;
         }
         .game-meta-info {
             display: flex; justify-content: space-between; align-items: center;
-            font-size: 11px; color: #94a3b8; background: rgba(15, 23, 42, 0.6);
-            padding: 6px 12px; border-radius: 8px; margin-bottom: 12px;
+            font-size: 11px; color: #a1a1aa; background: rgba(24, 24, 27, 0.8);
+            padding: 6px 12px; border-radius: 8px; margin-bottom: 10px;
         }
 
         .arena {
-            background: linear-gradient(to bottom, #172554, #020617);
-            border: 2px solid #3b82f6; border-radius: 16px; height: 260px;
-            position: relative; overflow: hidden; margin-bottom: 12px;
+            background: linear-gradient(to bottom, #1c1917, #0c0a09);
+            border: 2px solid #d97706; border-radius: 16px; height: 240px;
+            position: relative; overflow: hidden; margin-bottom: 10px;
         }
 
-        /* Player Styles & New Skins */
         #player {
-            width: 32px; height: 32px;
-            position: absolute; bottom: 10px; left: 40px;
-            transition: border-radius 0.2s, background 0.2s, transform 0.2s;
+            width: 32px; height: 32px; position: absolute; bottom: 10px; left: 40px;
         }
         #player.shape-circle { border-radius: 50%; background: #38bdf8; box-shadow: 0 0 15px #38bdf8; }
         #player.shape-square { border-radius: 4px; background: #a855f7; box-shadow: 0 0 15px #a855f7; }
         #player.shape-triangle {
-            width: 0; height: 0;
-            border-left: 16px solid transparent;
-            border-right: 16px solid transparent;
-            border-bottom: 32px solid #f97316;
-            background: transparent !important; box-shadow: none !important;
-            filter: drop-shadow(0 0 8px #f97316);
+            width: 0; height: 0; border-left: 16px solid transparent; border-right: 16px solid transparent;
+            border-bottom: 32px solid #f97316; background: transparent !important; filter: drop-shadow(0 0 8px #f97316);
         }
         #player.shape-star {
             background: #eab308; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
             box-shadow: 0 0 15px #eab308;
         }
-        #player.shape-diamond {
-            background: #06b6d4; transform: rotate(45deg);
-            box-shadow: 0 0 15px #06b6d4;
-        }
+        #player.shape-diamond { background: #06b6d4; transform: rotate(45deg); box-shadow: 0 0 15px #06b6d4; }
 
         #player.shielded { outline: 4px solid #10b981; filter: drop-shadow(0 0 12px #10b981); }
         #player.magnetized { outline: 4px solid #f59e0b; filter: drop-shadow(0 0 12px #f59e0b); }
@@ -124,9 +114,8 @@
             border-radius: 50%; position: absolute; bottom: 55px; left: 950px; box-shadow: 0 0 12px #facc15;
         }
         .powerup {
-            width: 24px; height: 24px; border-radius: 6px; position: absolute;
-            bottom: 60px; display: flex; justify-content: center; align-items: center;
-            font-size: 13px; font-weight: bold; color: #fff;
+            width: 24px; height: 24px; border-radius: 6px; position: absolute; bottom: 60px;
+            display: flex; justify-content: center; align-items: center; font-size: 13px; font-weight: bold; color: #fff;
         }
         #shieldItem { background: #10b981; box-shadow: 0 0 10px #10b981; left: 1400px; }
         #magnetItem { background: #f59e0b; box-shadow: 0 0 10px #f59e0b; left: 2000px; }
@@ -134,62 +123,52 @@
 
         .game-stats {
             display: flex; justify-content: space-between; font-size: 12px;
-            font-weight: bold; color: #f59e0b; margin-bottom: 8px; flex-wrap: wrap; gap: 4px;
+            font-weight: bold; color: #f59e0b; margin-bottom: 6px; flex-wrap: wrap; gap: 4px;
         }
         .jump-control-btn {
-            width: 100px; height: 100px; background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            color: #ffffff; border: 4px solid #93c5fd; border-radius: 50%;
+            width: 85px; height: 85px; background: linear-gradient(135deg, #d97706, #b45309);
+            color: #ffffff; border: 4px solid #fcd34d; border-radius: 50%;
             font-size: 18px; font-weight: bold; cursor: pointer; display: flex;
-            justify-content: center; align-items: center; margin: 0 auto;
-            touch-action: manipulation;
+            justify-content: center; align-items: center; margin: 0 auto; touch-action: manipulation;
         }
         #gameOverBox {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(3, 7, 18, 0.95); display: none;
+            background: rgba(12, 10, 9, 0.95); display: none;
             flex-direction: column; justify-content: center; align-items: center; padding: 20px; z-index: 100;
         }
         #gameOverBox.show { display: flex; }
-        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .shop-item {
-            background: #1e293b; border: 1px solid #3b82f6; border-radius: 12px;
-            padding: 10px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+            background: #27272a; border: 1px solid #d97706; border-radius: 12px;
+            padding: 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
         }
         .avatar-preview {
-            width: 70px; height: 70px; border-radius: 50%; background: #334155;
-            margin: 0 auto 10px auto; display: flex; justify-content: center; align-items: center;
-            overflow: hidden; border: 2px solid #3b82f6; cursor: pointer; position: relative;
+            width: 60px; height: 60px; border-radius: 50%; background: #3f3f46;
+            margin: 0 auto 8px auto; display: flex; justify-content: center; align-items: center;
+            overflow: hidden; border: 2px solid #d97706; cursor: pointer; position: relative;
         }
         .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
-        .tab-switcher { display: flex; gap: 5px; margin-bottom: 12px; }
-        .tab-btn { flex: 1; background: #1e293b; border: 1px solid #3b82f6; color: #93c5fd; padding: 8px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; }
-        .tab-btn.active { background: #3b82f6; color: #fff; }
-        .leaderboard-list { max-height: 120px; overflow-y: auto; font-size: 12px; }
-        .leaderboard-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(59, 130, 246, 0.2); }
+        .tab-switcher { display: flex; gap: 5px; margin-bottom: 10px; }
+        .tab-btn { flex: 1; background: #27272a; border: 1px solid #d97706; color: #fcd34d; padding: 8px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; }
+        .tab-btn.active { background: #d97706; color: #fff; }
+        .leaderboard-list { max-height: 100px; overflow-y: auto; font-size: 12px; }
+        .leaderboard-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(217, 119, 6, 0.2); }
         
         .quiz-img-container {
-            width: 100%; height: 170px; border-radius: 12px; overflow: hidden;
-            margin-bottom: 14px; border: 2px solid #3b82f6; background: #0f172a;
+            width: 100%; height: 160px; border-radius: 12px; overflow: hidden;
+            margin-bottom: 10px; border: 2px solid #d97706; background: #18181b;
         }
         .quiz-img-container img { width: 100%; height: 100%; object-fit: cover; }
 
-        .preview-shape-circle { width: 30px; height: 30px; background: #38bdf8; border-radius: 50%; margin: 5px auto; }
-        .preview-shape-square { width: 30px; height: 30px; background: #a855f7; border-radius: 4px; margin: 5px auto; }
-        .preview-shape-triangle {
-            width: 0; height: 0; border-left: 15px solid transparent;
-            border-right: 15px solid transparent; border-bottom: 30px solid #f97316; margin: 5px auto;
+        /* Fullscreen Canvas Style for Flappy Bird */
+        .flappy-container {
+            flex: 1; width: 100%; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; position: relative;
         }
-        .preview-shape-star {
-            width: 30px; height: 30px; background: #eab308;
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); margin: 5px auto;
-        }
-        .preview-shape-diamond {
-            width: 24px; height: 24px; background: #06b6d4; transform: rotate(45deg); margin: 8px auto;
-        }
-
-        /* Flappy Bird Canvas Style */
         #flappyCanvas {
-            display: block; margin: 0 auto; background: #70c5ce;
-            border: 2px solid #3b82f6; border-radius: 16px;
+            width: 100%; height: 100%; max-height: calc(100vh - 120px);
+            background: #451a03; border: 3px solid #b45309; border-radius: 16px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8); touch-action: manipulation;
         }
     </style>
 </head>
@@ -248,18 +227,18 @@
             <div class="brand-title">تۆپ تۆپ</div>
             <div class="top-bar">
                 <div style="display: flex; align-items: center; gap: 8px;">
-                    <div id="hubUserAvatar" style="width: 32px; height: 32px; border-radius: 50%; background: #38bdf8; overflow: hidden; display: flex; justify-content: center; align-items: center; font-size: 12px; border: 1px solid #3b82f6;">👤</div>
-                    <span id="hubUsernameText" style="font-weight: bold; color: #38bdf8;"></span>
+                    <div id="hubUserAvatar" style="width: 32px; height: 32px; border-radius: 50%; background: #d97706; overflow: hidden; display: flex; justify-content: center; align-items: center; font-size: 12px; border: 1px solid #fcd34d;">👤</div>
+                    <span id="hubUsernameText" style="font-weight: bold; color: #fbbf24;"></span>
                 </div>
                 <span>💰 کۆین: <span id="hubTotalCoins">0</span></span>
             </div>
             
             <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-                <button class="btn" onclick="openSettingsScreen()" style="background: #475569; margin-top:0;">⚙️ ڕێکخستن</button>
+                <button class="btn" onclick="openSettingsScreen()" style="background: #3f3f46; margin-top:0;">⚙️ ڕێکخستن</button>
             </div>
 
-            <div class="card" style="background: linear-gradient(135deg, #1e1b4b, #312e81); border-color: #818cf8;">
-                <h3 style="color: #a78bfa;">🎁 دیاریی ڕۆژانە و بەخت</h3>
+            <div class="card" style="background: linear-gradient(135deg, #451a03, #78350f); border-color: #f59e0b;">
+                <h3 style="color: #fbbf24;">🎁 دیاریی ڕۆژانە و بەخت</h3>
                 <p id="dailyBonusText">سوپرايزی ئەمڕۆت وەربگرە و کۆینی خۆڕایی ببەرەوە!</p>
                 <button class="btn" id="claimBonusBtn" style="background: linear-gradient(135deg, #10b981, #059669);" onclick="claimDailyBonus()">وەرگرتنی دیاری (بەختی دەستپێک) 🎲</button>
             </div>
@@ -271,11 +250,11 @@
             <!-- Game 1 -->
             <div class="game-catalog-card">
                 <div class="game-thumbnail">🔵</div>
-                <h3 style="color: #f59e0b; font-size: 16px; margin: 0 0 4px 0;">یاری بازدان (تۆپ تۆپ)</h3>
-                <p style="font-size: 11px; color: #93c5fd; margin: 0 0 10px 0;">قەڵغان، موگناتیس و بروسکە کۆبکەرەوە و خاڵ تۆمار بکە</p>
+                <h3 style="color: #fbbf24; font-size: 16px; margin: 0 0 4px 0;">یاری بازدان (تۆپ تۆپ)</h3>
+                <p style="font-size: 11px; color: #d6d3d1; margin: 0 0 10px 0;">قەڵغان، موگناتیس و بروسکە کۆبکەرەوە و خاڵ تۆمار بکە</p>
                 <div class="game-meta-info">
                     <span>📅 دەرچوون: 2026/06/01</span>
-                    <span style="color: #38bdf8; font-weight: bold;">ئاست: ئاسایی</span>
+                    <span style="color: #fbbf24; font-weight: bold;">ئاست: ئاسایی</span>
                 </div>
                 <button class="btn" onclick="openJumperLanding()">کردنەوەی بەش</button>
             </div>
@@ -283,8 +262,8 @@
             <!-- Game 2 -->
             <div class="game-catalog-card">
                 <div class="game-thumbnail" style="background: radial-gradient(circle, #ec4899, #831843);">📸</div>
-                <h3 style="color: #f59e0b; font-size: 16px; margin: 0 0 4px 0;">یاری وێنە و شوێنەکانی جیهان</h3>
-                <p style="font-size: 11px; color: #93c5fd; margin: 0 0 10px 0;">ئەم وێنەیە کامیانە و لە چ وڵاتێکە؟ زانیارییەکانت تاقی بکەرەوە</p>
+                <h3 style="color: #fbbf24; font-size: 16px; margin: 0 0 4px 0;">یاری وێنە و شوێنەکانی جیهان</h3>
+                <p style="font-size: 11px; color: #d6d3d1; margin: 0 0 10px 0;">ئەم وێنەیە کامیانە و لە چ وڵاتێکە؟ زانیارییەکانت تاقی بکەرەوە</p>
                 <div class="game-meta-info">
                     <span>📅 دەرچوون: 2026/06/02</span>
                     <span style="color: #ec4899; font-weight: bold;">جۆری: وێنەیی</span>
@@ -294,14 +273,14 @@
 
             <!-- Game 3 (Flappy Bird) -->
             <div class="game-catalog-card">
-                <div class="game-thumbnail" style="background: radial-gradient(circle, #f1c40f, #d35400);">🐤</div>
-                <h3 style="color: #f59e0b; font-size: 16px; margin: 0 0 4px 0;">یاری Flappy Bird</h3>
-                <p style="font-size: 11px; color: #93c5fd; margin: 0 0 10px 0;">باڵندەکە بە ڕێڕەوی بۆڕییەکاندا بپەڕێنەرەوە و کۆینی زیاتر کۆبکەرەوە!</p>
+                <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐓</div>
+                <h3 style="color: #fbbf24; font-size: 16px; margin: 0 0 4px 0;">یاری باڵندە و مریشکەکان (HD)</h3>
+                <p style="font-size: 11px; color: #d6d3d1; margin: 0 0 10px 0;">مریشک و قازەکان بفرێنە لەسەر دیواری قاوەیی دارین! (120 FPS)</p>
                 <div class="game-meta-info">
                     <span>📅 دەرچوون: 2026/08/04</span>
-                    <span style="color: #f1c40f; font-weight: bold;">جۆری: کلاسیک</span>
+                    <span style="color: #f59e0b; font-weight: bold;">جۆری: پێشکەوتوو</span>
                 </div>
-                <button class="btn" style="background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openFlappyLanding()">کردنەوەی بەش</button>
+                <button class="btn" style="background: linear-gradient(135deg, #f59e0b, #b45309);" onclick="openFlappyLanding()">کردنەوەی بەش</button>
             </div>
 
             <div class="card">
@@ -319,7 +298,7 @@
                 <p>ئامادەی بۆ خۆشی و ئاڵۆزییەکان؟ کلیک بکە بۆ دەستپێکردن یان سەردانی فرۆشگای تایبەتی شێوازەکان بکە.</p>
                 <button class="btn" style="background: linear-gradient(135deg, #10b981, #059669); font-size: 18px;" onclick="startGamePlay()">▶ یاری بکە</button>
                 <button class="btn" style="background: #8b5cf6;" onclick="openShopScreen()">🛒 شوپینگ (بازاڕی شێوازەکان)</button>
-                <button class="btn" style="background: #334155;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
+                <button class="btn" style="background: #3f3f46;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
             </div>
         </div>
 
@@ -331,59 +310,80 @@
                 <h3>پەڕەی تایبەتی یاری وێنەکان</h3>
                 <p>زانیارییەکانت دەربارەی وڵاتان و شوێنەکان بەکاربهێنە و خاڵ تۆمار بکە.</p>
                 <button class="btn" style="background: linear-gradient(135deg, #ec4899, #be185d); font-size: 18px;" onclick="startQuizPlay()">▶ یاری بکە</button>
-                <button class="btn" style="background: #334155;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
+                <button class="btn" style="background: #3f3f46;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
             </div>
         </div>
 
         <!-- Flappy Bird Landing Page -->
         <div id="flappyLandingScreen" class="screen">
-            <div class="brand-title">یاری Flappy Bird</div>
-            <div class="game-catalog-card" style="margin-top: 20px;">
-                <div class="game-thumbnail" style="background: radial-gradient(circle, #f1c40f, #d35400);">🐤</div>
-                <h3>پەڕەی تایبەتی Flappy Bird</h3>
-                <p>باڵندەکە بفرێنە و بۆڕییەکان بپەڕێنەرەوە! هەر خاڵێک وەربگریت دەبێتە کۆین بۆ حیسابەکەت.</p>
-                <button class="btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); font-size: 18px;" onclick="startFlappyGame()">▶ یاری بکە</button>
-                <button class="btn" style="background: #334155;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
+            <div class="brand-title">یاری باڵندە و مریشکەکان</div>
+            <div class="game-catalog-card" style="margin-top: 10px;">
+                <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐓</div>
+                <h3>شاشەی یاری مریشک و قازەکان</h3>
+                <p>دیواری قاوەیی کوالێتی بەرز، خێرایی 120 FPS و کارەکتەری بەهێز!</p>
+                <button class="btn" style="background: linear-gradient(135deg, #f59e0b, #b45309); font-size: 18px;" onclick="startFlappyGame()">▶ یاری بکە (فول سکرین)</button>
+                <button class="btn" style="background: #8b5cf6;" onclick="openFlappyShop()">🛒 شوپینگ (کڕینی مریشک و دیوار)</button>
+                <button class="btn" style="background: #3f3f46;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
             </div>
         </div>
 
-        <!-- Shop Screen -->
+        <!-- Shop Screen for Jumper -->
         <div id="shopScreen" class="screen">
             <div class="brand-title">بازاڕی شێوازەکانی بازدان</div>
-            <div style="text-align: center; margin-bottom: 10px; color: #f59e0b; font-size: 14px;">
+            <div style="text-align: center; margin-bottom: 10px; color: #fbbf24; font-size: 14px;">
                 💰 کۆینی بەردەست: <span id="shopTotalCoins">0</span>
             </div>
             <div class="shop-grid">
                 <div class="shop-item">
-                    <div class="preview-shape-circle"></div>
+                    <div style="width:30px; height:30px; background:#38bdf8; border-radius:50%; margin:5px auto;"></div>
                     <p style="font-size: 11px;">بازنەیی (بنەڕەتی)</p>
                     <button class="btn" id="btn-skin-circle" style="padding: 5px; font-size: 11px;" onclick="selectShape('circle')">هەڵبژاردن</button>
                 </div>
                 <div class="shop-item">
-                    <div class="preview-shape-square"></div>
+                    <div style="width:30px; height:30px; background:#a855f7; border-radius:4px; margin:5px auto;"></div>
                     <p style="font-size: 11px;">چوارگۆشە</p>
                     <button class="btn" id="btn-skin-square" style="padding: 5px; font-size: 11px;" onclick="handleShapeAction('square', 60)">کڕین (60💰)</button>
                 </div>
                 <div class="shop-item">
-                    <div class="preview-shape-triangle"></div>
+                    <div style="width:0; height:0; border-left:15px solid transparent; border-right:15px solid transparent; border-bottom:30px solid #f97316; margin:5px auto;"></div>
                     <p style="font-size: 11px;">سێگۆشە</p>
                     <button class="btn" id="btn-skin-triangle" style="padding: 5px; font-size: 11px;" onclick="handleShapeAction('triangle', 90)">کڕین (90💰)</button>
                 </div>
                 <div class="shop-item">
-                    <div class="preview-shape-star"></div>
+                    <div style="width:30px; height:30px; background:#eab308; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); margin:5px auto;"></div>
                     <p style="font-size: 11px;">ئەستێرە</p>
                     <button class="btn" id="btn-skin-star" style="padding: 5px; font-size: 11px;" onclick="handleShapeAction('star', 150)">کڕین (150💰)</button>
                 </div>
                 <div class="shop-item">
-                    <div class="preview-shape-diamond"></div>
+                    <div style="width:24px; height:24px; background:#06b6d4; transform:rotate(45deg); margin:8px auto;"></div>
                     <p style="font-size: 11px;">ئەڵماس</p>
                     <button class="btn" id="btn-skin-diamond" style="padding: 5px; font-size: 11px;" onclick="handleShapeAction('diamond', 220)">کڕین (220💰)</button>
                 </div>
             </div>
-            <button class="btn" style="background: #334155; margin-top: 15px;" onclick="switchScreen('jumperLandingScreen')">گەڕانەوە بۆ لاپەڕەی یاری</button>
+            <button class="btn" style="background: #3f3f46; margin-top: 15px;" onclick="switchScreen('jumperLandingScreen')">گەڕانەوە بۆ لاپەڕەی یاری</button>
         </div>
 
-        <!-- Settings Screen (Enhanced) -->
+        <!-- Flappy Bird Shop Screen -->
+        <div id="flappyShopScreen" class="screen">
+            <div class="brand-title">فرۆشگای مریشک و دیوارەکان 🛒</div>
+            <div style="text-align: center; margin-bottom: 10px; color: #fbbf24; font-size: 14px;">
+                💰 کۆینی بەردەست: <span id="flappyShopCoins">0</span>
+            </div>
+            
+            <div class="section-header">
+                <span>🐔 کارەکتەرەکان</span>
+            </div>
+            <div class="shop-grid" id="birdShopGrid"></div>
+
+            <div class="section-header" style="margin-top:15px;">
+                <span>🧱 دیواری پاشبنەما (کەشو هەوا)</span>
+            </div>
+            <div class="shop-grid" id="bgShopGrid"></div>
+
+            <button class="btn" style="background: #3f3f46; margin-top: 15px;" onclick="switchScreen('flappyLandingScreen')">گەڕانەوە بۆ لۆبی یاری</button>
+        </div>
+
+        <!-- Settings Screen -->
         <div id="settingsScreen" class="screen">
             <div class="brand-title">ڕێکخستنەکان</div>
             
@@ -412,7 +412,7 @@
             </div>
 
             <div class="card">
-                <h3>🎵 مۆسیقای پاشبنەما (Background Music)</h3>
+                <h3>🎵 مۆسیقای پاشبنەما</h3>
                 <select id="musicToggleSelect" onchange="toggleBackgroundMusic(this.value)">
                     <option value="on" selected>هەڵکردن 🎵</option>
                     <option value="off">کوژاندنەوە 🔇</option>
@@ -420,7 +420,7 @@
             </div>
 
             <div class="card">
-                <h3>🔊 دەنگەکانی یاری (Sound Effects)</h3>
+                <h3>🔊 دەنگەکانی یاری</h3>
                 <select id="sfxToggleSelect" onchange="toggleSoundEffects(this.value)">
                     <option value="on" selected>هەڵکردن 🔊</option>
                     <option value="off">کوژاندنەوە 🔇</option>
@@ -429,8 +429,7 @@
 
             <div class="card" style="border-color: #f59e0b;">
                 <h3 style="color: #f59e0b;">🏆 خاڵەکان و داتاکان</h3>
-                <p style="font-size: 11px;">سڕینەوەی بەرزترین خاڵی تۆمارکراوت لە یارییەکاندا</p>
-                <button class="btn" style="background: #d97706;" onclick="resetUserHighscore()">پاكکردنەوەی خاڵەکان (Reset Highscore)</button>
+                <button class="btn" style="background: #b45309;" onclick="resetUserHighscore()">پاكکردنەوەی خاڵەکان (Reset Highscore)</button>
             </div>
 
             <div class="card" style="border-color: #f87171;">
@@ -438,7 +437,7 @@
                 <button class="btn" style="background: linear-gradient(135deg, #ef4444, #b91c1c); margin-top: 5px;" onclick="logoutUser()">دەرچوون لە حیسابی ئێستا</button>
             </div>
 
-            <button class="btn" style="background: #334155; margin-top: auto;" onclick="backToHub()">گەڕانەوە بۆ شاشەی سەرەکی</button>
+            <button class="btn" style="background: #3f3f46; margin-top: auto;" onclick="backToHub()">گەڕانەوە بۆ شاشەی سەرەکی</button>
         </div>
 
         <!-- Game Screen (Jumper) -->
@@ -461,14 +460,14 @@
 
                 <div id="gameOverBox">
                     <h2 style="color: #f87171;">یاری تەواو بوو!</h2>
-                    <p style="font-size: 13px;">خاڵی ئەمجارە: <span id="finalScore" style="color: #f59e0b;">0</span></p>
+                    <p style="font-size: 13px;">خاڵی ئەمجارە: <span id="finalScore" style="color: #fbbf24;">0</span></p>
                     <button class="btn" onclick="startGamePlay()">دووبارە</button>
-                    <button class="btn" style="background: #334155;" onclick="switchScreen('jumperLandingScreen')">لاپەڕەی یاری</button>
+                    <button class="btn" style="background: #3f3f46;" onclick="switchScreen('jumperLandingScreen')">لاپەڕەی یاری</button>
                 </div>
             </div>
 
             <button class="jump-control-btn" onclick="jumpAction()">بازدان</button>
-            <button class="btn" style="background: #334155; margin-top: 10px;" onclick="switchScreen('jumperLandingScreen')">گەڕانەوە</button>
+            <button class="btn" style="background: #3f3f46; margin-top: 10px;" onclick="switchScreen('jumperLandingScreen')">گەڕانەوە</button>
         </div>
 
         <!-- Quiz Screen -->
@@ -478,24 +477,22 @@
                 <div class="quiz-img-container">
                     <img id="quizImage" src="" alt="وێنەی پرسیار">
                 </div>
-                <h3 id="quizQuestion" style="font-size: 15px; margin-bottom: 12px; color: #38bdf8;">پرسیار لێرە دەردەکەوێت...</h3>
+                <h3 id="quizQuestion" style="font-size: 15px; margin-bottom: 12px; color: #fbbf24;">پرسیار لێرە دەردەکەوێت...</h3>
                 <div id="quizOptions"></div>
                 <div id="quizScoreResult" style="font-weight: bold; margin-top: 12px; font-size: 15px; color: #f59e0b;"></div>
             </div>
-            <button class="btn" style="background: #334155; margin-top: auto;" onclick="switchScreen('quizLandingScreen')">گەڕانەوە</button>
+            <button class="btn" style="background: #3f3f46; margin-top: auto;" onclick="switchScreen('quizLandingScreen')">گەڕانەوە</button>
         </div>
 
-        <!-- Flappy Bird Screen -->
+        <!-- Flappy Bird Fullscreen -->
         <div id="flappyScreen" class="screen">
-            <div class="brand-title" style="font-size: 20px;">Flappy Bird</div>
-            <div style="text-align: center; margin-bottom: 8px; font-weight: bold; color: #f59e0b;">
-                کۆینی کۆکراوە لەم یارییەدا: <span id="flappyScore">0</span>
+            <div class="top-bar" style="margin-bottom: 6px;">
+                <button class="btn" style="width: auto; padding: 6px 12px; margin: 0; background: #3f3f46;" onclick="exitFlappyGame()">⬅️ دەرچوون</button>
+                <span style="font-weight: bold; color: #fbbf24;">کۆین: <span id="flappyScore">0</span></span>
             </div>
-            <canvas id="flappyCanvas" width="300" height="380"></canvas>
-            <div style="text-align: center; font-size: 12px; margin-top: 8px; color: #93c5fd;">
-                کرتە بکه یان دگمەی Space داگرە بۆ فڕین
+            <div class="flappy-container">
+                <canvas id="flappyCanvas"></canvas>
             </div>
-            <button class="btn" style="background: #334155; margin-top: auto;" onclick="exitFlappyGame()">گەڕانەوە</button>
         </div>
     </div>
 
@@ -506,6 +503,12 @@
         let ownedShapes = ["circle"];
         let tempAvatarBase64 = "";
         let settingsTempAvatar = "";
+
+        // Flappy Shop Variables
+        let selectedBird = "goose"; // goose, chicken, purple_goose, gold_goose, eagle
+        let ownedBirds = ["goose"];
+        let selectedBg = "brown_wall"; // brown_wall, night, morning, snow
+        let ownedBgs = ["brown_wall"];
 
         let isGameActive = false;
         let score = 0;
@@ -553,39 +556,25 @@
             const now = audioCtx.currentTime;
 
             if (type === 'jump') {
-                osc.type = 'sine'; osc.frequency.setValueAtTime(150, now);
-                osc.frequency.exponentialRampToValueAtTime(400, now + 0.12);
-                gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
-                osc.start(now); osc.stop(now + 0.12);
+                osc.type = 'sine'; osc.frequency.setValueAtTime(180, now);
+                osc.frequency.exponentialRampToValueAtTime(450, now + 0.1);
+                gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now); osc.stop(now + 0.1);
             } else if (type === 'coin') {
                 osc.type = 'sine'; osc.frequency.setValueAtTime(987.77, now);
                 osc.frequency.setValueAtTime(1318.51, now + 0.08);
                 gain.gain.setValueAtTime(0.12, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
                 osc.start(now); osc.stop(now + 0.2);
-            } else if (type === 'powerup') {
-                osc.type = 'triangle'; osc.frequency.setValueAtTime(300, now);
-                osc.frequency.exponentialRampToValueAtTime(800, now + 0.25);
-                gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-                osc.start(now); osc.stop(now + 0.25);
-            } else if (type === 'shieldbreak') {
-                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(500, now);
-                osc.frequency.exponentialRampToValueAtTime(150, now + 0.2);
-                gain.gain.setValueAtTime(0.25, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-                osc.start(now); osc.stop(now + 0.2);
-            } else if (type === 'gameover') {
-                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, now);
-                osc.frequency.exponentialRampToValueAtTime(80, now + 0.4);
-                gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-                osc.start(now); osc.stop(now + 0.4);
             } else if (type === 'buy') {
                 osc.type = 'triangle'; osc.frequency.setValueAtTime(440, now);
                 osc.frequency.exponentialRampToValueAtTime(880, now + 0.2);
                 gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
                 osc.start(now); osc.stop(now + 0.2);
-            } else if (type === 'select') {
-                osc.type = 'sine'; osc.frequency.setValueAtTime(600, now);
-                gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-                osc.start(now); osc.stop(now + 0.1);
+            } else if (type === 'gameover') {
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(80, now + 0.3);
+                gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now); osc.stop(now + 0.3);
             }
         }
 
@@ -603,7 +592,7 @@
                 osc.connect(gain); gain.connect(audioCtx.destination);
                 const now = audioCtx.currentTime;
                 osc.type = 'sine'; osc.frequency.setValueAtTime(notes[noteIdx], now);
-                gain.gain.setValueAtTime(0.03, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                gain.gain.setValueAtTime(0.02, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
                 osc.start(now); osc.stop(now + 0.3);
                 noteIdx = (noteIdx + 1) % notes.length;
             }, 350);
@@ -627,16 +616,10 @@
 
         window.onload = function() {
             let savedMusic = localStorage.getItem("top_top_music");
-            if (savedMusic) {
-                musicEnabled = (savedMusic === 'on');
-                document.getElementById("musicToggleSelect").value = savedMusic;
-            }
+            if (savedMusic) { musicEnabled = (savedMusic === 'on'); document.getElementById("musicToggleSelect").value = savedMusic; }
 
             let savedSfx = localStorage.getItem("top_top_sfx");
-            if (savedSfx) {
-                sfxEnabled = (savedSfx === 'on');
-                document.getElementById("sfxToggleSelect").value = savedSfx;
-            }
+            if (savedSfx) { sfxEnabled = (savedSfx === 'on'); document.getElementById("sfxToggleSelect").value = savedSfx; }
 
             let savedUser = localStorage.getItem("top_top_active_user");
             if (savedUser && localStorage.getItem("user_profile_" + savedUser)) {
@@ -719,7 +702,7 @@
         function loginUser() {
             let name = document.getElementById("loginUsername").value.trim();
             let pass = document.getElementById("loginPassword").value.trim();
-            if (!name || !pass) { alert("تکایەناو و وشەی نهێنی بنووسە!"); return; }
+            if (!name || !pass) { alert("تکایە ناو و وشەی نهێنی بنووسە!"); return; }
 
             let profileData = localStorage.getItem("user_profile_" + name);
             if (!profileData) { alert("ئەم ناوە بوونی نییە!"); return; }
@@ -737,8 +720,6 @@
             stopBackgroundMusic();
             localStorage.removeItem("top_top_active_user");
             currentUser = "";
-            document.getElementById("loginUsername").value = "";
-            document.getElementById("loginPassword").value = "";
             switchScreen("authScreen");
         }
 
@@ -750,9 +731,16 @@
             selectedShape = localStorage.getItem("shape_" + currentUser) || "circle";
             ownedShapes = JSON.parse(localStorage.getItem("owned_shapes_" + currentUser) || '["circle"]');
 
+            selectedBird = localStorage.getItem("flappy_bird_" + currentUser) || "goose";
+            ownedBirds = JSON.parse(localStorage.getItem("owned_birds_" + currentUser) || '["goose"]');
+            
+            selectedBg = localStorage.getItem("flappy_bg_" + currentUser) || "brown_wall";
+            ownedBgs = JSON.parse(localStorage.getItem("owned_bgs_" + currentUser) || '["brown_wall"]');
+
             document.getElementById("hubUsernameText").innerText = currentUser;
             document.getElementById("hubTotalCoins").innerText = totalCoins;
             document.getElementById("shopTotalCoins").innerText = totalCoins;
+            document.getElementById("flappyShopCoins").innerText = totalCoins;
             
             applyPlayerShapeUI();
 
@@ -763,21 +751,7 @@
                 avatarEl.innerHTML = currentUser.charAt(0).toUpperCase();
             }
 
-            // Populate settings inputs
             document.getElementById("settingsUsernameInput").value = currentUser;
-            let settingsImgTag = document.getElementById("settingsAvatarPreview");
-            let settingsTextTag = document.getElementById("settingsAvatarPlaceholder");
-            if (profile.avatar) {
-                settingsImgTag.src = profile.avatar;
-                settingsImgTag.style.display = "block";
-                settingsTextTag.style.display = "none";
-                settingsTempAvatar = profile.avatar;
-            } else {
-                settingsImgTag.style.display = "none";
-                settingsTextTag.style.display = "block";
-                settingsTempAvatar = "";
-            }
-
             updateShopUI();
             loadLeaderboard();
             checkDailyBonus();
@@ -791,47 +765,24 @@
             let profile = oldProfileData ? JSON.parse(oldProfileData) : {};
 
             if (newName !== currentUser) {
-                if (localStorage.getItem("user_profile_" + newName)) {
-                    alert("ئەم ناوە پێشتر بەکارهێنراوە!"); return;
-                }
-                
-                // Migrate data
-                let coinsVal = localStorage.getItem("coins_" + currentUser);
-                let shapeVal = localStorage.getItem("shape_" + currentUser);
-                let ownedVal = localStorage.getItem("owned_shapes_" + currentUser);
-                let scoreVal = localStorage.getItem("highscore_" + currentUser);
-                let bonusVal = localStorage.getItem("daily_bonus_" + currentUser);
-
+                if (localStorage.getItem("user_profile_" + newName)) { alert("ئەم ناوە پێشتر بەکارهێنراوە!"); return; }
                 localStorage.removeItem("user_profile_" + currentUser);
-                localStorage.removeItem("coins_" + currentUser);
-                localStorage.removeItem("shape_" + currentUser);
-                localStorage.removeItem("owned_shapes_" + currentUser);
-                localStorage.removeItem("highscore_" + currentUser);
-                localStorage.removeItem("daily_bonus_" + currentUser);
-
                 currentUser = newName;
                 localStorage.setItem("top_top_active_user", currentUser);
-
-                if (coinsVal) localStorage.setItem("coins_" + currentUser, coinsVal);
-                if (shapeVal) localStorage.setItem("shape_" + currentUser, shapeVal);
-                if (ownedVal) localStorage.setItem("owned_shapes_" + currentUser, ownedVal);
-                if (scoreVal) localStorage.setItem("highscore_" + currentUser, scoreVal);
-                if (bonusVal) localStorage.setItem("daily_bonus_" + currentUser, bonusVal);
             }
 
             profile.username = currentUser;
             if (settingsTempAvatar) profile.avatar = settingsTempAvatar;
 
             localStorage.setItem("user_profile_" + currentUser, JSON.stringify(profile));
-            playSound('select');
-            alert("زانیارییەکانت بە سەرکەوتوویی نوێکرانەوە!");
+            playSound('buy');
+            alert("زانیارییەکانت نوێکرانەوە!");
             loadUserData();
         }
 
         function resetUserHighscore() {
             if (confirm("دڵنیایت لە سڕینەوەی بەرزترین خاڵەکانت؟")) {
                 localStorage.removeItem("highscore_" + currentUser);
-                playSound('shieldbreak');
                 alert("خاڵەکانت سڕدرانەوە!");
                 loadUserData();
             }
@@ -847,32 +798,24 @@
             let today = new Date().toISOString().split('T')[0];
             let lastClaimed = localStorage.getItem("daily_bonus_" + currentUser);
             let bonusBtn = document.getElementById("claimBonusBtn");
-            let bonusText = document.getElementById("dailyBonusText");
 
             if (lastClaimed === today) {
                 bonusBtn.disabled = true; bonusBtn.innerText = "سەیری بەیانی بکەرەوە ⏳";
-                bonusBtn.style.background = "#475569";
-                bonusText.innerText = "دیاریی ئەمڕۆت وەرگرتووە! بەیانی وەرە بۆ دیاریی نوێ.";
             } else {
                 bonusBtn.disabled = false; bonusBtn.innerText = "وەرگرتنی دیاری (بەختی دەستپێک) 🎲";
-                bonusBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
-                bonusText.innerText = "سوپرايزی ئەمڕۆت وەربگرە و کۆینی خۆڕایی ببەرەوە!";
             }
         }
 
         function claimDailyBonus() {
             let today = new Date().toISOString().split('T')[0];
-            let lastClaimed = localStorage.getItem("daily_bonus_" + currentUser);
-            if (lastClaimed === today) { alert("پێشتر دیاریی ئەمڕۆت وەرگرتووە!"); return; }
-
-            let rewards = [50, 75, 100, 150, 200];
+            let rewards = [100, 150, 200, 250];
             let randomReward = rewards[Math.floor(Math.random() * rewards.length)];
 
             totalCoins += randomReward;
             localStorage.setItem("coins_" + currentUser, totalCoins);
             localStorage.setItem("daily_bonus_" + currentUser, today);
             playSound('buy');
-            alert(`پیرۆزە! بەختەکەت کەمێک بەهێز بوو و ${randomReward} کۆینت وەک دیاری وەرگرت! 🪙`);
+            alert(`پیرۆزە! ${randomReward} کۆینت بەدەستهێنا! 🪙`);
             loadUserData();
         }
 
@@ -896,12 +839,9 @@
                     btn.innerText = selectedShape === skin.id ? "هەڵبژێردراوە" : "هەڵبژاردن";
                     btn.onclick = function() { selectShape(skin.id); };
                     btn.disabled = selectedShape === skin.id;
-                    btn.style.background = selectedShape === skin.id ? "#10b981" : "";
                 } else {
                     btn.innerText = `کڕین (${skin.price}💰)`;
                     btn.onclick = function() { handleShapeAction(skin.id, skin.price); };
-                    btn.disabled = false;
-                    btn.style.background = "";
                 }
             });
         }
@@ -909,24 +849,19 @@
         function selectShape(shape) {
             selectedShape = shape;
             localStorage.setItem("shape_" + currentUser, selectedShape);
-            playSound('select');
+            playSound('buy');
             loadUserData();
         }
 
         function handleShapeAction(shapeKey, price) {
-            if (ownedShapes.includes(shapeKey)) {
+            if (totalCoins >= price) {
+                totalCoins -= price;
+                ownedShapes.push(shapeKey);
+                localStorage.setItem("coins_" + currentUser, totalCoins);
+                localStorage.setItem("owned_shapes_" + currentUser, JSON.stringify(ownedShapes));
                 selectShape(shapeKey);
             } else {
-                if (totalCoins >= price) {
-                    totalCoins -= price;
-                    ownedShapes.push(shapeKey);
-                    localStorage.setItem("coins_" + currentUser, totalCoins);
-                    localStorage.setItem("owned_shapes_" + currentUser, JSON.stringify(ownedShapes));
-                    playSound('buy');
-                    selectShape(shapeKey);
-                } else {
-                    alert("کۆینی تەواوت نییە!");
-                }
+                alert("کۆینی تەواوت نییە!");
             }
         }
 
@@ -946,15 +881,10 @@
 
             let listEl = document.getElementById("leaderboardList");
             listEl.innerHTML = "";
-            if (users.length === 0) {
-                listEl.innerHTML = "<p style='text-align:center; color:#93c5fd;'>هیچ خاڵێک تۆمار نەکراوە</p>";
-                return;
-            }
-
             users.forEach((u, idx) => {
                 let item = document.createElement("div");
                 item.className = "leaderboard-item";
-                item.innerHTML = `<span>${idx + 1}. ${u.name}</span> <span style="color: #f59e0b; font-weight: bold;">${u.score} خاڵ</span>`;
+                item.innerHTML = `<span>${idx + 1}. ${u.name}</span> <span style="color: #fbbf24; font-weight: bold;">${u.score} خاڵ</span>`;
                 listEl.appendChild(item);
             });
         }
@@ -965,123 +895,31 @@
             switchScreen("gameScreen");
             applyPlayerShapeUI();
 
-            score = 0; coins = 0; 
-            obstacleX = 800; coinX = 950;
-            shieldX = 1400; magnetX = 2000; speedX = 2800;
-            
-            shieldActive = false; magnetActive = false; speedActive = false;
-            shieldTimeLeft = 0; magnetTimeLeft = 0; speedTimeLeft = 0;
-            playerY = 10; playerVelocityY = 0; isJumping = false;
-
-            document.getElementById("currentScore").innerText = 0;
-            document.getElementById("currentCoins").innerText = 0;
-            document.getElementById("shieldTimer").innerText = 0;
-            document.getElementById("magnetTimer").innerText = 0;
-            document.getElementById("speedTimer").innerText = 0;
-
-            document.getElementById("player").classList.remove("shielded", "magnetized", "speedboosted");
-
+            score = 0; coins = 0; obstacleX = 800; coinX = 950;
             isGameActive = true;
             cancelAnimationFrame(gameAnimFrame);
-            clearInterval(scoreIntervalTimer);
-            clearInterval(powerupTimer);
-
             startBackgroundMusic();
             gameAnimFrame = requestAnimationFrame(gameLoopUpdate);
-            startScoreTimer();
-
-            powerupTimer = setInterval(() => {
-                if (shieldTimeLeft > 0) {
-                    shieldTimeLeft--;
-                    document.getElementById("shieldTimer").innerText = shieldTimeLeft;
-                    if (shieldTimeLeft === 0) {
-                        shieldActive = false;
-                        document.getElementById("player").classList.remove("shielded");
-                    }
-                }
-                if (magnetTimeLeft > 0) {
-                    magnetTimeLeft--;
-                    document.getElementById("magnetTimer").innerText = magnetTimeLeft;
-                    if (magnetTimeLeft === 0) {
-                        magnetActive = false;
-                        document.getElementById("player").classList.remove("magnetized");
-                    }
-                }
-                if (speedTimeLeft > 0) {
-                    speedTimeLeft--;
-                    document.getElementById("speedTimer").innerText = speedTimeLeft;
-                    if (speedTimeLeft === 0) {
-                        speedActive = false;
-                        document.getElementById("player").classList.remove("speedboosted");
-                        startScoreTimer();
-                    }
-                }
-            }, 1000);
-        }
-
-        function startScoreTimer() {
-            clearInterval(scoreIntervalTimer);
-            let interval = speedActive ? 120 : 300;
-            scoreIntervalTimer = setInterval(() => {
-                if (isGameActive) {
-                    score += speedActive ? 2 : 1;
-                    document.getElementById("currentScore").innerText = score;
-                }
-            }, interval);
         }
 
         function stopGameSession() {
             isGameActive = false;
             stopBackgroundMusic();
             cancelAnimationFrame(gameAnimFrame);
-            clearInterval(scoreIntervalTimer);
-            clearInterval(powerupTimer);
         }
 
         function jumpAction() {
             if (!isGameActive || isJumping) return;
-            isJumping = true; 
-            playerVelocityY = jumpStrength;
+            isJumping = true; playerVelocityY = jumpStrength;
             playSound('jump');
         }
 
         function gameLoopUpdate() {
             if (!isGameActive) return;
-
-            let baseSpeed = gameDifficulty === "easy" ? 3.2 : gameDifficulty === "hard" ? 6.0 : 4.5;
-            if (score > 200) baseSpeed += 1.0;
-            let speed = speedActive ? baseSpeed * 1.7 : baseSpeed;
-
+            let speed = 4.5;
             obstacleX -= speed;
             if (obstacleX < -30) obstacleX = 650 + Math.random() * 300;
             document.getElementById("obstacle").style.left = obstacleX + "px";
-
-            coinX -= speed;
-            if (coinX < -30) { coinX = 700 + Math.random() * 300; document.getElementById("coinItem").style.display = "block"; }
-            
-            if (magnetActive && coinX < 260) {
-                coinX -= 5;
-                if (coinX < 50) {
-                    coins++; totalCoins++;
-                    playSound('coin');
-                    document.getElementById("currentCoins").innerText = coins;
-                    document.getElementById("coinItem").style.display = "none";
-                    coinX = -40;
-                }
-            }
-            document.getElementById("coinItem").style.left = coinX + "px";
-
-            shieldX -= speed;
-            if (shieldX < -30) shieldX = 1300 + Math.random() * 800;
-            document.getElementById("shieldItem").style.left = shieldX + "px";
-
-            magnetX -= speed;
-            if (magnetX < -30) magnetX = 1900 + Math.random() * 900;
-            document.getElementById("magnetItem").style.left = magnetX + "px";
-
-            speedX -= speed;
-            if (speedX < -30) speedX = 2500 + Math.random() * 1000;
-            document.getElementById("speedItem").style.left = speedX + "px";
 
             if (isJumping) {
                 playerVelocityY -= gravity; playerY += playerVelocityY;
@@ -1089,311 +927,207 @@
                 document.getElementById("player").style.bottom = playerY + "px";
             }
 
-            if (document.getElementById("coinItem").style.display !== "none" && coinX > 25 && coinX < 60 && playerY > 25 && playerY < 85) {
-                coins++; totalCoins++;
-                playSound('coin');
-                document.getElementById("currentCoins").innerText = coins;
-                document.getElementById("coinItem").style.display = "none";
-            }
-
-            if (shieldX > 25 && shieldX < 60 && playerY > 30) {
-                shieldActive = true; shieldTimeLeft = 8;
-                playSound('powerup');
-                document.getElementById("shieldTimer").innerText = 8;
-                document.getElementById("player").classList.add("shielded");
-                shieldX = -40;
-            }
-
-            if (magnetX > 25 && magnetX < 60 && playerY > 30) {
-                magnetActive = true; magnetTimeLeft = 8;
-                playSound('powerup');
-                document.getElementById("magnetTimer").innerText = 8;
-                document.getElementById("player").classList.add("magnetized");
-                magnetX = -40;
-            }
-
-            if (speedX > 25 && speedX < 60 && playerY > 30) {
-                speedActive = true; speedTimeLeft = 5;
-                playSound('powerup');
-                document.getElementById("speedTimer").innerText = 5;
-                document.getElementById("player").classList.add("speedboosted");
-                startScoreTimer();
-                speedX = -40;
-            }
-
             if (obstacleX > 25 && obstacleX < 55 && playerY < 45) {
-                if (shieldActive) {
-                    shieldActive = false;
-                    shieldTimeLeft = 0;
-                    document.getElementById("shieldTimer").innerText = 0;
-                    document.getElementById("player").classList.remove("shielded");
-                    playSound('shieldbreak');
-                    obstacleX = 700 + Math.random() * 250;
-                } else {
-                    playSound('gameover');
-                    triggerGameOver();
-                    return;
-                }
+                playSound('gameover');
+                isGameActive = false;
+                document.getElementById("finalScore").innerText = score;
+                document.getElementById("gameOverBox").classList.add("show");
+                return;
             }
-
+            score++;
+            document.getElementById("currentScore").innerText = Math.floor(score/10);
             gameAnimFrame = requestAnimationFrame(gameLoopUpdate);
         }
 
-        function triggerGameOver() {
-            stopGameSession();
-            localStorage.setItem("coins_" + currentUser, totalCoins);
-            
-            let currentBest = parseInt(localStorage.getItem("highscore_" + currentUser) || "0");
-            if (score > currentBest) {
-                localStorage.setItem("highscore_" + currentUser, score);
-            }
-
-            document.getElementById("finalScore").innerText = score;
-            document.getElementById("gameOverBox").classList.add("show");
-        }
-
-        // ==================== Quiz Game Engine ====================
-        const quizData = [
-            { image: "images/IMG_0562.jpeg", question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], answer: 0 },
-            { image: "images/IMG_0563.jpeg", question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], answer: 1 },
-            { image: "images/IMG_0564.jpeg", question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], answer: 2 },
-            { image: "images/IMG_0565.jpeg", question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], answer: 3 },
-            { image: "images/IMG_0580.jpeg", question: "ئەم دیمەنە لە چ شار یان وڵاتێکە؟", options: ["ژاپۆن", "ئەمریکا", "تورکیا", "دهۆک"], answer: 0 },
-            { image: "images/IMG_0581.jpeg", question: "ئەم دیمەنە لە چ شارێکە؟", options: ["پاریس", "دوبەی", "قەتەر", "دهۆک"], answer: 0 },
-            { image: "images/IMG_0582.jpeg", question: "ئەم شوێنە دیارە لە چ شار یان وڵاتێکە؟", options: ["چۆمان", "شەقڵاوە", "سویسرا", "دهۆک"], answer: 0 },
-            { image: "images/IMG_0583.jpeg", question: "ئەم شوێنە لە چ شارێکە؟", options: ["لەندەن", "تورکیا", "هندستان", "کرکوک"], answer: 0 }
+        // ==================== Flappy Shop Engine ====================
+        const birdCatalog = [
+            { id: "goose", name: "قازی ئاسایی 🪿", price: 0, icon: "🪿", color: "#ffffff" },
+            { id: "chicken", name: "مریشکی کێوی 🐔", price: 150, icon: "🐔", color: "#e65100" },
+            { id: "purple_goose", name: "قازی وەنەوشەیی 🪿", price: 450, icon: "🪿", color: "#a855f7" },
+            { id: "gold_goose", name: "قازی زێڕین 🪿", price: 300, icon: "🪿", color: "#eab308" },
+            { id: "eagle", name: "هەڵۆی بەهێز 🦅", price: 600, icon: "🦅", color: "#78350f" }
         ];
-        
-        let currentQ = 0;
-        let quizScore = 0;
 
-        function startQuizPlay() {
-            currentQ = 0; quizScore = 0;
-            document.getElementById("quizScoreResult").innerText = "";
-            document.getElementById("quizImage").style.display = "block";
-            switchScreen("quizScreen");
-            loadQuizQuestion();
+        const bgCatalog = [
+            { id: "brown_wall", name: "دیواری قاوەیی HD", price: 0, color: "#451a03" },
+            { id: "night", name: "دیواری شەوانە 🌙", price: 100, color: "#0f172a" },
+            { id: "morning", name: "دیواری بەیانی 🌅", price: 150, color: "#fdba74" },
+            { id: "snow", name: "دیواری بەفراوی ❄️", price: 200, color: "#e2e8f0" }
+        ];
+
+        function openFlappyShop() {
+            loadUserData();
+            renderFlappyShop();
+            switchScreen("flappyShopScreen");
         }
 
-        function loadQuizQuestion() {
-            const currentQuiz = quizData[currentQ];
-            document.getElementById("quizImage").src = currentQuiz.image;
-            document.getElementById("quizQuestion").innerText = currentQuiz.question;
-            const optionsEl = document.getElementById("quizOptions");
-            optionsEl.innerHTML = "";
+        function renderFlappyShop() {
+            let bContainer = document.getElementById("birdShopGrid");
+            bContainer.innerHTML = "";
+            birdCatalog.forEach(b => {
+                let isOwned = ownedBirds.includes(b.id);
+                let isSelected = selectedBird === b.id;
+                let card = document.createElement("div");
+                card.className = "shop-item";
+                card.innerHTML = `
+                    <div style="font-size:32px; margin-bottom:4px;">${b.icon}</div>
+                    <p style="font-size:11px; margin:2px 0;">${b.name}</p>
+                    <button class="btn" style="padding:4px; font-size:11px; background:${isSelected ? '#10b981' : ''}" ${isSelected ? 'disabled' : ''}>
+                        ${isSelected ? 'هەڵبژێردراوە' : isOwned ? 'هەڵبژاردن' : 'کڕین (' + b.price + '💰)'}
+                    </button>
+                `;
+                card.querySelector("button").onclick = () => handleBirdBuy(b);
+                bContainer.appendChild(card);
+            });
 
-            currentQuiz.options.forEach((option, index) => {
-                const button = document.createElement("button");
-                button.innerText = option;
-                button.classList.add("btn");
-                button.onclick = () => selectQuizAnswer(index);
-                optionsEl.appendChild(button);
+            let bgContainer = document.getElementById("bgShopGrid");
+            bgContainer.innerHTML = "";
+            bgCatalog.forEach(bg => {
+                let isOwned = ownedBgs.includes(bg.id);
+                let isSelected = selectedBg === bg.id;
+                let card = document.createElement("div");
+                card.className = "shop-item";
+                card.innerHTML = `
+                    <div style="width:40px; height:25px; background:${bg.color}; border-radius:4px; margin:4px auto; border:1px solid #fff;"></div>
+                    <p style="font-size:11px; margin:2px 0;">${bg.name}</p>
+                    <button class="btn" style="padding:4px; font-size:11px; background:${isSelected ? '#10b981' : ''}" ${isSelected ? 'disabled' : ''}>
+                        ${isSelected ? 'هەڵبژێردراوە' : isOwned ? 'هەڵبژاردن' : 'کڕین (' + bg.price + '💰)'}
+                    </button>
+                `;
+                card.querySelector("button").onclick = () => handleBgBuy(bg);
+                bgContainer.appendChild(card);
             });
         }
 
-        function selectQuizAnswer(index) {
-            if (index === quizData[currentQ].answer) { 
-                quizScore++;
-                playSound('select');
+        function handleBirdBuy(bird) {
+            if (ownedBirds.includes(bird.id)) {
+                selectedBird = bird.id;
+                localStorage.setItem("flappy_bird_" + currentUser, selectedBird);
+                playSound('buy');
             } else {
-                playSound('shieldbreak');
+                if (totalCoins >= bird.price) {
+                    totalCoins -= bird.price;
+                    ownedBirds.push(bird.id);
+                    selectedBird = bird.id;
+                    localStorage.setItem("coins_" + currentUser, totalCoins);
+                    localStorage.setItem("owned_birds_" + currentUser, JSON.stringify(ownedBirds));
+                    localStorage.setItem("flappy_bird_" + currentUser, selectedBird);
+                    playSound('buy');
+                } else { alert("کۆینی تەواوت نییە!"); }
             }
-            currentQ++;
-            if (currentQ < quizData.length) {
-                loadQuizQuestion();
-            } else {
-                playSound('powerup');
-                document.getElementById("quizImage").style.display = "none";
-                document.getElementById("quizQuestion").innerText = "یارییەکە تەواو بوو!";
-                document.getElementById("quizOptions").innerHTML = "";
-                document.getElementById("quizScoreResult").innerText = `نمرەی کۆتایی: ${quizScore} لە ${quizData.length}`;
-            }
+            loadUserData(); renderFlappyShop();
         }
 
-        // ==================== Flappy Bird Game Engine ====================
+        function handleBgBuy(bg) {
+            if (ownedBgs.includes(bg.id)) {
+                selectedBg = bg.id;
+                localStorage.setItem("flappy_bg_" + currentUser, selectedBg);
+                playSound('buy');
+            } else {
+                if (totalCoins >= bg.price) {
+                    totalCoins -= bg.price;
+                    ownedBgs.push(bg.id);
+                    selectedBg = bg.id;
+                    localStorage.setItem("coins_" + currentUser, totalCoins);
+                    localStorage.setItem("owned_bgs_" + currentUser, JSON.stringify(ownedBgs));
+                    localStorage.setItem("flappy_bg_" + currentUser, selectedBg);
+                    playSound('buy');
+                } else { alert("کۆینی تەواوت نییە!"); }
+            }
+            loadUserData(); renderFlappyShop();
+        }
+
+        // ==================== Flappy Bird High FPS Engine ====================
         const fCanvas = document.getElementById("flappyCanvas");
         const fCtx = fCanvas.getContext("2d");
 
-        let flappyFrames = 0;
         let flappyScore = 0;
-        let flappyState = "START"; // START, PLAYING, GAMEOver
+        let flappyState = "START";
         let flappyAnim;
 
+        function resizeCanvas() {
+            fCanvas.width = fCanvas.parentElement.clientWidth;
+            fCanvas.height = fCanvas.parentElement.clientHeight;
+        }
+
         const fBird = {
-            x: 40,
-            y: 150,
-            radius: 10,
-            gravity: 0.22,
-            jump: 4.2,
-            velocity: 0,
-
+            x: 50, y: 150, radius: 14, gravity: 0.35, jump: 7.0, velocity: 0,
             draw() {
-                fCtx.beginPath();
-                fCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                fCtx.fillStyle = "#f1c40f";
-                fCtx.fill();
-                fCtx.lineWidth = 2;
-                fCtx.strokeStyle = "#000";
-                fCtx.stroke();
-                fCtx.closePath();
-
-                // چاو
-                fCtx.beginPath();
-                fCtx.arc(this.x + 3, this.y - 3, 2, 0, Math.PI * 2);
-                fCtx.fillStyle = "#fff";
-                fCtx.fill();
-                fCtx.closePath();
-
-                // دەنووک
-                fCtx.beginPath();
-                fCtx.fillStyle = "#e67e22";
-                fCtx.fillRect(this.x + 6, this.y, 6, 4);
-                fCtx.closePath();
+                fCtx.save();
+                fCtx.translate(this.x, this.y);
+                let birdObj = birdCatalog.find(b => b.id === selectedBird) || birdCatalog[0];
+                fCtx.font = "26px serif";
+                fCtx.textAlign = "center";
+                fCtx.textBaseline = "middle";
+                fCtx.fillText(birdObj.icon, 0, 0);
+                fCtx.restore();
             },
-
-            flap() {
-                this.velocity = -this.jump;
-                playSound('jump');
-            },
-
+            flap() { this.velocity = -this.jump; playSound('jump'); },
             update() {
                 this.velocity += this.gravity;
                 this.y += this.velocity;
-
-                if (this.y + this.radius >= fCanvas.height - 30) {
-                    this.y = fCanvas.height - 30 - this.radius;
-                    flappyGameOver();
-                }
-
-                if (this.y - this.radius <= 0) {
-                    this.y = this.radius;
-                    this.velocity = 0;
-                }
+                if (this.y + this.radius >= fCanvas.height - 20) { this.y = fCanvas.height - 20 - this.radius; flappyGameOver(); }
+                if (this.y - this.radius <= 0) { this.y = this.radius; this.velocity = 0; }
             },
-
-            reset() {
-                this.y = 150;
-                this.velocity = 0;
-            }
+            reset() { this.y = fCanvas.height / 2; this.velocity = 0; }
         };
 
         const fPipes = {
-            position: [],
-            w: 42,
-            h: 220,
-            gap: 90,
-            dx: 1.8,
-
+            position: [], w: 50, gap: 110, dx: 3.0,
             draw() {
                 for (let i = 0; i < this.position.length; i++) {
                     let p = this.position[i];
-                    let topYPos = p.y;
-                    let bottomYPos = p.y + this.h + this.gap;
+                    let topY = p.y;
+                    let bottomY = p.y + 250 + this.gap;
 
-                    // بۆڕیی سەرەوە
-                    fCtx.fillStyle = "#2ecc71";
-                    fCtx.fillRect(p.x, topYPos, this.w, this.h);
-                    fCtx.strokeStyle = "#27ae60";
-                    fCtx.lineWidth = 2;
-                    fCtx.strokeRect(p.x, topYPos, this.w, this.h);
+                    fCtx.fillStyle = "#3f2305";
+                    fCtx.fillRect(p.x, topY, this.w, 250);
+                    fCtx.strokeStyle = "#f59e0b";
+                    fCtx.strokeRect(p.x, topY, this.w, 250);
 
-                    // بۆڕیی خوارەوە
-                    fCtx.fillStyle = "#2ecc71";
-                    fCtx.fillRect(p.x, bottomYPos, this.w, this.h);
-                    fCtx.strokeRect(p.x, bottomYPos, this.w, this.h);
+                    fCtx.fillRect(p.x, bottomY, this.w, fCanvas.height);
+                    fCtx.strokeRect(p.x, bottomY, this.w, fCanvas.height);
                 }
             },
-
             update() {
                 if (flappyState !== "PLAYING") return;
-
-                if (flappyFrames % 110 === 0) {
+                if (this.position.length === 0 || this.position[this.position.length - 1].x < fCanvas.width - 180) {
                     this.position.push({
                         x: fCanvas.width,
-                        y: -Math.floor(Math.random() * (this.h - 80)) - 100
+                        y: -Math.floor(Math.random() * 150) - 80
                     });
                 }
-
                 for (let i = 0; i < this.position.length; i++) {
                     let p = this.position[i];
-                    let bottomPipeY = p.y + this.h + this.gap;
+                    let bottomY = p.y + 250 + this.gap;
 
-                    if (
-                        fBird.x + fBird.radius > p.x &&
-                        fBird.x - fBird.radius < p.x + this.w &&
-                        fBird.y - fBird.radius < p.y + this.h
-                    ) {
-                        flappyGameOver();
+                    if (fBird.x + fBird.radius > p.x && fBird.x - fBird.radius < p.x + this.w) {
+                        if (fBird.y - fBird.radius < p.y + 250 || fBird.y + fBird.radius > bottomY) { flappyGameOver(); }
                     }
-
-                    if (
-                        fBird.x + fBird.radius > p.x &&
-                        fBird.x - fBird.radius < p.x + this.w &&
-                        fBird.y + fBird.radius > bottomPipeY
-                    ) {
-                        flappyGameOver();
-                    }
-
                     p.x -= this.dx;
-
                     if (p.x + this.w <= 0) {
                         this.position.shift();
-                        flappyScore++;
-                        totalCoins++;
+                        flappyScore++; totalCoins++;
                         playSound('coin');
                         document.getElementById("flappyScore").innerText = flappyScore;
                         localStorage.setItem("coins_" + currentUser, totalCoins);
-
-                        let currentBest = parseInt(localStorage.getItem("highscore_" + currentUser) || "0");
-                        if (flappyScore > currentBest) {
-                            localStorage.setItem("highscore_" + currentUser, flappyScore);
-                        }
                         i--;
                     }
                 }
             },
-
-            reset() {
-                this.position = [];
-            }
+            reset() { this.position = []; }
         };
 
-        const fGround = {
-            h: 30,
-            draw() {
-                fCtx.fillStyle = "#e0c970";
-                fCtx.fillRect(0, fCanvas.height - this.h, fCanvas.width, this.h);
-                fCtx.fillStyle = "#27ae60";
-                fCtx.fillRect(0, fCanvas.height - this.h, fCanvas.width, 8);
-            }
-        };
+        function drawBackgroundWall() {
+            let bgObj = bgCatalog.find(b => b.id === selectedBg) || bgCatalog[0];
+            fCtx.fillStyle = bgObj.color;
+            fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
 
-        function drawFlappyUI() {
-            if (flappyState === "START") {
-                fCtx.fillStyle = "rgba(0,0,0,0.3)";
-                fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
-
-                fCtx.fillStyle = "#fff";
-                fCtx.font = "bold 18px 'Noto Sans Arabic'";
-                fCtx.textAlign = "center";
-                fCtx.fillText("دەستپێکردن", fCanvas.width / 2, 160);
-                fCtx.font = "13px 'Noto Sans Arabic'";
-                fCtx.fillText("کرتە بکە بۆ دەستپێکردن", fCanvas.width / 2, 195);
-            } else if (flappyState === "GAMEOVER") {
-                fCtx.fillStyle = "rgba(0,0,0,0.5)";
-                fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
-
-                fCtx.fillStyle = "#e74c3c";
-                fCtx.font = "bold 22px 'Noto Sans Arabic'";
-                fCtx.textAlign = "center";
-                fCtx.fillText("دۆڕایت!", fCanvas.width / 2, 150);
-
-                fCtx.fillStyle = "#fff";
-                fCtx.font = "14px 'Noto Sans Arabic'";
-                fCtx.fillText("خاڵی تۆمارکراو: " + flappyScore, fCanvas.width / 2, 190);
-
-                fCtx.font = "12px 'Noto Sans Arabic'";
-                fCtx.fillText("کرتە بکەرەوە بۆ دووبارەکردنەوە", fCanvas.width / 2, 230);
+            // نەخشی دیواری قاوەیی HD
+            fCtx.strokeStyle = "rgba(255,255,255,0.05)";
+            fCtx.lineWidth = 2;
+            for (let y = 0; y < fCanvas.height; y += 30) {
+                fCtx.beginPath(); fCtx.moveTo(0, y); fCtx.lineTo(fCanvas.width, y); fCtx.stroke();
             }
         }
 
@@ -1404,20 +1138,17 @@
         }
 
         function resetFlappyGame() {
-            fBird.reset();
-            fPipes.reset();
-            flappyScore = 0;
-            flappyFrames = 0;
-            document.getElementById("flappyScore").innerText = 0;
+            fBird.reset(); fPipes.reset();
+            flappyScore = 0; document.getElementById("flappyScore").innerText = 0;
             flappyState = "PLAYING";
             startBackgroundMusic();
         }
 
         function startFlappyGame() {
             switchScreen("flappyScreen");
+            resizeCanvas();
             flappyState = "START";
-            fBird.reset();
-            fPipes.reset();
+            fBird.reset(); fPipes.reset();
             flappyScore = 0;
             document.getElementById("flappyScore").innerText = 0;
             cancelAnimationFrame(flappyAnim);
@@ -1433,40 +1164,60 @@
         }
 
         function handleFlappyAction() {
-            if (flappyState === "START") {
-                flappyState = "PLAYING";
-                startBackgroundMusic();
-            } else if (flappyState === "PLAYING") {
-                fBird.flap();
-            } else if (flappyState === "GAMEOVER") {
-                resetFlappyGame();
-            }
+            if (flappyState === "START") { flappyState = "PLAYING"; startBackgroundMusic(); }
+            else if (flappyState === "PLAYING") { fBird.flap(); }
+            else if (flappyState === "GAMEOVER") { resetFlappyGame(); }
         }
 
-        fCanvas.addEventListener("click", handleFlappyAction);
-
+        fCanvas.addEventListener("pointerdown", (e) => { e.preventDefault(); handleFlappyAction(); });
         window.addEventListener("keydown", (e) => {
             if (e.code === "Space" && document.getElementById("flappyScreen").classList.contains("active")) {
-                e.preventDefault();
-                handleFlappyAction();
+                e.preventDefault(); handleFlappyAction();
             }
         });
 
         function flappyLoop() {
             fCtx.clearRect(0, 0, fCanvas.width, fCanvas.height);
+            drawBackgroundWall();
+            fPipes.draw(); fPipes.update();
+            fBird.draw(); fBird.update();
 
-            fPipes.draw();
-            fGround.draw();
-            fBird.draw();
-            drawFlappyUI();
-
-            if (flappyState === "PLAYING") {
-                fBird.update();
-                fPipes.update();
-                flappyFrames++;
+            if (flappyState === "START") {
+                fCtx.fillStyle = "rgba(0,0,0,0.4)";
+                fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
+                fCtx.fillStyle = "#fff"; fCtx.font = "bold 20px 'Noto Sans Arabic'"; fCtx.textAlign = "center";
+                fCtx.fillText("داگرە بۆ دەستپێکردن", fCanvas.width / 2, fCanvas.height / 2);
+            } else if (flappyState === "GAMEOVER") {
+                fCtx.fillStyle = "rgba(0,0,0,0.6)";
+                fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
+                fCtx.fillStyle = "#ef4444"; fCtx.font = "bold 24px 'Noto Sans Arabic'"; fCtx.textAlign = "center";
+                fCtx.fillText("دۆڕایت!", fCanvas.width / 2, fCanvas.height / 2 - 20);
+                fCtx.fillStyle = "#fff"; fCtx.font = "14px 'Noto Sans Arabic'";
+                fCtx.fillText("کرتە بکەرەوە بۆ دووبارەکردنەوە", fCanvas.width / 2, fCanvas.height / 2 + 20);
             }
 
             flappyAnim = requestAnimationFrame(flappyLoop);
+        }
+
+        // Quiz Logic
+        const quizData = [
+            { image: "images/IMG_0562.jpeg", question: "ئەم وێنەیە کام شوێن نیشان دەدات؟", options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], answer: 0 },
+            { image: "images/IMG_0563.jpeg", question: "ئەم وێنەیە کام شوێن نیشان دەدات؟", options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], answer: 1 }
+        ];
+        let currentQ = 0, quizScore = 0;
+        function startQuizPlay() { currentQ = 0; quizScore = 0; switchScreen("quizScreen"); loadQuizQuestion(); }
+        function loadQuizQuestion() {
+            let q = quizData[currentQ];
+            document.getElementById("quizImage").src = q.image;
+            document.getElementById("quizQuestion").innerText = q.question;
+            let optionsEl = document.getElementById("quizOptions");
+            optionsEl.innerHTML = "";
+            q.options.forEach((opt, idx) => {
+                let btn = document.createElement("button");
+                btn.innerText = opt; btn.className = "btn";
+                btn.onclick = () => { if (idx === q.answer) quizScore++; currentQ++; if (currentQ < quizData.length) loadQuizQuestion(); else alert("تەواو بوو! نمرە: " + quizScore); };
+                optionsEl.appendChild(btn);
+            });
         }
     </script>
 </body>
