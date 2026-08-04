@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>یاری تۆپ تۆپ - ڕێکخستنی پێشکەوتوو</title>
+    <title>یاری تۆپ تۆپ - مۆسیقا و پێشبڕکێ</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
@@ -114,12 +114,13 @@
         .tab-switcher { display: flex; gap: 5px; margin-bottom: 12px; }
         .tab-btn { flex: 1; background: #1e293b; border: 1px solid #3b82f6; color: #93c5fd; padding: 8px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; }
         .tab-btn.active { background: #3b82f6; color: #fff; }
+        .leaderboard-list { max-height: 120px; overflow-y: auto; font-size: 12px; }
+        .leaderboard-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(59, 130, 246, 0.2); }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Auth Screen -->
         <div id="authScreen" class="screen active">
             <div class="brand-title">تۆپ تۆپ</div>
             <div class="card">
@@ -166,7 +167,6 @@
             </div>
         </div>
 
-        <!-- Hub Screen -->
         <div id="hubScreen" class="screen">
             <div class="brand-title">تۆپ تۆپ</div>
             <div class="top-bar">
@@ -185,9 +185,13 @@
                 <p>🛡️ قەڵغان، 🧲 موگناتیس و ⚡ بروسکە کۆبکەرەوە!</p>
                 <button class="btn" onclick="startGamePlay()">دەستپێکردنی یاری</button>
             </div>
+            <div class="card">
+                <h3>🏆 ڕیزبەندی پێشبڕکێ</h3>
+                <div class="leaderboard-list" id="leaderboardList">
+                    </div>
+            </div>
         </div>
 
-        <!-- Shop Screen -->
         <div id="shopScreen" class="screen">
             <div class="brand-title">فرۆشگای شێوازەکان</div>
             <div style="text-align: center; margin-bottom: 10px; color: #f59e0b; font-size: 14px;">
@@ -213,13 +217,11 @@
             <button class="btn" style="background: #334155; margin-top: 15px;" onclick="backToHub()">گەڕانەوە</button>
         </div>
 
-        <!-- Settings Screen (Updated with stylish design & logout) -->
         <div id="settingsScreen" class="screen">
             <div class="brand-title">ڕێکخستنەکان</div>
             
             <div class="card">
                 <h3>ئاستی سەختی یاری</h3>
-                <p>ئاستی گونجاو بۆ تواناکانت دیاری بکە</p>
                 <select id="difficultySelect" onchange="changeDifficulty(this.value)">
                     <option value="easy">ئاستی ئاسان</option>
                     <option value="normal" selected>ئاستی ئاسایی</option>
@@ -227,16 +229,23 @@
                 </select>
             </div>
 
+            <div class="card">
+                <h3>مۆسیقای پاشبنەما (Background Music)</h3>
+                <p>دەتوانیت مۆسیقا هەڵبکەیت یان بکوژێنیتەوە</p>
+                <select id="musicToggleSelect" onchange="toggleBackgroundMusic(this.value)">
+                    <option value="on" selected>هەڵکردن 🎵</option>
+                    <option value="off">کوژاندنەوە 🔇</option>
+                </select>
+            </div>
+
             <div class="card" style="border-color: #f87171;">
                 <h3 style="color: #f87171;">بەڕێوەبردنی حیساب</h3>
-                <p>دەتوانیت لە حیسابەکەت دەربچیت و دواتر بە ئارەزووی خۆت بگەڕێیتەوە</p>
                 <button class="btn" style="background: linear-gradient(135deg, #ef4444, #b91c1c); margin-top: 5px;" onclick="logoutUser()">🚪 دەرچوون لە حیسابی ئێستا</button>
             </div>
 
             <button class="btn" style="background: #334155; margin-top: auto;" onclick="backToHub()">گەڕانەوە بۆ شاشەی سەرەکی</button>
         </div>
 
-        <!-- Game Screen -->
         <div id="gameScreen" class="screen">
             <div class="game-stats">
                 <span>خاڵ: <span id="currentScore">0</span></span>
@@ -302,6 +311,10 @@
         let powerupTimer;
         let gameDifficulty = "normal";
 
+        // Background Music Loop System
+        let musicEnabled = true;
+        let bgMusicInterval = null;
+
         // Audio System
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -358,7 +371,56 @@
             }
         }
 
+        // Background Music Note Sequence
+        function startBackgroundMusic() {
+            if (!musicEnabled) return;
+            stopBackgroundMusic();
+            
+            const notes = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63];
+            let noteIdx = 0;
+
+            bgMusicInterval = setInterval(() => {
+                if (!musicEnabled || !isGameActive) return;
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(notes[noteIdx], now);
+                gain.gain.setValueAtTime(0.03, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+
+                noteIdx = (noteIdx + 1) % notes.length;
+            }, 350);
+        }
+
+        function stopBackgroundMusic() {
+            if (bgMusicInterval) {
+                clearInterval(bgMusicInterval);
+                bgMusicInterval = null;
+            }
+        }
+
+        function toggleBackgroundMusic(val) {
+            musicEnabled = (val === 'on');
+            localStorage.setItem("top_top_music", val);
+            if (!musicEnabled) stopBackgroundMusic();
+            else if (isGameActive) startBackgroundMusic();
+        }
+
         window.onload = function() {
+            let savedMusic = localStorage.getItem("top_top_music");
+            if (savedMusic) {
+                musicEnabled = (savedMusic === 'on');
+                document.getElementById("musicToggleSelect").value = savedMusic;
+            }
+
             let savedUser = localStorage.getItem("top_top_active_user");
             if (savedUser && localStorage.getItem("user_profile_" + savedUser)) {
                 currentUser = savedUser;
@@ -372,6 +434,7 @@
         function switchScreen(id) {
             document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
             document.getElementById(id).classList.add("active");
+            if (id === 'hubScreen') loadLeaderboard();
         }
 
         function switchAuthMode(mode) {
@@ -415,7 +478,7 @@
             }
 
             if (localStorage.getItem("user_profile_" + name)) {
-                alert("ئەم ناوی بەکارهێنەرە پێشتر تۆمار کراوە، تکایە ناوێکی تر هەڵبژێرە!");
+                alert("ئەم ناوی بەکارهێنەرە پێشتر تۆمار کراوە!");
                 return;
             }
 
@@ -445,13 +508,13 @@
 
             let profileData = localStorage.getItem("user_profile_" + name);
             if (!profileData) {
-                alert("ئەم ناوە بوونی نییە، تکایە سەرەتا حیساب دروست بکە!");
+                alert("ئەم ناوە بوونی نییە!");
                 return;
             }
 
             let profile = JSON.parse(profileData);
             if (profile.password !== pass) {
-                alert("وشەی نهێنی هەڵەیە! دڵنیابەرەوە لە پیتەکان.");
+                alert("وشەی نهێنی هەڵەیە!");
                 return;
             }
 
@@ -462,6 +525,7 @@
         }
 
         function logoutUser() {
+            stopBackgroundMusic();
             localStorage.removeItem("top_top_active_user");
             currentUser = "";
             document.getElementById("loginUsername").value = "";
@@ -491,6 +555,7 @@
             }
 
             updateShopUI();
+            loadLeaderboard();
         }
 
         function openShopScreen() { loadUserData(); switchScreen("shopScreen"); }
@@ -546,6 +611,33 @@
 
         function changeDifficulty(val) { gameDifficulty = val; }
 
+        function loadLeaderboard() {
+            let users = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                if (key.startsWith("user_profile_")) {
+                    let uName = key.replace("user_profile_", "");
+                    let bestScore = parseInt(localStorage.getItem("highscore_" + uName) || "0");
+                    users.push({ name: uName, score: bestScore });
+                }
+            }
+            users.sort((a, b) => b.score - a.score);
+
+            let listEl = document.getElementById("leaderboardList");
+            listEl.innerHTML = "";
+            if (users.length === 0) {
+                listEl.innerHTML = "<p style='text-align:center; color:#93c5fd;'>هیچ خاڵێک تۆمار نەکراوە</p>";
+                return;
+            }
+
+            users.forEach((u, idx) => {
+                let item = document.createElement("div");
+                item.className = "leaderboard-item";
+                item.innerHTML = `<span>${idx + 1}. ${u.name}</span> <span style="color: #f59e0b; font-weight: bold;">${u.score} خاڵ</span>`;
+                listEl.appendChild(item);
+            });
+        }
+
         function startGamePlay() {
             document.getElementById("gameOverBox").classList.remove("show");
             document.getElementById("gameArena").classList.remove("speeding");
@@ -570,6 +662,7 @@
             clearInterval(scoreIntervalTimer);
             clearInterval(powerupTimer);
 
+            startBackgroundMusic();
             gameAnimFrame = requestAnimationFrame(gameLoopUpdate);
             startScoreTimer();
 
@@ -616,6 +709,7 @@
 
         function stopGameSession() {
             isGameActive = false;
+            stopBackgroundMusic();
             cancelAnimationFrame(gameAnimFrame);
             clearInterval(scoreIntervalTimer);
             clearInterval(powerupTimer);
@@ -720,6 +814,12 @@
         function triggerGameOver() {
             stopGameSession();
             localStorage.setItem("coins_" + currentUser, totalCoins);
+            
+            let currentBest = parseInt(localStorage.getItem("highscore_" + currentUser) || "0");
+            if (score > currentBest) {
+                localStorage.setItem("highscore_" + currentUser, score);
+            }
+
             document.getElementById("finalScore").innerText = score;
             document.getElementById("gameOverBox").classList.add("show");
         }
