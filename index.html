@@ -733,7 +733,7 @@
             });
         }
 
-        // نوێکردنەوەی ڕاستەوخۆی لیدەربۆرد بۆ هەمووان بە onSnapshot
+        // نوێکردنەوەی ڕاستەوخۆی لیدەربۆرد بە onSnapshot
         function updateLeaderboardUI() {
             let container = document.getElementById("leaderboardList");
             container.innerHTML = `<div class="score-row"><span>بارکردن...</span><span>0</span></div>`;
@@ -751,9 +751,9 @@
                     let userAvatar = data.avatar || "https://via.placeholder.com/24?text=وێنە";
                     
                     let rankColor = "#94a3b8";
-                    if (rank === 1) rankColor = "#eab308"; // زێڕین بۆ یەکەم
-                    else if (rank === 2) rankColor = "#cbd5e1"; // زیوین بۆ دووەم
-                    else if (rank === 3) rankColor = "#b45309"; // بڕۆنزی بۆ سێیەم
+                    if (rank === 1) rankColor = "#eab308";
+                    else if (rank === 2) rankColor = "#cbd5e1";
+                    else if (rank === 3) rankColor = "#b45309";
 
                     container.innerHTML += `
                         <div class="score-row">
@@ -942,11 +942,20 @@
             
             saveUserData();
             
+            // هەڵگرتنی بەرزترین ئاست بە شێوازی دروست لە localStorage
+            let savedBestScore = localStorage.getItem("toptop_best_" + currentUsername);
+            let best = savedBestScore ? parseInt(savedBestScore) : 0;
+            
+            if (score > best) {
+                best = score;
+                localStorage.setItem("toptop_best_" + currentUsername, best);
+            }
+            
             // ناردنی نمرە بۆ فایەربەیس
             saveScoreToLeaderboard(currentUsername, score, currentUserAvatar);
             
             document.getElementById("finalScore").innerText = score;
-            document.getElementById("bestScore").innerText = score;
+            document.getElementById("bestScore").innerText = best;
             document.getElementById("finalCoins").innerText = coins;
             document.getElementById("gameOverScreen").classList.remove("hidden");
         }
