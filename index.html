@@ -8,10 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- کتێبخانەکانی فایەربەیس (Compat) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
     <style>
         body {
             background-color: #0f172a;
@@ -413,7 +409,7 @@
             </div>
 
             <div class="leaderboard-box">
-                <h4>🏆 باشترین یاریزانەکان (ڕاستەوخۆ)</h4>
+                <h4>🏆 باشترین یاریزانەکان (خۆجێی)</h4>
                 <div id="leaderboardList">
                     <div class="score-row"><span>بارکردن...</span><span>0</span></div>
                 </div>
@@ -504,21 +500,8 @@
 
     </div>
 
-    <!-- JavaScript -->
+    <!-- JavaScript (Local Storage) -->
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDfrFkglZShCuZhCYwNQ8pEmKwNppWggBU",
-            authDomain: "toptop-game-4e89f.firebaseapp.com",
-            projectId: "toptop-game-4e89f",
-            storageBucket: "toptop-game-4e89f.firebasestorage.app",
-            messagingSenderId: "786973684229",
-            appId: "1:786973684229:web:a327a180f44ca18f8fa26c",
-            measurementId: "G-S6ERB47WJ8"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
         let currentUsername = "";
         let currentUserAvatar = "";
         let score = 0;
@@ -717,77 +700,62 @@
             document.getElementById("totalCoinsHub").innerText = totalCoins;
         }
 
-        // ناردن و نوێکردنەوەی نمرە بە بەکارهێنانی ناوی بەکارهێنەر وەک ID بۆ ڕێگریکردن لە دووبارەبوونەوە
-        function saveScoreToLeaderboard(name, finalScore, avatar) {
+        // پاشەکەوتکردن و نوێکردنەوەی نمرە لە ناو localStorage خۆجێی
+        function saveScoreToLocalLeaderboard(name, finalScore, avatar) {
             if (!name) return;
             
-            const userRef = db.collection("scores").doc(name);
-
-            userRef.get().then((doc) => {
-                let shouldUpdate = true;
-                if (doc.exists) {
-                    let existingScore = doc.data().score || 0;
-                    if (finalScore <= existingScore) {
-                        shouldUpdate = false; // ئەگەر نمرەکە بەرزتر نەبوو، نوێی ناکەینەوە
-                    }
-                }
-
-                if (shouldUpdate) {
-                    userRef.set({
-                        name: String(name),
-                        score: Number(finalScore),
-                        avatar: String(avatar || ""),
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    })
-                    .then(() => {
-                        console.log("نمرە بە سەرکەوتوویی نوێ کرایەوە!");
-                    })
-                    .catch((error) => {
-                        console.error("هەڵە لە نوێکردنەوەی نمرە: ", error);
-                    });
-                }
-            }).catch((error) => {
-                console.error("هەڵە لە خوێندنەوەی داتا: ", error);
-            });
+            let allScores = JSON.parse(localStorage.getItem("toptop_local_scores") || "{}");
+            
+            if (!allScores[name] || finalScore > allScores[name].score) {
+                allScores[name] = {
+                    name: name,
+                    score: finalScore,
+                    avatar: avatar || ""
+                };
+                localStorage.setItem("toptop_local_scores", JSON.stringify(allScores));
+            }
         }
 
-        // نوێکردنەوەی ڕاستەوخۆی لیدەربۆرد بە onSnapshot
+        // پیشاندانی باشترین یاریزانەکان لە لیدەربۆردی خۆجێی
         function updateLeaderboardUI() {
             let container = document.getElementById("leaderboardList");
-            container.innerHTML = `<div class="score-row"><span>بارکردن...</span><span>0</span></div>`;
+            let allScoresObj = JSON.parse(localStorage.getItem("toptop_local_scores") || "{}");
+            
+            let scoresArray = [];
+            for (let key in allScoresObj) {
+                scoresArray.push(allScoresObj[key]);
+            }
+            
+            // ڕیزکردن لە بەرزترینەوە بۆ نزمترین نمرە
+            scoresArray.sort((a, b) => b.score - a.score);
+            
+            container.innerHTML = "";
+            if (scoresArray.length === 0) {
+                container.innerHTML = `<div class="score-row"><span>هیچ تۆمارێک نییە</span><span>0</span></div>`;
+                return;
+            }
 
-            db.collection("scores").orderBy("score", "desc").limit(3).onSnapshot((querySnapshot) => {
-                container.innerHTML = "";
-                if (querySnapshot.empty) {
-                    container.innerHTML = `<div class="score-row"><span>هیچ تۆمارێک نییە</span><span>0</span></div>`;
-                    return;
-                }
+            let rank = 1;
+            for (let i = 0; i < Math.min(scoresArray.length, 3); i++) {
+                let data = scoresArray[i];
+                let userAvatar = data.avatar || "https://via.placeholder.com/24?text=وێنە";
+                
+                let rankColor = "#94a3b8";
+                if (rank === 1) rankColor = "#eab308";
+                else if (rank === 2) rankColor = "#cbd5e1";
+                else if (rank === 3) rankColor = "#b45309";
 
-                let rank = 1;
-                querySnapshot.forEach((doc) => {
-                    let data = doc.data();
-                    let userAvatar = data.avatar || "https://via.placeholder.com/24?text=وێنە";
-                    
-                    let rankColor = "#94a3b8";
-                    if (rank === 1) rankColor = "#eab308";
-                    else if (rank === 2) rankColor = "#cbd5e1";
-                    else if (rank === 3) rankColor = "#b45309";
-
-                    container.innerHTML += `
-                        <div class="score-row">
-                            <div class="leaderboard-user">
-                                <span style="color: ${rankColor}; font-weight: bold;">#${rank}</span>
-                                <img src="${userAvatar}" class="mini-avatar" alt="">
-                                <span style="color: #f8fafc; font-weight: bold;">${data.name}</span>
-                            </div>
-                            <span style="color: #eab308; font-weight: bold;">${data.score} خاڵ</span>
-                        </div>`;
-                    rank++;
-                });
-            }, (error) => {
-                console.error("هەڵە لە هێنانی لیدەربۆرد: ", error);
-                container.innerHTML = `<div class="score-row"><span>هەڵە لە هێنانی داتا</span><span>0</span></div>`;
-            });
+                container.innerHTML += `
+                    <div class="score-row">
+                        <div class="leaderboard-user">
+                            <span style="color: ${rankColor}; font-weight: bold;">#${rank}</span>
+                            <img src="${userAvatar}" class="mini-avatar" alt="">
+                            <span style="color: #f8fafc; font-weight: bold;">${data.name}</span>
+                        </div>
+                        <span style="color: #eab308; font-weight: bold;">${data.score} خاڵ</span>
+                    </div>`;
+                rank++;
+            }
         }
 
         function startToptopGame() {
@@ -816,6 +784,7 @@
             clearInterval(scoreInterval);
             document.getElementById("gameOverScreen").classList.add("hidden");
             loadUserData();
+            updateLeaderboardUI();
             document.getElementById("gameScreen").classList.add("hidden");
             document.getElementById("settingsScreen").classList.add("hidden");
             document.getElementById("hubScreen").classList.remove("hidden");
@@ -968,7 +937,7 @@
                 localStorage.setItem("toptop_best_" + currentUsername, best);
             }
             
-            saveScoreToLeaderboard(currentUsername, score, currentUserAvatar);
+            saveScoreToLocalLeaderboard(currentUsername, score, currentUserAvatar);
             
             document.getElementById("finalScore").innerText = score;
             document.getElementById("bestScore").innerText = best;
@@ -978,4 +947,3 @@
     </script>
 </body>
 </html>
-
