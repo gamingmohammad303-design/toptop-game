@@ -320,7 +320,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.92);
+            background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(4px);
             display: flex;
             flex-direction: column;
@@ -487,7 +487,7 @@
                     <h2>یاری تەواو بوو!</h2>
                     <div class="game-over-stats">
                         <div>خاڵەکانت: <span id="finalScore">0</span></div>
-                        <div style="margin-top: 5px;">بەررزترین ئاستت: <span id="bestScore">0</span></div>
+                        <div style="margin-top: 5px;">بەرزترین ئاستت: <span id="bestScore">0</span></div>
                         <div style="margin-top: 5px;">کۆینە کۆکراوەکان: <span id="finalCoins">0</span></div>
                     </div>
                     <button class="btn" style="max-width: 280px; margin-bottom: 8px;" onclick="startToptopGame()">یاری دیسان بکەرەوە</button>
@@ -500,7 +500,7 @@
 
     </div>
 
-    <!-- JavaScript (Local Storage) -->
+    <!-- JavaScript -->
     <script>
         let currentUsername = "";
         let currentUserAvatar = "";
@@ -700,10 +700,8 @@
             document.getElementById("totalCoinsHub").innerText = totalCoins;
         }
 
-        // پاشەکەوتکردن و نوێکردنەوەی نمرە لە ناو localStorage خۆجێی
         function saveScoreToLocalLeaderboard(name, finalScore, avatar) {
             if (!name) return;
-            
             let allScores = JSON.parse(localStorage.getItem("toptop_local_scores") || "{}");
             
             if (!allScores[name] || finalScore > allScores[name].score) {
@@ -716,7 +714,6 @@
             }
         }
 
-        // پیشاندانی باشترین یاریزانەکان لە لیدەربۆردی خۆجێی
         function updateLeaderboardUI() {
             let container = document.getElementById("leaderboardList");
             let allScoresObj = JSON.parse(localStorage.getItem("toptop_local_scores") || "{}");
@@ -726,7 +723,6 @@
                 scoresArray.push(allScoresObj[key]);
             }
             
-            // ڕیزکردن لە بەرزترینەوە بۆ نزمترین نمرە
             scoresArray.sort((a, b) => b.score - a.score);
             
             container.innerHTML = "";
@@ -761,12 +757,16 @@
         function startToptopGame() {
             document.getElementById("gameOverScreen").classList.add("hidden");
             document.getElementById("hubScreen").classList.add("hidden");
+            document.getElementById("settingsScreen").classList.add("hidden");
             document.getElementById("gameScreen").classList.remove("hidden");
             document.getElementById("player").style.backgroundColor = playerColor;
             
             resetGameVariables();
             isPlaying = true;
             
+            cancelAnimationFrame(animationFrameId);
+            clearInterval(scoreInterval);
+
             animationFrameId = requestAnimationFrame(gameLoop);
             
             scoreInterval = setInterval(() => {
@@ -782,11 +782,14 @@
             isPlaying = false;
             cancelAnimationFrame(animationFrameId);
             clearInterval(scoreInterval);
+            
             document.getElementById("gameOverScreen").classList.add("hidden");
-            loadUserData();
-            updateLeaderboardUI();
             document.getElementById("gameScreen").classList.add("hidden");
             document.getElementById("settingsScreen").classList.add("hidden");
+            
+            loadUserData();
+            updateLeaderboardUI();
+            
             document.getElementById("hubScreen").classList.remove("hidden");
         }
 
@@ -938,6 +941,7 @@
             }
             
             saveScoreToLocalLeaderboard(currentUsername, score, currentUserAvatar);
+            updateLeaderboardUI();
             
             document.getElementById("finalScore").innerText = score;
             document.getElementById("bestScore").innerText = best;
