@@ -56,7 +56,6 @@
         .card h3 { margin: 0 0 6px 0; color: #f59e0b; font-size: 15px; }
         .card p { margin: 0 0 10px 0; font-size: 12px; color: #93c5fd; }
         
-        /* New Game Catalog UI Styles */
         .section-header {
             font-size: 20px; font-weight: 900; color: #38bdf8;
             margin: 10px 0 14px 0; border-bottom: 2px solid rgba(56, 189, 248, 0.3);
@@ -208,29 +207,37 @@
                 <button class="btn" onclick="openSettingsScreen()" style="background: #475569; margin-top:0;">⚙️ ڕێکخستن</button>
             </div>
 
-            <!-- Games Section & Catalog Card -->
             <div class="section-header">
                 <span>🎮 یارییەکان</span>
             </div>
 
+            <!-- Game 1: Jumper -->
             <div class="game-catalog-card">
                 <div class="game-thumbnail">🔵</div>
                 <h3 style="color: #f59e0b; font-size: 16px; margin: 0 0 4px 0;">یاری بازدان (تۆپ تۆپ)</h3>
                 <p style="font-size: 11px; color: #93c5fd; margin: 0 0 10px 0;">قەڵغان، موگناتیس و بروسکە کۆبکەرەوە و خاڵ تۆمار بکە</p>
-                
                 <div class="game-meta-info">
-                    <span>📅 مێژووی دەرچوون: 2026/06/01</span>
+                    <span>📅 دەرچوون: 2026/06/01</span>
                     <span style="color: #38bdf8; font-weight: bold;">ئاست: ئاسایی</span>
                 </div>
-
                 <button class="btn" onclick="startGamePlay()">یاری بکە</button>
+            </div>
+
+            <!-- Game 2: Quiz -->
+            <div class="game-catalog-card">
+                <div class="game-thumbnail" style="background: radial-gradient(circle, #ec4899, #831843);">❓</div>
+                <h3 style="color: #f59e0b; font-size: 16px; margin: 0 0 4px 0;">یاری پرسیار و وەڵام</h3>
+                <p style="font-size: 11px; color: #93c5fd; margin: 0 0 10px 0;">زانیارییە گشتییەکانت تاقی بکەرەوە و نمرە بەدەستبهێنە</p>
+                <div class="game-meta-info">
+                    <span>📅 دەرچوون: 2026/06/02</span>
+                    <span style="color: #ec4899; font-weight: bold;">جۆری: فکری</span>
+                </div>
+                <button class="btn" style="background: linear-gradient(135deg, #ec4899, #be185d);" onclick="startQuizPlay()">یاری بکە</button>
             </div>
 
             <div class="card">
                 <h3>🏆 ڕیزبەندی پێشبڕکێ</h3>
-                <div class="leaderboard-list" id="leaderboardList">
-                    <!-- Leaderboard items injected here -->
-                </div>
+                <div class="leaderboard-list" id="leaderboardList"></div>
             </div>
         </div>
 
@@ -290,7 +297,7 @@
             <button class="btn" style="background: #334155; margin-top: auto;" onclick="backToHub()">گەڕانەوە بۆ شاشەی سەرەکی</button>
         </div>
 
-        <!-- Game Screen -->
+        <!-- Game Screen (Jumper) -->
         <div id="gameScreen" class="screen">
             <div class="game-stats">
                 <span>خاڵ: <span id="currentScore">0</span></span>
@@ -317,6 +324,18 @@
             </div>
 
             <button class="jump-control-btn" onclick="jumpAction()">بازدان</button>
+            <button class="btn" style="background: #334155; margin-top: 10px;" onclick="backToHub()">گەڕانەوە بۆ سەرەتا</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quizScreen" class="screen">
+            <div class="brand-title" style="font-size: 22px;">یاری پرسیار و وەڵام</div>
+            <div class="card" style="text-align: center; margin-top: 10px;">
+                <h3 id="quizQuestion" style="font-size: 16px; margin-bottom: 20px; color: #38bdf8;">پرسیار لێرە دەردەکەوێت...</h3>
+                <div id="quizOptions"></div>
+                <div id="quizScoreResult" style="font-weight: bold; margin-top: 15px; font-size: 16px; color: #f59e0b;"></div>
+            </div>
+            <button class="btn" style="background: #334155; margin-top: auto;" onclick="backToHub()">گەڕانەوە بۆ سەرەکی</button>
         </div>
     </div>
 
@@ -864,6 +883,52 @@
 
             document.getElementById("finalScore").innerText = score;
             document.getElementById("gameOverBox").classList.add("show");
+        }
+
+        // Quiz Game Logic
+        const quizData = [
+            { question: "پایتەختی کوردستان کام شارە؟", options: ["هەولێر", "سلێمانی", "دهۆک", "کەرکووک"], answer: 0 },
+            { question: "ژمارە ٥ لەگەڵ ٣ چەند دەكات؟", options: ["٦", "٧", "٨", "٩"], answer: 2 },
+            { question: "گەورەترین هەسارەی کۆمەڵەی خۆر کامەیە؟", options: ["زەوی", "کەیوان", "مەریخ", "موشتەری"], answer: 3 }
+        ];
+        let currentQ = 0;
+        let quizScore = 0;
+
+        function startQuizPlay() {
+            currentQ = 0;
+            quizScore = 0;
+            document.getElementById("quizScoreResult").innerText = "";
+            switchScreen("quizScreen");
+            loadQuizQuestion();
+        }
+
+        function loadQuizQuestion() {
+            const currentQuiz = quizData[currentQ];
+            document.getElementById("quizQuestion").innerText = currentQuiz.question;
+            const optionsEl = document.getElementById("quizOptions");
+            optionsEl.innerHTML = "";
+
+            currentQuiz.options.forEach((option, index) => {
+                const button = document.createElement("button");
+                button.innerText = option;
+                button.classList.add("btn");
+                button.onclick = () => selectQuizAnswer(index);
+                optionsEl.appendChild(button);
+            });
+        }
+
+        function selectQuizAnswer(index) {
+            if (index === quizData[currentQ].answer) {
+                quizScore++;
+            }
+            currentQ++;
+            if (currentQ < quizData.length) {
+                loadQuizQuestion();
+            } else {
+                document.getElementById("quizQuestion").innerText = "یارییەکە تەواو بوو!";
+                document.getElementById("quizOptions").innerHTML = "";
+                document.getElementById("quizScoreResult").innerText = `نمرەی کۆتایی: ${quizScore} لە ${quizData.length}`;
+            }
         }
     </script>
 </body>
