@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>یاری تۆپ تۆپ - وێنەی ڕاستەوخۆ</title>
+    <title>یاری تۆپ تۆپ - سیستەمی چوونەژوورەوەی پارێزراو</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
@@ -111,37 +111,60 @@
             overflow: hidden; border: 2px solid #3b82f6; cursor: pointer; position: relative;
         }
         .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+        .tab-switcher { display: flex; gap: 5px; margin-bottom: 12px; }
+        .tab-btn { flex: 1; background: #1e293b; border: 1px solid #3b82f6; color: #93c5fd; padding: 8px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; }
+        .tab-btn.active { background: #3b82f6; color: #fff; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Auth Screen -->
+        <!-- Auth Screen (Login / Register) -->
         <div id="authScreen" class="screen active">
             <div class="brand-title">تۆپ تۆپ</div>
             <div class="card">
-                <h3>تۆمارکردنی حیسابی نوێ</h3>
-                <p>وێنەی پڕۆفایلەکەت لە ئامێرەکەتەوە هەڵبژێرە</p>
-                
-                <div class="avatar-preview" id="avatarPreviewContainer" onclick="document.getElementById('fileInput').click()">
-                    <span id="avatarPlaceholderText" style="font-size: 24px;">📷</span>
-                    <img id="avatarImgTag" style="display:none;" />
+                <div class="tab-switcher">
+                    <button class="tab-btn active" id="loginTabBtn" onclick="switchAuthMode('login')">چوونەژوورەوە</button>
+                    <button class="tab-btn" id="registerTabBtn" onclick="switchAuthMode('register')">حیسابی نوێ</button>
                 </div>
-                <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
 
-                <div class="form-group" style="margin-top: 10px;">
-                    <label>ناوی بەکارهێنەر (Username)</label>
-                    <input type="text" id="regUsername" placeholder="ناوی بەکارهێنەر...">
+                <!-- Register Form -->
+                <div id="registerForm" style="display: none;">
+                    <p style="font-size: 12px;">وێنەی پڕۆفایلەکەت هەڵبژێرە و حیساب دروست بکە</p>
+                    <div class="avatar-preview" onclick="document.getElementById('fileInput').click()">
+                        <span id="avatarPlaceholderText" style="font-size: 24px;">📷</span>
+                        <img id="avatarImgTag" style="display:none;" />
+                    </div>
+                    <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
+
+                    <div class="form-group">
+                        <label>ناوی بەکارهێنەر</label>
+                        <input type="text" id="regUsername" placeholder="ناوی بەکارهێنەر...">
+                    </div>
+                    <div class="form-group">
+                        <label>ڕێکەوتی لەدایکبوون</label>
+                        <input type="date" id="regBirthdate">
+                    </div>
+                    <div class="form-group">
+                        <label>وشەی نهێنی</label>
+                        <input type="password" id="regPassword" placeholder="وشەی نهێنی...">
+                    </div>
+                    <button class="btn" onclick="registerUser()">دروستکردنی حیساب</button>
                 </div>
-                <div class="form-group">
-                    <label>ڕێکەوتی لەدایکبوون</label>
-                    <input type="date" id="regBirthdate">
+
+                <!-- Login Form -->
+                <div id="loginForm">
+                    <p style="font-size: 12px;">بۆ چوونەژوورەوە، ناوی بەکارهێنەر و وشەی نهێنی بنووسە</p>
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label>ناوی بەکارهێنەر</label>
+                        <input type="text" id="loginUsername" placeholder="ناوی بەکارهێنەر...">
+                    </div>
+                    <div class="form-group">
+                        <label>وشەی نهێنی</label>
+                        <input type="password" id="loginPassword" placeholder="وشەی نهێنی...">
+                    </div>
+                    <button class="btn" onclick="loginUser()">چوونەژوورەوە</button>
                 </div>
-                <div class="form-group">
-                    <label>وشەی نهێنی (Password)</label>
-                    <input type="password" id="regPassword" placeholder="وشەی نهێنی بنووسە...">
-                </div>
-                <button class="btn" onclick="registerUser()">تۆمارکردن و دەستپێکردن</button>
             </div>
         </div>
 
@@ -331,7 +354,7 @@
 
         window.onload = function() {
             let savedUser = localStorage.getItem("top_top_active_user");
-            if (savedUser) {
+            if (savedUser && localStorage.getItem("user_profile_" + savedUser)) {
                 currentUser = savedUser;
                 loadUserData();
                 switchScreen("hubScreen");
@@ -343,6 +366,20 @@
         function switchScreen(id) {
             document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
             document.getElementById(id).classList.add("active");
+        }
+
+        function switchAuthMode(mode) {
+            if (mode === 'login') {
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('registerForm').style.display = 'none';
+                document.getElementById('loginTabBtn').classList.add('active');
+                document.getElementById('registerTabBtn').classList.remove('active');
+            } else {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('registerForm').style.display = 'block';
+                document.getElementById('registerTabBtn').classList.add('active');
+                document.getElementById('loginTabBtn').classList.remove('active');
+            }
         }
 
         function handleImageUpload(event) {
@@ -371,6 +408,11 @@
                 return;
             }
 
+            if (localStorage.getItem("user_profile_" + name)) {
+                alert("ئەم ناوی بەکارهێنەرە پێشتر تۆمار کراوە، تکایە ناوێکی تر هەڵبژێرە!");
+                return;
+            }
+
             let userProfile = {
                 username: name,
                 password: pass,
@@ -386,9 +428,38 @@
             switchScreen("hubScreen");
         }
 
+        function loginUser() {
+            let name = document.getElementById("loginUsername").value.trim();
+            let pass = document.getElementById("loginPassword").value.trim();
+
+            if (!name || !pass) {
+                alert("تکایە ناو و وشەی نهێنی بنووسە!");
+                return;
+            }
+
+            let profileData = localStorage.getItem("user_profile_" + name);
+            if (!profileData) {
+                alert("ئەم ناوە بوونی نییە، تکایە سەرەتا حیساب دروست بکە!");
+                return;
+            }
+
+            let profile = JSON.parse(profileData);
+            if (profile.password !== pass) {
+                alert("وشەی نهێنی هەڵەیە! دڵنیابەرەوە لە پیتەکان.");
+                return;
+            }
+
+            localStorage.setItem("top_top_active_user", name);
+            currentUser = name;
+            loadUserData();
+            switchScreen("hubScreen");
+        }
+
         function logoutUser() {
             localStorage.removeItem("top_top_active_user");
             currentUser = "";
+            document.getElementById("loginUsername").value = "";
+            document.getElementById("loginPassword").value = "";
             switchScreen("authScreen");
         }
 
@@ -649,4 +720,3 @@
     </script>
 </body>
 </html>
-
