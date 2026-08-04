@@ -717,19 +717,37 @@
             document.getElementById("totalCoinsHub").innerText = totalCoins;
         }
 
-        // ناردنی نمرە بۆ فایەربەیس
+        // ناردن و نوێکردنەوەی نمرە بە بەکارهێنانی ناوی بەکارهێنەر وەک ID بۆ ڕێگریکردن لە دووبارەبوونەوە
         function saveScoreToLeaderboard(name, finalScore, avatar) {
-            db.collection("scores").add({
-                name: String(name || "Guest"),
-                score: Number(finalScore || 0),
-                avatar: String(avatar || ""),
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .then(() => {
-                console.log("نمرە سەرکەوتووانە نێردرا!");
-            })
-            .catch((error) => {
-                console.error("هەڵە لە ناردنی نمرە: ", error);
+            if (!name) return;
+            
+            const userRef = db.collection("scores").doc(name);
+
+            userRef.get().then((doc) => {
+                let shouldUpdate = true;
+                if (doc.exists) {
+                    let existingScore = doc.data().score || 0;
+                    if (finalScore <= existingScore) {
+                        shouldUpdate = false; // ئەگەر نمرەکە بەرزتر نەبوو، نوێی ناکەینەوە
+                    }
+                }
+
+                if (shouldUpdate) {
+                    userRef.set({
+                        name: String(name),
+                        score: Number(finalScore),
+                        avatar: String(avatar || ""),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    })
+                    .then(() => {
+                        console.log("نمرە بە سەرکەوتوویی نوێ کرایەوە!");
+                    })
+                    .catch((error) => {
+                        console.error("هەڵە لە نوێکردنەوەی نمرە: ", error);
+                    });
+                }
+            }).catch((error) => {
+                console.error("هەڵە لە خوێندنەوەی داتا: ", error);
             });
         }
 
@@ -942,7 +960,6 @@
             
             saveUserData();
             
-            // هەڵگرتنی بەرزترین ئاست بە شێوازی دروست لە localStorage
             let savedBestScore = localStorage.getItem("toptop_best_" + currentUsername);
             let best = savedBestScore ? parseInt(savedBestScore) : 0;
             
@@ -951,7 +968,6 @@
                 localStorage.setItem("toptop_best_" + currentUsername, best);
             }
             
-            // ناردنی نمرە بۆ فایەربەیس
             saveScoreToLeaderboard(currentUsername, score, currentUserAvatar);
             
             document.getElementById("finalScore").innerText = score;
@@ -962,3 +978,4 @@
     </script>
 </body>
 </html>
+
