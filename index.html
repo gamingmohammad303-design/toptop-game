@@ -3,950 +3,589 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>پلاتفۆرمی تۆپتۆپ</title>
+    <title>یاری تۆپ تۆپ - بەشی دەنگ و پاوەرئەپ</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
-        body {
-            background-color: #0f172a;
-            color: #f8fafc;
+        * { box-sizing: border-box; user-select: none; }
+        html, body {
+            width: 100%; height: 100vh; margin: 0; padding: 0;
+            background-color: #030712; color: #f8fafc;
             font-family: 'Noto Sans Arabic', sans-serif;
-            margin: 0;
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
-            touch-action: manipulation;
-            user-select: none;
+            overflow: hidden; touch-action: manipulation;
         }
         .container {
-            width: 100%;
-            max-width: 420px;
-            background: #1e293b;
-            border: 2px solid #334155;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            box-sizing: border-box;
-            text-align: center;
-            position: relative;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #090d16, #0f172a);
+            display: flex; flex-direction: column; padding: 16px; position: relative; overflow-y: auto;
         }
-        h1, h2 {
-            color: #38bdf8;
-            margin-top: 0;
+        .brand-title {
+            text-align: center; font-size: 28px; font-weight: 900;
+            background: linear-gradient(135deg, #38bdf8, #60a5fa, #93c5fd);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin: 8px 0 14px 0; filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.4));
         }
-        .form-group {
-            margin-bottom: 15px;
-            text-align: right;
-        }
-        label {
-            display: block;
-            font-size: 13px;
-            margin-bottom: 5px;
-            color: #94a3b8;
-        }
+        .screen { display: none; flex: 1; flex-direction: column; }
+        .screen.active { display: flex; }
+        .form-group { margin-bottom: 15px; text-align: right; }
+        label { display: block; font-size: 12px; margin-bottom: 6px; color: #93c5fd; }
         input, select {
-            width: 100%;
-            padding: 10px;
-            background: #0f172a;
-            border: 1px solid #475569;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 14px;
-            box-sizing: border-box;
-            outline: none;
-            font-family: 'Noto Sans Arabic', sans-serif;
-        }
-        input:focus, select:focus {
-            border-color: #38bdf8;
-        }
-        .hint {
-            font-size: 11px;
-            color: #64748b;
-            margin-top: 3px;
-            display: block;
+            width: 100%; padding: 12px 14px; background: #1e293b;
+            border: 1px solid #3b82f6; border-radius: 12px; color: #fff;
+            font-size: 14px; outline: none; font-family: 'Noto Sans Arabic', sans-serif;
         }
         .btn {
-            width: 100%;
-            background-color: #38bdf8;
-            color: #0f172a;
-            border: none;
-            padding: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 10px;
+            width: 100%; background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: #ffffff; border: none; padding: 13px; font-size: 15px;
+            font-weight: bold; border-radius: 12px; cursor: pointer; margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
-        .btn:active {
-            background-color: #0284c7;
+        .btn:active { transform: scale(0.97); }
+        .btn:disabled { background: #334155; opacity: 0.6; cursor: not-allowed; box-shadow: none; }
+        .top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 15px; background: rgba(30, 41, 59, 0.8);
+            padding: 10px 16px; border-radius: 14px; border: 1px solid #3b82f6;
         }
-        .hidden {
-            display: none !important;
+        .card {
+            background: rgba(30, 41, 59, 0.75); border-radius: 14px;
+            padding: 16px; margin-bottom: 14px; text-align: right;
+            border: 1px solid #3b82f6; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
-        .profile-avatar-container {
-            position: relative;
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 10px auto;
+        .card h3 { margin: 0 0 6px 0; color: #f59e0b; font-size: 15px; }
+        .card p { margin: 0 0 10px 0; font-size: 12px; color: #93c5fd; }
+        .arena {
+            background: linear-gradient(to bottom, #172554, #020617);
+            border: 2px solid #3b82f6; border-radius: 16px; height: 260px;
+            position: relative; overflow: hidden; margin-bottom: 12px;
+            transition: background 0.3s;
         }
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #38bdf8;
-            background: #0f172a;
-        }
-        .avatar-upload-btn {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            background: #eab308;
-            color: #0f172a;
-            border: none;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        .game-card {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            text-align: right;
-        }
-        .game-card h3 {
-            margin: 0 0 5px 0;
-            color: #eab308;
-            font-size: 18px;
-        }
-        .game-card p {
-            margin: 0 0 10px 0;
-            font-size: 12px;
-            color: #94a3b8;
-        }
-        .leaderboard-box {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 15px;
-            text-align: right;
-        }
-        .leaderboard-box h4 {
-            margin: 0 0 8px 0;
-            color: #38bdf8;
-            font-size: 14px;
-        }
-        .score-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
-            padding: 6px 0;
-            border-bottom: 1px solid #1e293b;
-            color: #94a3b8;
-        }
-        .leaderboard-user {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .mini-avatar {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1px solid #38bdf8;
-        }
-        .game-arena {
-            background: linear-gradient(to bottom, #1e293b, #0f172a);
-            border: 2px solid #334155;
-            border-radius: 12px;
-            height: 210px;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 15px;
-            transition: background 0.5s ease;
+        .arena.speeding {
+            background: linear-gradient(to bottom, #3b0764, #1e1b4b);
+            border-color: #a855f7;
         }
         #player {
-            width: 28px;
-            height: 28px;
-            background-color: #38bdf8;
-            border-radius: 6px;
-            position: absolute;
-            bottom: 10px;
-            left: 35px;
+            width: 32px; height: 32px; background: #38bdf8;
+            border-radius: 50%; position: absolute; bottom: 10px; left: 40px;
+            box-shadow: 0 0 15px #38bdf8; transition: border 0.2s, box-shadow 0.2s;
         }
+        #player.shielded { border: 3px solid #10b981; box-shadow: 0 0 20px #10b981; }
+        #player.magnetized { border: 3px solid #f59e0b; box-shadow: 0 0 20px #f59e0b; }
+        #player.speedboosted { border: 3px solid #eab308; box-shadow: 0 0 25px #eab308; }
         #obstacle {
-            width: 20px;
-            height: 35px;
-            background-color: #ef4444;
-            border-radius: 4px;
-            position: absolute;
-            bottom: 10px;
-            left: 370px;
+            width: 22px; height: 40px; background: linear-gradient(135deg, #f87171, #b91c1c);
+            border-radius: 8px; position: absolute; bottom: 10px; left: 350px;
         }
-        #coin {
-            width: 16px;
-            height: 16px;
-            background-color: #eab308;
-            border-radius: 50%;
-            position: absolute;
-            bottom: 50px;
-            left: 390px;
-            box-shadow: 0 0 8px #eab308;
+        #coinItem {
+            width: 20px; height: 20px; background: radial-gradient(circle, #fde047, #ca8a04);
+            border-radius: 50%; position: absolute; bottom: 55px; left: 380px; box-shadow: 0 0 12px #facc15;
         }
-        #shieldItem {
-            width: 22px;
-            height: 22px;
-            background-color: #3b82f6;
-            border-radius: 50%;
-            position: absolute;
-            bottom: 60px;
-            left: 450px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 12px;
-            box-shadow: 0 0 10px #3b82f6;
+        .powerup {
+            width: 24px; height: 24px; border-radius: 6px; position: absolute;
+            bottom: 60px; display: flex; justify-content: center; align-items: center;
+            font-size: 13px; font-weight: bold; color: #fff;
         }
-        .score-box {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #eab308;
+        #shieldItem { background: #10b981; box-shadow: 0 0 10px #10b981; left: 800px; }
+        #magnetItem { background: #f59e0b; box-shadow: 0 0 10px #f59e0b; left: 1400px; }
+        #speedItem { background: #eab308; box-shadow: 0 0 12px #eab308; left: 2000px; }
+        .game-stats {
+            display: flex; justify-content: space-between; font-size: 12px;
+            font-weight: bold; color: #f59e0b; margin-bottom: 8px; flex-wrap: wrap; gap: 4px;
         }
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+        .jump-control-btn {
+            width: 100px; height: 100px; background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: #ffffff; border: 4px solid #93c5fd; border-radius: 50%;
+            font-size: 18px; font-weight: bold; cursor: pointer; display: flex;
+            justify-content: center; align-items: center; margin: 0 auto;
         }
-        .back-btn, .settings-btn {
-            background: #475569;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
+        #gameOverBox {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 7, 18, 0.95); display: none;
+            flex-direction: column; justify-content: center; align-items: center; padding: 20px; z-index: 100;
         }
-        .settings-box {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 15px;
-            text-align: right;
-            margin-bottom: 12px;
-        }
-        .toggle-switch {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .shop-box {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 15px;
-            text-align: right;
-        }
-        .shop-box h4 {
-            margin: 0 0 8px 0;
-            color: #eab308;
-            font-size: 14px;
-        }
-        .skin-options {
-            display: flex;
-            gap: 8px;
-        }
-        .skin-btn {
-            flex: 1;
-            padding: 6px;
-            border: 1px solid #475569;
-            background: #1e293b;
-            color: white;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 11px;
-        }
-        .skin-btn.active {
-            border-color: #38bdf8;
-            background: #0f172a;
-        }
-        .round-jump-btn {
-            width: 95px;
-            height: 95px;
-            background: linear-gradient(135deg, #38bdf8, #0284c7);
-            color: #0f172a;
-            border: 4px solid #bae6fd;
-            border-radius: 50%;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto;
-            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
-            touch-action: manipulation;
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
-        }
-        .round-jump-btn:active {
-            transform: scale(0.92);
-            box-shadow: 0 2px 10px rgba(56, 189, 248, 0.6);
-            background: linear-gradient(135deg, #0284c7, #0369a1);
-        }
-
-        #gameOverScreen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(4px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-radius: 16px;
-            box-sizing: border-box;
-            padding: 20px;
-            z-index: 10;
-        }
-        #gameOverScreen h2 {
-            color: #ef4444;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        .game-over-stats {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 10px;
-            padding: 12px;
-            width: 100%;
-            max-width: 280px;
-            margin-bottom: 15px;
-            text-align: right;
-            font-size: 14px;
-            color: #94a3b8;
-            box-sizing: border-box;
-        }
-        .game-over-stats span {
-            color: #eab308;
-            font-weight: bold;
+        #gameOverBox.show { display: flex; }
+        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .shop-item {
+            background: #1e293b; border: 1px solid #3b82f6; border-radius: 12px;
+            padding: 10px; text-align: center;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        
-        <!-- 1. شاشەی تۆمارکردن -->
-        <div id="authScreen">
-            <h1>تۆپتۆپ</h1>
-            <p style="color: #94a3b8; font-size: 13px; margin-bottom: 20px;">هەژمارەکەت دروست بکە و وێنەی پڕۆفایلت دیاری بکە</p>
-            
-            <div class="profile-avatar-container">
-                <img id="regAvatarPreview" src="https://via.placeholder.com/80?text=وێنە" class="profile-avatar" alt="وێنەی پڕۆفایل">
-                <button type="button" class="avatar-upload-btn" onclick="document.getElementById('regAvatarInput').click()">+</button>
-                <input type="file" id="regAvatarInput" accept="image/*" class="hidden" onchange="previewRegAvatar(event)">
-            </div>
-            
+        <!-- Auth Screen -->
+        <div id="authScreen" class="screen active">
+            <div class="brand-title">تۆپ تۆپ</div>
             <div class="form-group">
-                <label>ناوی بەکارهێنەر (Username)</label>
-                <input type="text" id="usernameInput" placeholder="بۆ نموونە: ahmad123">
-                <span class="hint">تەنها پیت و ژمارەی ئینگلیزی ڕێگەپێدراوە.</span>
+                <label>ناوی بەکارهێنەر</label>
+                <input type="text" id="usernameInput" placeholder="تکایە ناوت بنووسە...">
             </div>
-            
-            <div class="form-group">
-                <label>وشەی تێپەڕ (Password)</label>
-                <input type="password" id="passwordInput" placeholder="رمزەکەت بنووسە...">
-                <span class="hint">لانیکەم 4 پیت یان ژمارە.</span>
-            </div>
-            
-            <button class="btn" onclick="loginUser()">تۆمارکردن / چوونەژوورەوە</button>
+            <button class="btn" onclick="registerUser()">دەستپێکردن</button>
         </div>
 
-        <!-- 2. شاشەی لیست و هاب -->
-        <div id="hubScreen" class="hidden">
+        <!-- Hub Screen -->
+        <div id="hubScreen" class="screen">
+            <div class="brand-title">تۆپ تۆپ</div>
             <div class="top-bar">
-                <button class="settings-btn" onclick="openSettings()">⚙️ ڕێکخستن</button>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span id="welcomeText" style="font-size: 14px; font-weight: bold; color: #38bdf8;"></span>
-                    <img id="hubAvatar" src="" class="mini-avatar" alt="پڕۆفایل">
-                </div>
+                <span id="hubUsernameText" style="font-weight: bold; color: #38bdf8;"></span>
+                <span>💰 کۆین: <span id="hubTotalCoins">0</span></span>
             </div>
-            
-            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 8px; margin-bottom: 12px; font-size: 13px; text-align: right; color: #eab308;">
-                💰 دراوەکانی کۆکراوە: <span id="totalCoinsHub" style="font-weight: bold;">0</span>
+            <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                <button class="btn" onclick="openShopScreen()" style="background: #8b5cf6;">🛒 فرۆشگا</button>
+                <button class="btn" onclick="openSettingsScreen()" style="background: #475569;">⚙️ ڕێکخستن</button>
             </div>
-
-            <div class="shop-box">
-                <h4>🎨 شێوازی یاریزان (Skins)</h4>
-                <div class="skin-options">
-                    <button class="skin-btn active" id="skin_sky" onclick="changeSkin('#38bdf8')">شینی ئاسمانی</button>
-                    <button class="skin-btn" id="skin_gold" onclick="changeSkin('#eab308')">زێڕین</button>
-                    <button class="skin-btn" id="skin_green" onclick="changeSkin('#22c55e')">سەوزی هێمن</button>
-                </div>
-            </div>
-
-            <div class="leaderboard-box">
-                <h4>🏆 باشترین یاریزانەکان (خۆجێی)</h4>
-                <div id="leaderboardList">
-                    <div class="score-row"><span>بارکردن...</span><span>0</span></div>
-                </div>
-            </div>
-            
-            <div class="game-card">
-                <h3>یاری بازدانی خێرا (تۆپتۆپ)</h3>
-                <p>کۆسپەکان ببڕە و کوین و قەڵغان کۆبکەرەوە!</p>
-                <button class="btn" style="margin-top: 5px; padding: 8px;" onclick="startToptopGame()">دەستپێکردنی یاری</button>
+            <div class="card">
+                <h3>یاری کێبڕکێی ئاسۆیی</h3>
+                <p>🛡️ قەڵغان، 🧲 موگناتیس و ⚡ بروسکە کۆبکەرەوە!</p>
+                <button class="btn" onclick="startGamePlay()">دەستپێکردنی یاری</button>
             </div>
         </div>
 
-        <!-- 3. شاشەی سێتینگ -->
-        <div id="settingsScreen" class="hidden">
-            <div class="top-bar">
-                <button class="back-btn" onclick="returnToHub()">← گەڕانەوە</button>
-                <h2 style="font-size: 16px; margin: 0; color: #38bdf8;">ڕێکخستنەکانی پڕۆفایل و یاری</h2>
+        <!-- Shop Screen -->
+        <div id="shopScreen" class="screen">
+            <div class="brand-title">فرۆشگای شێوازەکان</div>
+            <div style="text-align: center; margin-bottom: 10px; color: #f59e0b; font-size: 14px;">
+                💰 کۆینی بەردەست: <span id="shopTotalCoins">0</span>
             </div>
-
-            <div class="settings-box" style="text-align: center;">
-                <label style="margin-bottom: 8px;">گۆڕینی وێنەی پڕۆفایل:</label>
-                <div class="profile-avatar-container" style="margin-bottom: 10px;">
-                    <img id="settingsAvatarPreview" src="" class="profile-avatar" alt="پڕۆفایل">
-                    <button type="button" class="avatar-upload-btn" onclick="document.getElementById('settingsAvatarInput').click()">✏️</button>
-                    <input type="file" id="settingsAvatarInput" accept="image/*" class="hidden" onchange="updateSettingsAvatar(event)">
+            <div class="shop-grid">
+                <div class="shop-item">
+                    <div style="width: 30px; height: 30px; background: #38bdf8; border-radius: 50%; margin: 5px auto;"></div>
+                    <p style="font-size: 11px;">شینی بنەڕەتی</p>
+                    <button class="btn" id="btn-skin-default" style="padding: 5px; font-size: 11px;" onclick="selectSkin('#38bdf8')">هەڵبژاردن</button>
+                </div>
+                <div class="shop-item">
+                    <div style="width: 30px; height: 30px; background: #ec4899; border-radius: 50%; margin: 5px auto;"></div>
+                    <p style="font-size: 11px;">پەمەیی ناوازە</p>
+                    <button class="btn" id="btn-skin-pink" style="padding: 5px; font-size: 11px;" onclick="handleSkinAction('#ec4899', 20, 'pink')">کڕین (20💰)</button>
+                </div>
+                <div class="shop-item">
+                    <div style="width: 30px; height: 30px; background: #10b981; border-radius: 50%; margin: 5px auto;"></div>
+                    <p style="font-size: 11px;">سەوزی زومڕودی</p>
+                    <button class="btn" id="btn-skin-green" style="padding: 5px; font-size: 11px;" onclick="handleSkinAction('#10b981', 40, 'green')">کڕین (40💰)</button>
                 </div>
             </div>
+            <button class="btn" style="background: #334155; margin-top: 15px;" onclick="backToHub()">گەڕانەوە</button>
+        </div>
 
-            <div class="settings-box">
-                <div class="toggle-switch">
-                    <span style="font-size: 14px;">دەنگی یاری (Sound FX)</span>
-                    <input type="checkbox" id="soundToggle" checked style="width: 20px; height: 20px; cursor: pointer; accent-color: #38bdf8;" onclick="toggleSound()">
-                </div>
-            </div>
-
-            <div class="settings-box" style="text-align: right;">
-                <label style="margin-bottom: 8px;">ئاستی قورسیی یاری (Difficulty):</label>
-                <select id="difficultySelect" onchange="changeDifficulty()">
-                    <option value="easy">ئاسانی (هێواش)</option>
-                    <option value="normal" selected>ناوەند (ئاسایی)</option>
-                    <option value="hard">قورس (خێرا)</option>
+        <!-- Settings Screen -->
+        <div id="settingsScreen" class="screen">
+            <div class="brand-title">ڕێکخستنەکان</div>
+            <div class="card">
+                <label>ئاستی سەختی</label>
+                <select id="difficultySelect" onchange="changeDifficulty(this.value)">
+                    <option value="easy">ئاسان</option>
+                    <option value="normal" selected>ئاسایی</option>
+                    <option value="hard">قورس</option>
                 </select>
             </div>
-
-            <div class="settings-box" style="text-align: right;">
-                <label style="margin-bottom: 8px;">ڕووکاری پاشبنەما (Arena Theme):</label>
-                <select id="themeSelect" onchange="changeTheme()">
-                    <option value="classic" selected>شەوی کلاسیکی</option>
-                    <option value="sunset">خۆرنشینی سوور</option>
-                    <option value="matrix">ماتریۆکسی سەوز</option>
-                </select>
-            </div>
-
-            <button class="btn" style="background-color: #ef4444; color: white; margin-top: 15px;" onclick="logoutAccount()">دەرچوون لە هەژمار (Logout)</button>
+            <button class="btn" style="background: #334155;" onclick="backToHub()">گەڕانەوە</button>
         </div>
 
-        <!-- 4. شاشەی یارییەکە -->
-        <div id="gameScreen" class="hidden">
-            <button class="back-btn" onclick="returnToHub()" style="float: right; margin-bottom: 10px;">← گەڕانەوە</button>
-            <div style="clear: both;"></div>
-            
-            <div class="score-box">
-                <span>خاڵ: <span id="score">0</span></span>
-                <span>💰 کوین: <span id="coins">0</span></span>
-                <span id="shieldStatus" style="color: #3b82f6; display: none;">🛡️ قەڵغان هەیە</span>
+        <!-- Game Screen -->
+        <div id="gameScreen" class="screen">
+            <div class="game-stats">
+                <span>خاڵ: <span id="currentScore">0</span></span>
+                <span>🛡️: <span id="shieldTimer">0</span>s</span>
+                <span>🧲: <span id="magnetTimer">0</span>s</span>
+                <span>⚡: <span id="speedTimer">0</span>s</span>
+                <span>💰: <span id="currentCoins">0</span></span>
             </div>
 
-            <div class="game-arena" id="gameArena">
+            <div class="arena" id="gameArena">
                 <div id="player"></div>
                 <div id="obstacle"></div>
-                <div id="coin"></div>
-                <div id="shieldItem">🛡️</div>
+                <div id="coinItem"></div>
+                <div id="shieldItem" class="powerup">🛡️</div>
+                <div id="magnetItem" class="powerup">🧲</div>
+                <div id="speedItem" class="powerup">⚡</div>
 
-                <div id="gameOverScreen" class="hidden">
-                    <h2>یاری تەواو بوو!</h2>
-                    <div class="game-over-stats">
-                        <div>خاڵەکانت: <span id="finalScore">0</span></div>
-                        <div style="margin-top: 5px;">بەرزترین ئاستت: <span id="bestScore">0</span></div>
-                        <div style="margin-top: 5px;">کۆینە کۆکراوەکان: <span id="finalCoins">0</span></div>
-                    </div>
-                    <button class="btn" style="max-width: 280px; margin-bottom: 8px;" onclick="startToptopGame()">یاری دیسان بکەرەوە</button>
-                    <button class="btn" style="max-width: 280px; background-color: #475569; color: white;" onclick="returnToHub()">گەڕانەوە بۆ سەرەتا</button>
+                <div id="gameOverBox">
+                    <h2 style="color: #f87171;">یاری تەواو بوو!</h2>
+                    <p style="font-size: 13px;">خاڵی ئەمجارە: <span id="finalScore" style="color: #f59e0b;">0</span></p>
+                    <button class="btn" onclick="startGamePlay()">دووبارە</button>
+                    <button class="btn" style="background: #334155;" onclick="backToHub()">شاشەی سەرەکی</button>
                 </div>
             </div>
 
-            <button class="round-jump-btn" onclick="jumpPlayer()">بازدان</button>
+            <button class="jump-control-btn" onclick="jumpAction()">بازدان</button>
         </div>
-
     </div>
 
-    <!-- JavaScript -->
     <script>
-        let currentUsername = "";
-        let currentUserAvatar = "";
+        let currentUser = "";
+        let totalCoins = 0;
+        let playerColor = "#38bdf8";
+        let ownedSkins = ["default"];
+
+        let isGameActive = false;
         let score = 0;
         let coins = 0;
-        let totalCoins = 0;
-        let isPlaying = false;
-        
-        let obstacleLeft = 370;
-        let coinLeft = 390;
-        let shieldLeft = 450;
-        let hasShield = false;
-        
+
         let playerY = 10;
         let playerVelocityY = 0;
         let isJumping = false;
-        const gravity = 0.55;
-        const jumpForce = 11;
+        const gravity = 0.6;
+        const jumpStrength = 11;
 
-        let playerColor = "#38bdf8";
-        let animationFrameId;
-        let scoreInterval;
-        let soundEnabled = true;
+        let obstacleX = 350;
+        let coinX = 380;
+        let shieldX = 800;
+        let magnetX = 1400;
+        let speedX = 2000;
 
-        let difficultyMultiplier = 1.0;
-        let selectedTheme = "classic";
+        let shieldActive = false;
+        let magnetActive = false;
+        let speedActive = false;
 
+        let shieldTimeLeft = 0;
+        let magnetTimeLeft = 0;
+        let speedTimeLeft = 0;
+
+        let gameAnimFrame;
+        let scoreIntervalTimer;
+        let powerupTimer;
+        let gameDifficulty = "normal";
+
+        // Audio System Setup
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let tempAvatarBase64 = "https://via.placeholder.com/80?text=وێنە";
-        
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            if (type === 'jump') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.exponentialRampToValueAtTime(400, now + 0.12);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+                osc.start(now);
+                osc.stop(now + 0.12);
+            } else if (type === 'coin') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(987.77, now); // B5 note
+                osc.frequency.setValueAtTime(1318.51, now + 0.08); // E6 note
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            } else if (type === 'powerup') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(800, now + 0.25);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            } else if (type === 'gameover') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(80, now + 0.4);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc.start(now);
+                osc.stop(now + 0.4);
+            } else if (type === 'buy') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.exponentialRampToValueAtTime(880, now + 0.2);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            } else if (type === 'select') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, now);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            }
+        }
+
         window.onload = function() {
-            let savedUser = localStorage.getItem("toptop_logged_user");
-            if (savedUser) {
-                currentUsername = savedUser;
-                currentUserAvatar = localStorage.getItem("toptop_avatar_" + currentUsername) || "https://via.placeholder.com/80?text=وێنە";
-                
-                document.getElementById("welcomeText").innerText = currentUsername;
-                document.getElementById("hubAvatar").src = currentUserAvatar;
-                
+            let savedName = localStorage.getItem("top_top_user");
+            if (savedName) {
+                currentUser = savedName;
+                document.getElementById("hubUsernameText").innerText = currentUser;
                 loadUserData();
-                updateLeaderboardUI();
-                document.getElementById("authScreen").classList.add("hidden");
-                document.getElementById("hubScreen").classList.remove("hidden");
+                switchScreen("hubScreen");
             }
         };
 
-        function previewRegAvatar(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    tempAvatarBase64 = e.target.result;
-                    document.getElementById("regAvatarPreview").src = tempAvatarBase64;
-                }
-                reader.readAsDataURL(file);
+        function switchScreen(id) {
+            document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+            document.getElementById(id).classList.add("active");
+        }
+
+        function registerUser() {
+            let name = document.getElementById("usernameInput").value.trim();
+            if (name) {
+                currentUser = name;
+                localStorage.setItem("top_top_user", currentUser);
+                document.getElementById("hubUsernameText").innerText = currentUser;
+                loadUserData();
+                switchScreen("hubScreen");
             }
-        }
-
-        function updateSettingsAvatar(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    currentUserAvatar = e.target.result;
-                    localStorage.setItem("toptop_avatar_" + currentUsername, currentUserAvatar);
-                    document.getElementById("settingsAvatarPreview").src = currentUserAvatar;
-                    document.getElementById("hubAvatar").src = currentUserAvatar;
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function playSound(type) {
-            if (!soundEnabled) return;
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-
-            if (type === 'jump') {
-                oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.15);
-                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-                oscillator.start();
-                oscillator.stop(audioCtx.currentTime + 0.15);
-            } else if (type === 'coin') {
-                oscillator.type = 'triangle';
-                oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.1);
-                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-                oscillator.start();
-                oscillator.stop(audioCtx.currentTime + 0.1);
-            } else if (type === 'shield') {
-                oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.2);
-                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-                oscillator.start();
-                oscillator.stop(audioCtx.currentTime + 0.2);
-            } else if (type === 'hit') {
-                oscillator.type = 'sawtooth';
-                oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
-                oscillator.frequency.linearRampToValueAtTime(40, audioCtx.currentTime + 0.3);
-                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-                oscillator.start();
-                oscillator.stop(audioCtx.currentTime + 0.3);
-            }
-        }
-
-        function toggleSound() {
-            soundEnabled = document.getElementById("soundToggle").checked;
-        }
-
-        function changeDifficulty() {
-            const diff = document.getElementById("difficultySelect").value;
-            if (diff === 'easy') difficultyMultiplier = 0.8;
-            else if (diff === 'normal') difficultyMultiplier = 1.0;
-            else if (diff === 'hard') difficultyMultiplier = 1.35;
-        }
-
-        function changeTheme() {
-            selectedTheme = document.getElementById("themeSelect").value;
-            updateEnvironment();
-        }
-
-        function openSettings() {
-            document.getElementById("settingsAvatarPreview").src = currentUserAvatar;
-            document.getElementById("hubScreen").classList.add("hidden");
-            document.getElementById("settingsScreen").classList.remove("hidden");
-        }
-
-        function changeSkin(color) {
-            playerColor = color;
-            if (!hasShield) {
-                document.getElementById("player").style.backgroundColor = color;
-            }
-            
-            document.querySelectorAll('.skin-btn').forEach(btn => btn.classList.remove('active'));
-            if(color === '#38bdf8') document.getElementById('skin_sky').classList.add('active');
-            if(color === '#eab308') document.getElementById('skin_gold').classList.add('active');
-            if(color === '#22c55e') document.getElementById('skin_green').classList.add('active');
-        }
-
-        function loginUser() {
-            const username = document.getElementById("usernameInput").value.trim();
-            const password = document.getElementById("passwordInput").value.trim();
-
-            const usernameRegex = /^[A-Za-z0-9]+$/;
-            if (!usernameRegex.test(username)) {
-                alert("ناوی بەکارهێنەر هەڵەیە! تکایە تەنها پیت و ژمارەی ئینگلیزی بەکاربهێنە.");
-                return;
-            }
-
-            const passwordRegex = /^[A-Za-z0-9]{4,}$/;
-            if (!passwordRegex.test(password)) {
-                alert("وشەی تێپەڕ هەڵەیە! دەبێت لانیکەم 4 پیت یان ژمارە بێت.");
-                return;
-            }
-
-            currentUsername = username;
-            currentUserAvatar = tempAvatarBase64;
-            
-            localStorage.setItem("toptop_logged_user", currentUsername);
-            localStorage.setItem("toptop_avatar_" + currentUsername, currentUserAvatar);
-
-            document.getElementById("welcomeText").innerText = currentUsername;
-            document.getElementById("hubAvatar").src = currentUserAvatar;
-            
-            loadUserData();
-            updateLeaderboardUI();
-            document.getElementById("authScreen").classList.add("hidden");
-            document.getElementById("hubScreen").classList.remove("hidden");
-        }
-
-        function logoutAccount() {
-            localStorage.removeItem("toptop_logged_user");
-            location.reload();
         }
 
         function loadUserData() {
-            let savedCoins = localStorage.getItem("toptop_coins_" + currentUsername);
-            totalCoins = savedCoins ? parseInt(savedCoins) : 0;
-            document.getElementById("totalCoinsHub").innerText = totalCoins;
+            totalCoins = parseInt(localStorage.getItem("coins_" + currentUser) || "0");
+            playerColor = localStorage.getItem("color_" + currentUser) || "#38bdf8";
+            ownedSkins = JSON.parse(localStorage.getItem("owned_skins_" + currentUser) || '["default"]');
+
+            document.getElementById("hubTotalCoins").innerText = totalCoins;
+            document.getElementById("shopTotalCoins").innerText = totalCoins;
+            document.getElementById("player").style.background = playerColor;
+            document.getElementById("player").style.boxShadow = `0 0 15px ${playerColor}`;
+
+            updateShopUI();
         }
 
-        function saveUserData() {
-            localStorage.setItem("toptop_coins_" + currentUsername, totalCoins);
-            document.getElementById("totalCoinsHub").innerText = totalCoins;
-        }
+        function openShopScreen() { loadUserData(); switchScreen("shopScreen"); }
+        function openSettingsScreen() { switchScreen("settingsScreen"); }
+        function backToHub() { stopGameSession(); loadUserData(); switchScreen("hubScreen"); }
 
-        function saveScoreToLocalLeaderboard(name, finalScore, avatar) {
-            if (!name) return;
-            let allScores = JSON.parse(localStorage.getItem("toptop_local_scores") || "{}");
-            
-            if (!allScores[name] || finalScore > allScores[name].score) {
-                allScores[name] = {
-                    name: name,
-                    score: finalScore,
-                    avatar: avatar || ""
-                };
-                localStorage.setItem("toptop_local_scores", JSON.stringify(allScores));
-            }
-        }
-
-        function updateLeaderboardUI() {
-            let container = document.getElementById("leaderboardList");
-            let allScoresObj = JSON.parse(localStorage.getItem("toptop_local_scores") || "{}");
-            
-            let scoresArray = [];
-            for (let key in allScoresObj) {
-                scoresArray.push(allScoresObj[key]);
-            }
-            
-            scoresArray.sort((a, b) => b.score - a.score);
-            
-            container.innerHTML = "";
-            if (scoresArray.length === 0) {
-                container.innerHTML = `<div class="score-row"><span>هیچ تۆمارێک نییە</span><span>0</span></div>`;
-                return;
+        function updateShopUI() {
+            let btnPink = document.getElementById("btn-skin-pink");
+            if (ownedSkins.includes("pink")) {
+                btnPink.innerText = playerColor === "#ec4899" ? "هەڵبژێردراوە" : "هەڵبژاردن";
+                btnPink.onclick = function() { selectSkin('#ec4899'); };
+                btnPink.disabled = playerColor === "#ec4899";
+                btnPink.style.background = playerColor === "#ec4899" ? "#10b981" : "";
             }
 
-            let rank = 1;
-            for (let i = 0; i < Math.min(scoresArray.length, 3); i++) {
-                let data = scoresArray[i];
-                let userAvatar = data.avatar || "https://via.placeholder.com/24?text=وێنە";
-                
-                let rankColor = "#94a3b8";
-                if (rank === 1) rankColor = "#eab308";
-                else if (rank === 2) rankColor = "#cbd5e1";
-                else if (rank === 3) rankColor = "#b45309";
-
-                container.innerHTML += `
-                    <div class="score-row">
-                        <div class="leaderboard-user">
-                            <span style="color: ${rankColor}; font-weight: bold;">#${rank}</span>
-                            <img src="${userAvatar}" class="mini-avatar" alt="">
-                            <span style="color: #f8fafc; font-weight: bold;">${data.name}</span>
-                        </div>
-                        <span style="color: #eab308; font-weight: bold;">${data.score} خاڵ</span>
-                    </div>`;
-                rank++;
+            let btnGreen = document.getElementById("btn-skin-green");
+            if (ownedSkins.includes("green")) {
+                btnGreen.innerText = playerColor === "#10b981" ? "هەڵبژێردراوە" : "هەڵبژاردن";
+                btnGreen.onclick = function() { selectSkin('#10b981'); };
+                btnGreen.disabled = playerColor === "#10b981";
+                btnGreen.style.background = playerColor === "#10b981" ? "#10b981" : "";
             }
+
+            let btnDefault = document.getElementById("btn-skin-default");
+            btnDefault.innerText = playerColor === "#38bdf8" ? "هەڵبژێردراوە" : "هەڵبژاردن";
+            btnDefault.disabled = playerColor === "#38bdf8";
+            btnDefault.style.background = playerColor === "#38bdf8" ? "#10b981" : "";
         }
 
-        function startToptopGame() {
-            document.getElementById("gameOverScreen").classList.add("hidden");
-            document.getElementById("hubScreen").classList.add("hidden");
-            document.getElementById("settingsScreen").classList.add("hidden");
-            document.getElementById("gameScreen").classList.remove("hidden");
-            document.getElementById("player").style.backgroundColor = playerColor;
-            
-            resetGameVariables();
-            isPlaying = true;
-            
-            cancelAnimationFrame(animationFrameId);
-            clearInterval(scoreInterval);
-
-            animationFrameId = requestAnimationFrame(gameLoop);
-            
-            scoreInterval = setInterval(() => {
-                if (isPlaying) {
-                    score++;
-                    document.getElementById("score").innerText = score;
-                    updateEnvironment();
-                }
-            }, 300);
-        }
-
-        function returnToHub() {
-            isPlaying = false;
-            cancelAnimationFrame(animationFrameId);
-            clearInterval(scoreInterval);
-            
-            document.getElementById("gameOverScreen").classList.add("hidden");
-            document.getElementById("gameScreen").classList.add("hidden");
-            document.getElementById("settingsScreen").classList.add("hidden");
-            
+        function selectSkin(color) {
+            playerColor = color;
+            localStorage.setItem("color_" + currentUser, playerColor);
+            playSound('select');
             loadUserData();
-            updateLeaderboardUI();
-            
-            document.getElementById("hubScreen").classList.remove("hidden");
         }
 
-        function resetGameVariables() {
-            score = 0;
-            coins = 0;
-            hasShield = false;
-            obstacleLeft = 370;
-            coinLeft = 390;
-            shieldLeft = 450;
-            playerY = 10;
-            playerVelocityY = 0;
-            isJumping = false;
-            document.getElementById("score").innerText = 0;
-            document.getElementById("coins").innerText = 0;
-            document.getElementById("shieldStatus").style.display = "none";
-            document.getElementById("obstacle").style.left = obstacleLeft + "px";
-            document.getElementById("coin").style.left = coinLeft + "px";
-            document.getElementById("coin").style.display = "block";
-            document.getElementById("shieldItem").style.left = shieldLeft + "px";
-            document.getElementById("shieldItem").style.display = "flex";
-            document.getElementById("player").style.bottom = playerY + "px";
-            updateEnvironment();
-        }
-
-        function updateEnvironment() {
-            let arena = document.getElementById("gameArena");
-            let obs = document.getElementById("obstacle");
-
-            if (selectedTheme === "sunset") {
-                arena.style.background = "linear-gradient(to bottom, #7c2d12, #431407)";
-                obs.style.backgroundColor = "#fb923c";
-            } else if (selectedTheme === "matrix") {
-                arena.style.background = "linear-gradient(to bottom, #064e3b, #022c22)";
-                obs.style.backgroundColor = "#34d399";
+        function handleSkinAction(color, price, skinKey) {
+            if (ownedSkins.includes(skinKey)) {
+                selectSkin(color);
             } else {
-                if (score >= 100) {
-                    arena.style.background = "linear-gradient(to bottom, #7f1d1d, #450a0a)";
-                    obs.style.backgroundColor = "#eab308";
-                } else if (score >= 20) {
-                    arena.style.background = "linear-gradient(to bottom, #311026, #0f172a)";
-                    obs.style.backgroundColor = "#a855f7";
+                if (totalCoins >= price) {
+                    totalCoins -= price;
+                    ownedSkins.push(skinKey);
+                    localStorage.setItem("coins_" + currentUser, totalCoins);
+                    localStorage.setItem("owned_skins_" + currentUser, JSON.stringify(ownedSkins));
+                    playSound('buy');
+                    selectSkin(color);
                 } else {
-                    arena.style.background = "linear-gradient(to bottom, #1e293b, #0f172a)";
-                    obs.style.backgroundColor = "#ef4444";
+                    alert("کۆینی تەواوت نییە!");
                 }
             }
         }
 
-        function gameLoop() {
-            if (!isPlaying) return;
+        function changeDifficulty(val) { gameDifficulty = val; }
 
-            let baseSpeed = 4.2;
-            if (score >= 100) baseSpeed = 7.0;
-            else if (score >= 50) baseSpeed = 5.8;
-            else if (score >= 20) baseSpeed = 5.0;
+        function startGamePlay() {
+            document.getElementById("gameOverBox").classList.remove("show");
+            document.getElementById("gameArena").classList.remove("speeding");
+            switchScreen("gameScreen");
 
-            let speed = baseSpeed * difficultyMultiplier;
+            score = 0; coins = 0; 
+            obstacleX = 350; coinX = 380;
+            shieldX = 800; magnetX = 1400; speedX = 2000;
+            
+            shieldActive = false; magnetActive = false; speedActive = false;
+            shieldTimeLeft = 0; magnetTimeLeft = 0; speedTimeLeft = 0;
+            playerY = 10; playerVelocityY = 0; isJumping = false;
 
-            obstacleLeft -= speed;
-            if (obstacleLeft < -25) {
-                obstacleLeft = 370;
+            document.getElementById("currentScore").innerText = 0;
+            document.getElementById("currentCoins").innerText = 0;
+            document.getElementById("shieldTimer").innerText = 0;
+            document.getElementById("magnetTimer").innerText = 0;
+            document.getElementById("speedTimer").innerText = 0;
+
+            isGameActive = true;
+            cancelAnimationFrame(gameAnimFrame);
+            clearInterval(scoreIntervalTimer);
+            clearInterval(powerupTimer);
+
+            gameAnimFrame = requestAnimationFrame(gameLoopUpdate);
+            startScoreTimer();
+
+            powerupTimer = setInterval(() => {
+                if (shieldTimeLeft > 0) {
+                    shieldTimeLeft--;
+                    document.getElementById("shieldTimer").innerText = shieldTimeLeft;
+                    if (shieldTimeLeft === 0) {
+                        shieldActive = false;
+                        document.getElementById("player").classList.remove("shielded");
+                    }
+                }
+                if (magnetTimeLeft > 0) {
+                    magnetTimeLeft--;
+                    document.getElementById("magnetTimer").innerText = magnetTimeLeft;
+                    if (magnetTimeLeft === 0) {
+                        magnetActive = false;
+                        document.getElementById("player").classList.remove("magnetized");
+                    }
+                }
+                if (speedTimeLeft > 0) {
+                    speedTimeLeft--;
+                    document.getElementById("speedTimer").innerText = speedTimeLeft;
+                    if (speedTimeLeft === 0) {
+                        speedActive = false;
+                        document.getElementById("player").classList.remove("speedboosted");
+                        document.getElementById("gameArena").classList.remove("speeding");
+                        startScoreTimer();
+                    }
+                }
+            }, 1000);
+        }
+
+        function startScoreTimer() {
+            clearInterval(scoreIntervalTimer);
+            let interval = speedActive ? 120 : 300;
+            scoreIntervalTimer = setInterval(() => {
+                if (isGameActive) {
+                    score += speedActive ? 2 : 1;
+                    document.getElementById("currentScore").innerText = score;
+                }
+            }, interval);
+        }
+
+        function stopGameSession() {
+            isGameActive = false;
+            cancelAnimationFrame(gameAnimFrame);
+            clearInterval(scoreIntervalTimer);
+            clearInterval(powerupTimer);
+        }
+
+        function jumpAction() {
+            if (!isGameActive || isJumping) return;
+            isJumping = true; 
+            playerVelocityY = jumpStrength;
+            playSound('jump');
+        }
+
+        function gameLoopUpdate() {
+            if (!isGameActive) return;
+
+            let baseSpeed = gameDifficulty === "easy" ? 3.5 : gameDifficulty === "hard" ? 6.5 : 4.8;
+            let speed = speedActive ? baseSpeed * 1.8 : baseSpeed;
+
+            obstacleX -= speed;
+            if (obstacleX < -25) obstacleX = 360 + Math.random() * 60;
+            document.getElementById("obstacle").style.left = obstacleX + "px";
+
+            coinX -= speed;
+            if (coinX < -25) { coinX = 400 + Math.random() * 100; document.getElementById("coinItem").style.display = "block"; }
+            
+            if (magnetActive && coinX < 260) {
+                coinX -= 5;
+                if (coinX < 50) {
+                    coins++; totalCoins++;
+                    playSound('coin');
+                    document.getElementById("currentCoins").innerText = coins;
+                    document.getElementById("coinItem").style.display = "none";
+                    coinX = -30;
+                }
             }
-            document.getElementById("obstacle").style.left = obstacleLeft + "px";
+            document.getElementById("coinItem").style.left = coinX + "px";
 
-            coinLeft -= speed;
-            if (coinLeft < -25) {
-                coinLeft = 400 + Math.random() * 120;
-                document.getElementById("coin").style.display = "block";
-            }
-            document.getElementById("coin").style.left = coinLeft + "px";
+            // Spaced out powerups (Shield, Magnet, Speed)
+            shieldX -= speed;
+            if (shieldX < -30) shieldX = 1000 + Math.random() * 800;
+            document.getElementById("shieldItem").style.left = shieldX + "px";
 
-            shieldLeft -= speed;
-            if (shieldLeft < -25) {
-                shieldLeft = 600 + Math.random() * 300;
-                document.getElementById("shieldItem").style.display = "flex";
-            }
-            document.getElementById("shieldItem").style.left = shieldLeft + "px";
+            magnetX -= speed;
+            if (magnetX < -30) magnetX = 1600 + Math.random() * 900;
+            document.getElementById("magnetItem").style.left = magnetX + "px";
+
+            speedX -= speed;
+            if (speedX < -30) speedX = 2200 + Math.random() * 1000;
+            document.getElementById("speedItem").style.left = speedX + "px";
 
             if (isJumping) {
-                playerVelocityY -= gravity;
-                playerY += playerVelocityY;
-
-                if (playerY <= 10) {
-                    playerY = 10;
-                    isJumping = false;
-                    playerVelocityY = 0;
-                }
+                playerVelocityY -= gravity; playerY += playerVelocityY;
+                if (playerY <= 10) { playerY = 10; isJumping = false; playerVelocityY = 0; }
                 document.getElementById("player").style.bottom = playerY + "px";
             }
 
-            let coinElem = document.getElementById("coin");
-            if (coinElem.style.display !== "none" && coinLeft > 25 && coinLeft < 60 && playerY > 30 && playerY < 90) {
-                coins++;
-                totalCoins++;
-                document.getElementById("coins").innerText = coins;
-                coinElem.style.display = "none";
+            // Coin Collect
+            if (document.getElementById("coinItem").style.display !== "none" && coinX > 25 && coinX < 60 && playerY > 25 && playerY < 85) {
+                coins++; totalCoins++;
                 playSound('coin');
-                saveUserData();
+                document.getElementById("currentCoins").innerText = coins;
+                document.getElementById("coinItem").style.display = "none";
             }
 
-            let shieldElem = document.getElementById("shieldItem");
-            if (shieldElem.style.display !== "none" && shieldLeft > 25 && shieldLeft < 60 && playerY > 30 && playerY < 90) {
-                hasShield = true;
-                shieldElem.style.display = "none";
-                document.getElementById("shieldStatus").style.display = "inline";
-                document.getElementById("player").style.backgroundColor = "#3b82f6";
-                playSound('shield');
+            // Shield Collect
+            if (shieldX > 25 && shieldX < 60 && playerY > 30) {
+                shieldActive = true; shieldTimeLeft = 6;
+                playSound('powerup');
+                document.getElementById("shieldTimer").innerText = 6;
+                document.getElementById("player").classList.add("shielded");
+                shieldX = -40;
             }
 
-            let currentObsHeight = parseInt(window.getComputedStyle(document.getElementById("obstacle")).getPropertyValue("height"));
-            if (obstacleLeft > 25 && obstacleLeft < 55 && playerY < (currentObsHeight + 5)) {
-                if (hasShield) {
-                    hasShield = false;
-                    document.getElementById("shieldStatus").style.display = "none";
-                    document.getElementById("player").style.backgroundColor = playerColor;
-                    obstacleLeft = 370;
-                    playSound('hit');
+            // Magnet Collect
+            if (magnetX > 25 && magnetX < 60 && playerY > 30) {
+                magnetActive = true; magnetTimeLeft = 8;
+                playSound('powerup');
+                document.getElementById("magnetTimer").innerText = 8;
+                document.getElementById("player").classList.add("magnetized");
+                magnetX = -40;
+            }
+
+            // Speed Collect ⚡
+            if (speedX > 25 && speedX < 60 && playerY > 30) {
+                speedActive = true; speedTimeLeft = 5;
+                playSound('powerup');
+                document.getElementById("speedTimer").innerText = 5;
+                document.getElementById("player").classList.add("speedboosted");
+                document.getElementById("gameArena").classList.add("speeding");
+                startScoreTimer();
+                speedX = -40;
+            }
+
+            // Obstacle Collision
+            if (obstacleX > 25 && obstacleX < 55 && playerY < 45) {
+                if (shieldActive) {
+                    obstacleX = 360; 
                 } else {
-                    gameOver();
+                    playSound('gameover');
+                    triggerGameOver();
                     return;
                 }
             }
 
-            animationFrameId = requestAnimationFrame(gameLoop);
+            gameAnimFrame = requestAnimationFrame(gameLoopUpdate);
         }
 
-        function jumpPlayer() {
-            if (!isPlaying || isJumping) return;
-            playSound('jump');
-            isJumping = true;
-            playerVelocityY = jumpForce;
-        }
-
-        function gameOver() {
-            isPlaying = false;
-            cancelAnimationFrame(animationFrameId);
-            clearInterval(scoreInterval);
-            playSound('hit');
-            
-            saveUserData();
-            
-            let savedBestScore = localStorage.getItem("toptop_best_" + currentUsername);
-            let best = savedBestScore ? parseInt(savedBestScore) : 0;
-            
-            if (score > best) {
-                best = score;
-                localStorage.setItem("toptop_best_" + currentUsername, best);
-            }
-            
-            saveScoreToLocalLeaderboard(currentUsername, score, currentUserAvatar);
-            updateLeaderboardUI();
-            
+        function triggerGameOver() {
+            stopGameSession();
+            localStorage.setItem("coins_" + currentUser, totalCoins);
             document.getElementById("finalScore").innerText = score;
-            document.getElementById("bestScore").innerText = best;
-            document.getElementById("finalCoins").innerText = coins;
-            document.getElementById("gameOverScreen").classList.remove("hidden");
+            document.getElementById("gameOverBox").classList.add("show");
         }
     </script>
 </body>
