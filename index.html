@@ -42,6 +42,7 @@
             font-weight: bold; border-radius: 12px; cursor: pointer; margin-top: 10px;
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .btn:active { transform: scale(0.97); }
         .top-bar {
             display: flex; justify-content: space-between; align-items: center;
@@ -83,30 +84,46 @@
             border: 2px solid #3b82f6; border-radius: 16px; height: 260px;
             position: relative; overflow: hidden; margin-bottom: 12px;
         }
+
+        /* Player Styles */
         #player {
-            width: 32px; height: 32px; background: #38bdf8;
-            border-radius: 50%; position: absolute; bottom: 10px; left: 40px;
-            box-shadow: 0 0 15px #38bdf8;
+            width: 32px; height: 32px;
+            position: absolute; bottom: 10px; left: 40px;
+            transition: border-radius 0.2s, background 0.2s, transform 0.2s;
         }
-        #player.shielded { border: 3px solid #10b981; box-shadow: 0 0 20px #10b981; }
-        #player.magnetized { border: 3px solid #f59e0b; box-shadow: 0 0 20px #f59e0b; }
-        #player.speedboosted { border: 3px solid #eab308; box-shadow: 0 0 25px #eab308; }
+        #player.shape-circle { border-radius: 50%; background: #38bdf8; box-shadow: 0 0 15px #38bdf8; }
+        #player.shape-square { border-radius: 4px; background: #a855f7; box-shadow: 0 0 15px #a855f7; }
+        #player.shape-triangle {
+            width: 0; height: 0;
+            border-left: 16px solid transparent;
+            border-right: 16px solid transparent;
+            border-bottom: 32px solid #f97316;
+            background: transparent !important;
+            box-shadow: none !important;
+            filter: drop-shadow(0 0 8px #f97316);
+        }
+
+        #player.shielded { outline: 4px solid #10b981; filter: drop-shadow(0 0 12px #10b981); }
+        #player.magnetized { outline: 4px solid #f59e0b; filter: drop-shadow(0 0 12px #f59e0b); }
+        #player.speedboosted { outline: 4px solid #eab308; filter: drop-shadow(0 0 15px #eab308); }
+
         #obstacle {
             width: 22px; height: 40px; background: linear-gradient(135deg, #f87171, #b91c1c);
-            border-radius: 8px; position: absolute; bottom: 10px; left: 350px;
+            border-radius: 8px; position: absolute; bottom: 10px; left: 600px;
         }
         #coinItem {
             width: 20px; height: 20px; background: radial-gradient(circle, #fde047, #ca8a04);
-            border-radius: 50%; position: absolute; bottom: 55px; left: 380px; box-shadow: 0 0 12px #facc15;
+            border-radius: 50%; position: absolute; bottom: 55px; left: 700px; box-shadow: 0 0 12px #facc15;
         }
         .powerup {
             width: 24px; height: 24px; border-radius: 6px; position: absolute;
             bottom: 60px; display: flex; justify-content: center; align-items: center;
             font-size: 13px; font-weight: bold; color: #fff;
         }
-        #shieldItem { background: #10b981; box-shadow: 0 0 10px #10b981; left: 800px; }
-        #magnetItem { background: #f59e0b; box-shadow: 0 0 10px #f59e0b; left: 1400px; }
-        #speedItem { background: #eab308; box-shadow: 0 0 12px #eab308; left: 2000px; }
+        #shieldItem { background: #10b981; box-shadow: 0 0 10px #10b981; left: 1100px; }
+        #magnetItem { background: #f59e0b; box-shadow: 0 0 10px #f59e0b; left: 1700px; }
+        #speedItem { background: #eab308; box-shadow: 0 0 12px #eab308; left: 2400px; }
+
         .game-stats {
             display: flex; justify-content: space-between; font-size: 12px;
             font-weight: bold; color: #f59e0b; margin-bottom: 8px; flex-wrap: wrap; gap: 4px;
@@ -126,7 +143,7 @@
         .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .shop-item {
             background: #1e293b; border: 1px solid #3b82f6; border-radius: 12px;
-            padding: 10px; text-align: center;
+            padding: 10px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
         }
         .avatar-preview {
             width: 70px; height: 70px; border-radius: 50%; background: #334155;
@@ -144,8 +161,17 @@
             width: 100%; height: 170px; border-radius: 12px; overflow: hidden;
             margin-bottom: 14px; border: 2px solid #3b82f6; background: #0f172a;
         }
-        .quiz-img-container img {
-            width: 100%; height: 100%; object-fit: cover;
+        .quiz-img-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Custom Shop Icons */
+        .preview-shape-circle { width: 30px; height: 30px; background: #38bdf8; border-radius: 50%; margin: 5px auto; }
+        .preview-shape-square { width: 30px; height: 30px; background: #a855f7; border-radius: 4px; margin: 5px auto; }
+        .preview-shape-triangle {
+            width: 0; height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 30px solid #f97316;
+            margin: 5px auto;
         }
     </style>
 </head>
@@ -215,7 +241,6 @@
                 <button class="btn" onclick="openSettingsScreen()" style="background: #475569; margin-top:0;">⚙️ ڕێکخستن</button>
             </div>
 
-            <!-- Daily Bonus Card -->
             <div class="card" style="background: linear-gradient(135deg, #1e1b4b, #312e81); border-color: #818cf8;">
                 <h3 style="color: #a78bfa;">🎁 دیاریی ڕۆژانە</h3>
                 <p id="dailyBonusText">سوپرايزی ئەمڕۆت وەربگرە و کۆینی خۆڕایی ببەرەوە!</p>
@@ -226,7 +251,6 @@
                 <span>🎮 یارییەکان</span>
             </div>
 
-            <!-- Game 1: Jumper -->
             <div class="game-catalog-card">
                 <div class="game-thumbnail">🔵</div>
                 <h3 style="color: #f59e0b; font-size: 16px; margin: 0 0 4px 0;">یاری بازدان (تۆپ تۆپ)</h3>
@@ -238,7 +262,6 @@
                 <button class="btn" onclick="startGamePlay()">یاری بکە</button>
             </div>
 
-            <!-- Game 2: Quiz & Photos -->
             <div class="game-catalog-card">
                 <div class="game-thumbnail" style="background: radial-gradient(circle, #ec4899, #831843);">📸</div>
                 <h3 style="color: #f59e0b; font-size: 16px; margin: 0 0 4px 0;">یاری وێنە و شوێنەکانی جیهان</h3>
@@ -263,26 +286,23 @@
                 💰 کۆینی بەردەست: <span id="shopTotalCoins">0</span>
             </div>
             <div class="shop-grid">
+                <!-- دائیرەیی بنەڕەتی -->
                 <div class="shop-item">
-                    <div style="width: 30px; height: 30px; background: #38bdf8; border-radius: 50%; margin: 5px auto;"></div>
-                    <p style="font-size: 11px;">شینی بنەڕەتی</p>
-                    <button class="btn" id="btn-skin-default" style="padding: 5px; font-size: 11px;" onclick="selectSkin('#38bdf8')">هەڵبژاردن</button>
+                    <div class="preview-shape-circle"></div>
+                    <p style="font-size: 11px;">بازنەیی (بنەڕەتی)</p>
+                    <button class="btn" id="btn-skin-circle" style="padding: 5px; font-size: 11px;" onclick="selectShape('circle')">هەڵبژاردن</button>
                 </div>
+                <!-- چوارگۆشە -->
                 <div class="shop-item">
-                    <div style="width: 30px; height: 30px; background: #ec4899; border-radius: 50%; margin: 5px auto;"></div>
-                    <p style="font-size: 11px;">پەمەیی ناوازە</p>
-                    <button class="btn" id="btn-skin-pink" style="padding: 5px; font-size: 11px;" onclick="handleSkinAction('#ec4899', 20, 'pink')">کڕین (20💰)</button>
+                    <div class="preview-shape-square"></div>
+                    <p style="font-size: 11px;">چوارگۆشە</p>
+                    <button class="btn" id="btn-skin-square" style="padding: 5px; font-size: 11px;" onclick="handleShapeAction('square', 60)">کڕین (60💰)</button>
                 </div>
+                <!-- سێگۆشە -->
                 <div class="shop-item">
-                    <div style="width: 30px; height: 30px; background: #10b981; border-radius: 50%; margin: 5px auto;"></div>
-                    <p style="font-size: 11px;">سەوزی زومڕودی</p>
-                    <button class="btn" id="btn-skin-green" style="padding: 5px; font-size: 11px;" onclick="handleSkinAction('#10b981', 40, 'green')">کڕین (40💰)</button>
-                </div>
-                <!-- شێوازی نوێ: زێڕینی تایبەت -->
-                <div class="shop-item">
-                    <div style="width: 30px; height: 30px; background: #f59e0b; border-radius: 50%; margin: 5px auto; box-shadow: 0 0 10px #f59e0b;"></div>
-                    <p style="font-size: 11px;">زێڕینی تایبەت</p>
-                    <button class="btn" id="btn-skin-gold" style="padding: 5px; font-size: 11px;" onclick="handleSkinAction('#f59e0b', 60, 'gold')">کڕین (60💰)</button>
+                    <div class="preview-shape-triangle"></div>
+                    <p style="font-size: 11px;">سێگۆشە</p>
+                    <button class="btn" id="btn-skin-triangle" style="padding: 5px; font-size: 11px;" onclick="handleShapeAction('triangle', 90)">کڕین (90💰)</button>
                 </div>
             </div>
             <button class="btn" style="background: #334155; margin-top: 15px;" onclick="backToHub()">گەڕانەوە</button>
@@ -303,7 +323,6 @@
 
             <div class="card">
                 <h3>مۆسیقای پاشبنەما (Background Music)</h3>
-                <p>دەتوانیت مۆسیقا هەڵبکەیت یان بکوژێنیتەوە</p>
                 <select id="musicToggleSelect" onchange="toggleBackgroundMusic(this.value)">
                     <option value="on" selected>هەڵکردن 🎵</option>
                     <option value="off">کوژاندنەوە 🔇</option>
@@ -329,7 +348,7 @@
             </div>
 
             <div class="arena" id="gameArena">
-                <div id="player"></div>
+                <div id="player" class="shape-circle"></div>
                 <div id="obstacle"></div>
                 <div id="coinItem"></div>
                 <div id="shieldItem" class="powerup">🛡️</div>
@@ -348,7 +367,7 @@
             <button class="btn" style="background: #334155; margin-top: 10px;" onclick="backToHub()">گەڕانەوە بۆ سەرەتا</button>
         </div>
 
-        <!-- Quiz Screen (Photo & Places Mode) -->
+        <!-- Quiz Screen -->
         <div id="quizScreen" class="screen">
             <div class="brand-title" style="font-size: 20px;">یاری وێنە و شوێنەکانی جیهان</div>
             <div class="card" style="text-align: center; margin-top: 5px; padding: 12px;">
@@ -366,8 +385,8 @@
     <script>
         let currentUser = "";
         let totalCoins = 0;
-        let playerColor = "#38bdf8";
-        let ownedSkins = ["default"];
+        let selectedShape = "circle";
+        let ownedShapes = ["circle"];
         let tempAvatarBase64 = "";
 
         let isGameActive = false;
@@ -380,11 +399,12 @@
         const gravity = 0.6;
         const jumpStrength = 11;
 
-        let obstacleX = 350;
-        let coinX = 380;
-        let shieldX = 800;
-        let magnetX = 1400;
-        let speedX = 2000;
+        // به ڕبه سته كان درەنگتر دێن (فاستەر / فاصلەی زیاتر)
+        let obstacleX = 600;
+        let coinX = 750;
+        let shieldX = 1200;
+        let magnetX = 1800;
+        let speedX = 2500;
 
         let shieldActive = false;
         let magnetActive = false;
@@ -414,45 +434,38 @@
             const now = audioCtx.currentTime;
 
             if (type === 'jump') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(150, now);
+                osc.type = 'sine'; osc.frequency.setValueAtTime(150, now);
                 osc.frequency.exponentialRampToValueAtTime(400, now + 0.12);
-                gain.gain.setValueAtTime(0.15, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+                gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
                 osc.start(now); osc.stop(now + 0.12);
             } else if (type === 'coin') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(987.77, now);
+                osc.type = 'sine'; osc.frequency.setValueAtTime(987.77, now);
                 osc.frequency.setValueAtTime(1318.51, now + 0.08);
-                gain.gain.setValueAtTime(0.12, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                gain.gain.setValueAtTime(0.12, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
                 osc.start(now); osc.stop(now + 0.2);
             } else if (type === 'powerup') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(300, now);
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(300, now);
                 osc.frequency.exponentialRampToValueAtTime(800, now + 0.25);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
                 osc.start(now); osc.stop(now + 0.25);
+            } else if (type === 'shieldbreak') {
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(500, now);
+                osc.frequency.exponentialRampToValueAtTime(150, now + 0.2);
+                gain.gain.setValueAtTime(0.25, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc.start(now); osc.stop(now + 0.2);
             } else if (type === 'gameover') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(300, now);
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, now);
                 osc.frequency.exponentialRampToValueAtTime(80, now + 0.4);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
                 osc.start(now); osc.stop(now + 0.4);
             } else if (type === 'buy') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(440, now);
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(440, now);
                 osc.frequency.exponentialRampToValueAtTime(880, now + 0.2);
-                gain.gain.setValueAtTime(0.15, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
                 osc.start(now); osc.stop(now + 0.2);
             } else if (type === 'select') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(600, now);
-                gain.gain.setValueAtTime(0.1, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.type = 'sine'; osc.frequency.setValueAtTime(600, now);
+                gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
                 osc.start(now); osc.stop(now + 0.1);
             }
         }
@@ -460,36 +473,25 @@
         function startBackgroundMusic() {
             if (!musicEnabled) return;
             stopBackgroundMusic();
-            
             const notes = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63];
             let noteIdx = 0;
 
             bgMusicInterval = setInterval(() => {
                 if (!musicEnabled || !isGameActive) return;
                 if (audioCtx.state === 'suspended') audioCtx.resume();
-
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
+                osc.connect(gain); gain.connect(audioCtx.destination);
                 const now = audioCtx.currentTime;
-
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(notes[noteIdx], now);
-                gain.gain.setValueAtTime(0.03, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-                osc.start(now);
-                osc.stop(now + 0.3);
-
+                osc.type = 'sine'; osc.frequency.setValueAtTime(notes[noteIdx], now);
+                gain.gain.setValueAtTime(0.03, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                osc.start(now); osc.stop(now + 0.3);
                 noteIdx = (noteIdx + 1) % notes.length;
             }, 350);
         }
 
         function stopBackgroundMusic() {
-            if (bgMusicInterval) {
-                clearInterval(bgMusicInterval);
-                bgMusicInterval = null;
-            }
+            if (bgMusicInterval) { clearInterval(bgMusicInterval); bgMusicInterval = null; }
         }
 
         function toggleBackgroundMusic(val) {
@@ -544,9 +546,7 @@
                     tempAvatarBase64 = e.target.result;
                     let imgTag = document.getElementById("avatarImgTag");
                     let textTag = document.getElementById("avatarPlaceholderText");
-                    imgTag.src = tempAvatarBase64;
-                    imgTag.style.display = "block";
-                    textTag.style.display = "none";
+                    imgTag.src = tempAvatarBase64; imgTag.style.display = "block"; textTag.style.display = "none";
                 }
                 reader.readAsDataURL(file);
             }
@@ -557,26 +557,12 @@
             let pass = document.getElementById("regPassword").value.trim();
             let birthdate = document.getElementById("regBirthdate").value;
 
-            if (!name || !pass) {
-                alert("تکایە ناوی بەکارهێنەر و وشەی نهێنی پڕبکەرەوە!");
-                return;
-            }
+            if (!name || !pass) { alert("تکایە ناوی بەکارهێنەر و وشەی نهێنی پڕبکەرەوە!"); return; }
+            if (localStorage.getItem("user_profile_" + name)) { alert("ئەم ناوی بەکارهێنەرە پێشتر تۆمار کراوە!"); return; }
 
-            if (localStorage.getItem("user_profile_" + name)) {
-                alert("ئەم ناوی بەکارهێنەرە پێشتر تۆمار کراوە!");
-                return;
-            }
-
-            let userProfile = {
-                username: name,
-                password: pass,
-                birthdate: birthdate,
-                avatar: tempAvatarBase64 || ""
-            };
-
+            let userProfile = { username: name, password: pass, birthdate: birthdate, avatar: tempAvatarBase64 || "" };
             localStorage.setItem("user_profile_" + name, JSON.stringify(userProfile));
             localStorage.setItem("top_top_active_user", name);
-
             currentUser = name;
             loadUserData();
             switchScreen("hubScreen");
@@ -585,23 +571,13 @@
         function loginUser() {
             let name = document.getElementById("loginUsername").value.trim();
             let pass = document.getElementById("loginPassword").value.trim();
-
-            if (!name || !pass) {
-                alert("تکایە ناو و وشەی نهێنی بنووسە!");
-                return;
-            }
+            if (!name || !pass) { alert("تکایە ناو و وشەی نهێنی بنووسە!"); return; }
 
             let profileData = localStorage.getItem("user_profile_" + name);
-            if (!profileData) {
-                alert("ئەم ناوە بوونی نییە!");
-                return;
-            }
+            if (!profileData) { alert("ئەم ناوە بوونی نییە!"); return; }
 
             let profile = JSON.parse(profileData);
-            if (profile.password !== pass) {
-                alert("وشەی نهێنی هەڵەیە!");
-                return;
-            }
+            if (profile.password !== pass) { alert("وشەی نهێنی هەڵەیە!"); return; }
 
             localStorage.setItem("top_top_active_user", name);
             currentUser = name;
@@ -623,14 +599,14 @@
             let profile = profileData ? JSON.parse(profileData) : {};
 
             totalCoins = parseInt(localStorage.getItem("coins_" + currentUser) || "0");
-            playerColor = localStorage.getItem("color_" + currentUser) || "#38bdf8";
-            ownedSkins = JSON.parse(localStorage.getItem("owned_skins_" + currentUser) || '["default"]');
+            selectedShape = localStorage.getItem("shape_" + currentUser) || "circle";
+            ownedShapes = JSON.parse(localStorage.getItem("owned_shapes_" + currentUser) || '["circle"]');
 
             document.getElementById("hubUsernameText").innerText = currentUser;
             document.getElementById("hubTotalCoins").innerText = totalCoins;
             document.getElementById("shopTotalCoins").innerText = totalCoins;
-            document.getElementById("player").style.background = playerColor;
-            document.getElementById("player").style.boxShadow = `0 0 15px ${playerColor}`;
+            
+            applyPlayerShapeUI();
 
             let avatarEl = document.getElementById("hubUserAvatar");
             if (profile.avatar) {
@@ -644,21 +620,24 @@
             checkDailyBonus();
         }
 
+        function applyPlayerShapeUI() {
+            let player = document.getElementById("player");
+            player.className = "";
+            player.classList.add("shape-" + selectedShape);
+        }
+
         function checkDailyBonus() {
             let today = new Date().toISOString().split('T')[0];
             let lastClaimed = localStorage.getItem("daily_bonus_" + currentUser);
-
             let bonusBtn = document.getElementById("claimBonusBtn");
             let bonusText = document.getElementById("dailyBonusText");
 
             if (lastClaimed === today) {
-                bonusBtn.disabled = true;
-                bonusBtn.innerText = "سەیری بەیانی بکەرەوە ⏳";
+                bonusBtn.disabled = true; bonusBtn.innerText = "سەیری بەیانی بکەرەوە ⏳";
                 bonusBtn.style.background = "#475569";
                 bonusText.innerText = "دیاریی ئەمڕۆت وەرگرتووە! بەیانی وەرە بۆ دیاریی نوێ.";
             } else {
-                bonusBtn.disabled = false;
-                bonusBtn.innerText = "وەرگرتنی دیاری (50 💰)";
+                bonusBtn.disabled = false; bonusBtn.innerText = "وەرگرتنی دیاری (50 💰)";
                 bonusBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
                 bonusText.innerText = "سوپرايزی ئەمڕۆت وەربگرە و کۆینی خۆڕایی ببەرەوە!";
             }
@@ -667,19 +646,13 @@
         function claimDailyBonus() {
             let today = new Date().toISOString().split('T')[0];
             let lastClaimed = localStorage.getItem("daily_bonus_" + currentUser);
-
-            if (lastClaimed === today) {
-                alert("پێشتر دیاریی ئەمڕۆت وەرگرتووە!");
-                return;
-            }
+            if (lastClaimed === today) { alert("پێشتر دیاریی ئەمڕۆت وەرگرتووە!"); return; }
 
             totalCoins += 50;
             localStorage.setItem("coins_" + currentUser, totalCoins);
             localStorage.setItem("daily_bonus_" + currentUser, today);
-
             playSound('buy');
             alert("پیرۆزە! 50 کۆینت وەکو دیاریی ڕۆژانە وەرگرت 🪙");
-
             loadUserData();
         }
 
@@ -688,54 +661,59 @@
         function backToHub() { stopGameSession(); loadUserData(); switchScreen("hubScreen"); }
 
         function updateShopUI() {
-            let btnPink = document.getElementById("btn-skin-pink");
-            if (ownedSkins.includes("pink")) {
-                btnPink.innerText = playerColor === "#ec4899" ? "هەڵبژێردراوە" : "هەڵبژاردن";
-                btnPink.onclick = function() { selectSkin('#ec4899'); };
-                btnPink.disabled = playerColor === "#ec4899";
-                btnPink.style.background = playerColor === "#ec4899" ? "#10b981" : "";
+            // Circle
+            let btnCircle = document.getElementById("btn-skin-circle");
+            btnCircle.innerText = selectedShape === "circle" ? "هەڵبژێردراوە" : "هەڵبژاردن";
+            btnCircle.disabled = selectedShape === "circle";
+            btnCircle.style.background = selectedShape === "circle" ? "#10b981" : "";
+
+            // Square
+            let btnSquare = document.getElementById("btn-skin-square");
+            if (ownedShapes.includes("square")) {
+                btnSquare.innerText = selectedShape === "square" ? "هەڵبژێردراوە" : "هەڵبژاردن";
+                btnSquare.onclick = function() { selectShape('square'); };
+                btnSquare.disabled = selectedShape === "square";
+                btnSquare.style.background = selectedShape === "square" ? "#10b981" : "";
+            } else {
+                btnSquare.innerText = "کڕین (60💰)";
+                btnSquare.onclick = function() { handleShapeAction('square', 60); };
+                btnSquare.disabled = false;
+                btnSquare.style.background = "";
             }
 
-            let btnGreen = document.getElementById("btn-skin-green");
-            if (ownedSkins.includes("green")) {
-                btnGreen.innerText = playerColor === "#10b981" ? "هەڵبژێردراوە" : "هەڵبژاردن";
-                btnGreen.onclick = function() { selectSkin('#10b981'); };
-                btnGreen.disabled = playerColor === "#10b981";
-                btnGreen.style.background = playerColor === "#10b981" ? "#10b981" : "";
+            // Triangle
+            let btnTriangle = document.getElementById("btn-skin-triangle");
+            if (ownedShapes.includes("triangle")) {
+                btnTriangle.innerText = selectedShape === "triangle" ? "هەڵبژێردراوە" : "هەڵبژاردن";
+                btnTriangle.onclick = function() { selectShape('triangle'); };
+                btnTriangle.disabled = selectedShape === "triangle";
+                btnTriangle.style.background = selectedShape === "triangle" ? "#10b981" : "";
+            } else {
+                btnTriangle.innerText = "کڕین (90💰)";
+                btnTriangle.onclick = function() { handleShapeAction('triangle', 90); };
+                btnTriangle.disabled = false;
+                btnTriangle.style.background = "";
             }
-
-            let btnGold = document.getElementById("btn-skin-gold");
-            if (ownedSkins.includes("gold")) {
-                btnGold.innerText = playerColor === "#f59e0b" ? "هەڵبژێردراوە" : "هەڵبژاردن";
-                btnGold.onclick = function() { selectSkin('#f59e0b'); };
-                btnGold.disabled = playerColor === "#f59e0b";
-                btnGold.style.background = playerColor === "#f59e0b" ? "#10b981" : "";
-            }
-
-            let btnDefault = document.getElementById("btn-skin-default");
-            btnDefault.innerText = playerColor === "#38bdf8" ? "هەڵبژێردراوە" : "هەڵبژاردن";
-            btnDefault.disabled = playerColor === "#38bdf8";
-            btnDefault.style.background = playerColor === "#38bdf8" ? "#10b981" : "";
         }
 
-        function selectSkin(color) {
-            playerColor = color;
-            localStorage.setItem("color_" + currentUser, playerColor);
+        function selectShape(shape) {
+            selectedShape = shape;
+            localStorage.setItem("shape_" + currentUser, selectedShape);
             playSound('select');
             loadUserData();
         }
 
-        function handleSkinAction(color, price, skinKey) {
-            if (ownedSkins.includes(skinKey)) {
-                selectSkin(color);
+        function handleShapeAction(shapeKey, price) {
+            if (ownedShapes.includes(shapeKey)) {
+                selectShape(shapeKey);
             } else {
                 if (totalCoins >= price) {
                     totalCoins -= price;
-                    ownedSkins.push(skinKey);
+                    ownedShapes.push(shapeKey);
                     localStorage.setItem("coins_" + currentUser, totalCoins);
-                    localStorage.setItem("owned_skins_" + currentUser, JSON.stringify(ownedSkins));
+                    localStorage.setItem("owned_shapes_" + currentUser, JSON.stringify(ownedShapes));
                     playSound('buy');
-                    selectSkin(color);
+                    selectShape(shapeKey);
                 } else {
                     alert("کۆینی تەواوت نییە!");
                 }
@@ -773,12 +751,13 @@
 
         function startGamePlay() {
             document.getElementById("gameOverBox").classList.remove("show");
-            document.getElementById("gameArena").classList.remove("speeding");
             switchScreen("gameScreen");
+            applyPlayerShapeUI();
 
             score = 0; coins = 0; 
-            obstacleX = 350; coinX = 380;
-            shieldX = 800; magnetX = 1400; speedX = 2000;
+            // بەربەستەکان مەودایان زۆرترە تا درەنگتر دەربکەون
+            obstacleX = 600; coinX = 750;
+            shieldX = 1200; magnetX = 1800; speedX = 2500;
             
             shieldActive = false; magnetActive = false; speedActive = false;
             shieldTimeLeft = 0; magnetTimeLeft = 0; speedTimeLeft = 0;
@@ -789,6 +768,8 @@
             document.getElementById("shieldTimer").innerText = 0;
             document.getElementById("magnetTimer").innerText = 0;
             document.getElementById("speedTimer").innerText = 0;
+
+            document.getElementById("player").classList.remove("shielded", "magnetized", "speedboosted");
 
             isGameActive = true;
             cancelAnimationFrame(gameAnimFrame);
@@ -822,7 +803,6 @@
                     if (speedTimeLeft === 0) {
                         speedActive = false;
                         document.getElementById("player").classList.remove("speedboosted");
-                        document.getElementById("gameArena").classList.remove("speeding");
                         startScoreTimer();
                     }
                 }
@@ -858,15 +838,16 @@
         function gameLoopUpdate() {
             if (!isGameActive) return;
 
-            let baseSpeed = gameDifficulty === "easy" ? 3.5 : gameDifficulty === "hard" ? 6.5 : 4.8;
-            let speed = speedActive ? baseSpeed * 1.8 : baseSpeed;
+            let baseSpeed = gameDifficulty === "easy" ? 3.2 : gameDifficulty === "hard" ? 6.0 : 4.5;
+            let speed = speedActive ? baseSpeed * 1.7 : baseSpeed;
 
+            // جووڵەی بەربەستەکان بە مەودای فراوان و درەنگتر
             obstacleX -= speed;
-            if (obstacleX < -25) obstacleX = 360 + Math.random() * 60;
+            if (obstacleX < -30) obstacleX = 500 + Math.random() * 200;
             document.getElementById("obstacle").style.left = obstacleX + "px";
 
             coinX -= speed;
-            if (coinX < -25) { coinX = 400 + Math.random() * 100; document.getElementById("coinItem").style.display = "block"; }
+            if (coinX < -30) { coinX = 550 + Math.random() * 250; document.getElementById("coinItem").style.display = "block"; }
             
             if (magnetActive && coinX < 260) {
                 coinX -= 5;
@@ -875,21 +856,21 @@
                     playSound('coin');
                     document.getElementById("currentCoins").innerText = coins;
                     document.getElementById("coinItem").style.display = "none";
-                    coinX = -30;
+                    coinX = -40;
                 }
             }
             document.getElementById("coinItem").style.left = coinX + "px";
 
             shieldX -= speed;
-            if (shieldX < -30) shieldX = 1000 + Math.random() * 800;
+            if (shieldX < -30) shieldX = 1100 + Math.random() * 700;
             document.getElementById("shieldItem").style.left = shieldX + "px";
 
             magnetX -= speed;
-            if (magnetX < -30) magnetX = 1600 + Math.random() * 900;
+            if (magnetX < -30) magnetX = 1700 + Math.random() * 800;
             document.getElementById("magnetItem").style.left = magnetX + "px";
 
             speedX -= speed;
-            if (speedX < -30) speedX = 2200 + Math.random() * 1000;
+            if (speedX < -30) speedX = 2300 + Math.random() * 900;
             document.getElementById("speedItem").style.left = speedX + "px";
 
             if (isJumping) {
@@ -898,6 +879,7 @@
                 document.getElementById("player").style.bottom = playerY + "px";
             }
 
+            // کۆکردنەوەی کۆین
             if (document.getElementById("coinItem").style.display !== "none" && coinX > 25 && coinX < 60 && playerY > 25 && playerY < 85) {
                 coins++; totalCoins++;
                 playSound('coin');
@@ -905,14 +887,16 @@
                 document.getElementById("coinItem").style.display = "none";
             }
 
+            // کۆکردنەوەی قەڵغان (درع)
             if (shieldX > 25 && shieldX < 60 && playerY > 30) {
-                shieldActive = true; shieldTimeLeft = 6;
+                shieldActive = true; shieldTimeLeft = 8;
                 playSound('powerup');
-                document.getElementById("shieldTimer").innerText = 6;
+                document.getElementById("shieldTimer").innerText = 8;
                 document.getElementById("player").classList.add("shielded");
                 shieldX = -40;
             }
 
+            // کۆکردنەوەی موگناتیس
             if (magnetX > 25 && magnetX < 60 && playerY > 30) {
                 magnetActive = true; magnetTimeLeft = 8;
                 playSound('powerup');
@@ -921,19 +905,26 @@
                 magnetX = -40;
             }
 
+            // کۆکردنەوەی بروسکە
             if (speedX > 25 && speedX < 60 && playerY > 30) {
                 speedActive = true; speedTimeLeft = 5;
                 playSound('powerup');
                 document.getElementById("speedTimer").innerText = 5;
                 document.getElementById("player").classList.add("speedboosted");
-                document.getElementById("gameArena").classList.add("speeding");
                 startScoreTimer();
                 speedX = -40;
             }
 
+            // پێکدادان لەگەڵ بەربەست
             if (obstacleX > 25 && obstacleX < 55 && playerY < 45) {
                 if (shieldActive) {
-                    obstacleX = 360; 
+                    // ئەگەر درعت هەبێت، تەنها درعەکەت دەشکێت و یاری ناکەویت!
+                    shieldActive = false;
+                    shieldTimeLeft = 0;
+                    document.getElementById("shieldTimer").innerText = 0;
+                    document.getElementById("player").classList.remove("shielded");
+                    playSound('shieldbreak');
+                    obstacleX = 550 + Math.random() * 200; // بەربەستەکە دوور دەکەوێتەوە
                 } else {
                     playSound('gameover');
                     triggerGameOver();
@@ -958,62 +949,21 @@
         }
 
         const quizData = [
-            { 
-                image: "images/IMG_0562.jpeg", 
-                question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", 
-                options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], 
-                answer: 0 
-            },
-            { 
-                image: "images/IMG_0563.jpeg", 
-                question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", 
-                options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], 
-                answer: 1 
-            },
-            { 
-                image: "images/IMG_0564.jpeg", 
-                question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", 
-                options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], 
-                answer: 2 
-            },
-            { 
-                image: "images/IMG_0565.jpeg", 
-                question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", 
-                options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], 
-                answer: 3 
-            },
-            { 
-                image: "images/IMG_0580.jpeg", 
-                question: "ئەم دیمەنە لە چ شار یان وڵاتێکە؟", 
-                options: ["ژاپۆن", "ئەمریکا", "تورکیا", "دهۆک"], 
-                answer: 0 
-            },
-            { 
-                image: "images/IMG_0581.jpeg", 
-                question: "ئەم دیمەنە لە چ شارێکە؟", 
-                options: ["پاریس", "دوبەی", "قەتەر", "دهۆک"],
-                answer: 0
-            },
-            {
-                image: "images/IMG_0582.jpeg",
-                question: "ئەم شوێنە دیارە لە چ شار یان وڵاتێکە؟",
-                options: ["چۆمان", "شەقڵاوە", "سویسرا", "دهۆک"],
-                answer: 0
-            },
-            {
-                image: "images/IMG_0583.jpeg",
-                question: "ئەم شوێنە لە چ شارێکە؟",
-                options: ["لەندەن", "تورکیا", "هندستان", "کرکوک"],
-                answer: 0
-            }
+            { image: "images/IMG_0562.jpeg", question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], answer: 0 },
+            { image: "images/IMG_0563.jpeg", question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], answer: 1 },
+            { image: "images/IMG_0564.jpeg", question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], answer: 2 },
+            { image: "images/IMG_0565.jpeg", question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], answer: 3 },
+            { image: "images/IMG_0580.jpeg", question: "ئەم دیمەنە لە چ شار یان وڵاتێکە؟", options: ["ژاپۆن", "ئەمریکا", "تورکیا", "دهۆک"], answer: 0 },
+            { image: "images/IMG_0581.jpeg", question: "ئەم دیمەنە لە چ شارێکە؟", options: ["پاریس", "دوبەی", "قەتەر", "دهۆک"], answer: 0 },
+            { image: "images/IMG_0582.jpeg", question: "ئەم شوێنە دیارە لە چ شار یان وڵاتێکە؟", options: ["چۆمان", "شەقڵاوە", "سویسرا", "دهۆک"], answer: 0 },
+            { image: "images/IMG_0583.jpeg", question: "ئەم شوێنە لە چ شارێکە؟", options: ["لەندەن", "تورکیا", "هندستان", "کرکوک"], answer: 0 }
         ];
         
         let currentQ = 0;
         let quizScore = 0;
 
         function startQuizPlay() {
-            currentQ = 0;
-            quizScore = 0;
+            currentQ = 0; quizScore = 0;
             document.getElementById("quizScoreResult").innerText = "";
             document.getElementById("quizImage").style.display = "block";
             switchScreen("quizScreen");
@@ -1037,9 +987,7 @@
         }
 
         function selectQuizAnswer(index) {
-            if (index === quizData[currentQ].answer) {
-                quizScore++;
-            }
+            if (index === quizData[currentQ].answer) { quizScore++; }
             currentQ++;
             if (currentQ < quizData.length) {
                 loadQuizQuestion();
