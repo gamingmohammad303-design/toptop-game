@@ -87,6 +87,37 @@
         .hidden {
             display: none !important;
         }
+        .profile-avatar-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 10px auto;
+        }
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #38bdf8;
+            background: #0f172a;
+        }
+        .avatar-upload-btn {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: #eab308;
+            color: #0f172a;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
         .game-card {
             background: #0f172a;
             border: 1px solid #334155;
@@ -121,10 +152,23 @@
         .score-row {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             font-size: 13px;
-            padding: 4px 0;
+            padding: 5px 0;
             border-bottom: 1px solid #1e293b;
             color: #94a3b8;
+        }
+        .leaderboard-user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .mini-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #38bdf8;
         }
         .game-arena {
             background: linear-gradient(to bottom, #1e293b, #0f172a);
@@ -317,7 +361,13 @@
         <!-- 1. شاشەی تۆمارکردن -->
         <div id="authScreen">
             <h1>تۆپتۆپ</h1>
-            <p style="color: #94a3b8; font-size: 13px; margin-bottom: 20px;">تکایە هەژمارێک دروست بکە بۆ دەستپێکردن</p>
+            <p style="color: #94a3b8; font-size: 13px; margin-bottom: 20px;">هەژمارەکەت دروست بکە و وێنەی پڕۆفایلت دیاری بکە</p>
+            
+            <div class="profile-avatar-container">
+                <img id="regAvatarPreview" src="https://via.placeholder.com/80?text=وێنە" class="profile-avatar" alt="وێنەی پڕۆفایل">
+                <button type="button" class="avatar-upload-btn" onclick="document.getElementById('regAvatarInput').click()">+</button>
+                <input type="file" id="regAvatarInput" accept="image/*" class="hidden" onchange="previewRegAvatar(event)">
+            </div>
             
             <div class="form-group">
                 <label>ناوی بەکارهێنەر (Username)</label>
@@ -331,14 +381,17 @@
                 <span class="hint">لانیکەم 4 پیت یان ژمارە.</span>
             </div>
             
-            <button class="btn" onclick="loginUser()">چوونەژوورەوە</button>
+            <button class="btn" onclick="loginUser()">تۆمارکردن / چوونەژوورەوە</button>
         </div>
 
         <!-- 2. شاشەی لیست و هاب -->
         <div id="hubScreen" class="hidden">
             <div class="top-bar">
                 <button class="settings-btn" onclick="openSettings()">⚙️ ڕێکخستن</button>
-                <h2 id="welcomeText" style="font-size: 15px; margin: 0;"></h2>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span id="welcomeText" style="font-size: 14px; font-weight: bold; color: #38bdf8;"></span>
+                    <img id="hubAvatar" src="" class="mini-avatar" alt="پڕۆفایل">
+                </div>
             </div>
             
             <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 8px; margin-bottom: 12px; font-size: 13px; text-align: right; color: #eab308;">
@@ -372,7 +425,16 @@
         <div id="settingsScreen" class="hidden">
             <div class="top-bar">
                 <button class="back-btn" onclick="returnToHub()">← گەڕانەوە</button>
-                <h2 style="font-size: 16px; margin: 0; color: #38bdf8;">ڕێکخستنەکانی یاری</h2>
+                <h2 style="font-size: 16px; margin: 0; color: #38bdf8;">ڕێکخستنەکانی پڕۆفایل و یاری</h2>
+            </div>
+
+            <div class="settings-box" style="text-align: center;">
+                <label style="margin-bottom: 8px;">گۆڕینی وێنەی پڕۆفایل:</label>
+                <div class="profile-avatar-container" style="margin-bottom: 10px;">
+                    <img id="settingsAvatarPreview" src="" class="profile-avatar" alt="پڕۆفایل">
+                    <button type="button" class="avatar-upload-btn" onclick="document.getElementById('settingsAvatarInput').click()">✏️</button>
+                    <input type="file" id="settingsAvatarInput" accept="image/*" class="hidden" onchange="updateSettingsAvatar(event)">
+                </div>
             </div>
 
             <div class="settings-box">
@@ -399,6 +461,8 @@
                     <option value="matrix">ماتریۆکسی سەوز</option>
                 </select>
             </div>
+
+            <button class="btn" style="background-color: #ef4444; color: white; margin-top: 15px;" onclick="logoutAccount()">دەرچوون لە هەژمار (Logout)</button>
         </div>
 
         <!-- 4. شاشەی یارییەکە -->
@@ -416,7 +480,7 @@
                 <div id="player"></div>
                 <div id="obstacle"></div>
                 <div id="coin"></div>
-                <div id="shieldItem">🛡️</div>
+                <div id="shieldItem">🛡️️</div>
 
                 <div id="gameOverScreen" class="hidden">
                     <h2>یاری تەواو بوو!</h2>
@@ -437,6 +501,7 @@
 
     <script>
         let currentUsername = "";
+        let currentUserAvatar = "";
         let score = 0;
         let coins = 0;
         let totalCoins = 0;
@@ -462,7 +527,52 @@
         let selectedTheme = "classic";
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let tempAvatarBase64 = "https://via.placeholder.com/80?text=وێنە";
         
+        // پشکنینی پاشەکەوت لە براوسەردا لە کاتی کردنەوەی پەڕەکەدا
+        window.onload = function() {
+            let savedUser = localStorage.getItem("toptop_logged_user");
+            if (savedUser) {
+                currentUsername = savedUser;
+                currentUserAvatar = localStorage.getItem("toptop_avatar_" + currentUsername) || "https://via.placeholder.com/80?text=وێنە";
+                
+                document.getElementById("welcomeText").innerText = currentUsername;
+                document.getElementById("hubAvatar").src = currentUserAvatar;
+                
+                loadUserData();
+                updateLeaderboardUI();
+                document.getElementById("authScreen").classList.add("hidden");
+                document.getElementById("hubScreen").classList.remove("hidden");
+            }
+        };
+
+        function previewRegAvatar(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    tempAvatarBase64 = e.target.result;
+                    document.getElementById("regAvatarPreview").src = tempAvatarBase64;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateSettingsAvatar(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentUserAvatar = e.target.result;
+                    localStorage.setItem("toptop_avatar_" + currentUsername, currentUserAvatar);
+                    document.getElementById("settingsAvatarPreview").src = currentUserAvatar;
+                    document.getElementById("hubAvatar").src = currentUserAvatar;
+                    updateLeaderboardUI();
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
         function playSound(type) {
             if (!soundEnabled) return;
             if (audioCtx.state === 'suspended') {
@@ -526,6 +636,7 @@
         }
 
         function openSettings() {
+            document.getElementById("settingsAvatarPreview").src = currentUserAvatar;
             document.getElementById("hubScreen").classList.add("hidden");
             document.getElementById("settingsScreen").classList.remove("hidden");
         }
@@ -559,12 +670,24 @@
             }
 
             currentUsername = username;
-            document.getElementById("welcomeText").innerText = "سڵاو، " + currentUsername;
+            currentUserAvatar = tempAvatarBase64;
+            
+            // پاشەکەوتکردنی داتا لەسەر براوسەر
+            localStorage.setItem("toptop_logged_user", currentUsername);
+            localStorage.setItem("toptop_avatar_" + currentUsername, currentUserAvatar);
+
+            document.getElementById("welcomeText").innerText = currentUsername;
+            document.getElementById("hubAvatar").src = currentUserAvatar;
             
             loadUserData();
             updateLeaderboardUI();
             document.getElementById("authScreen").classList.add("hidden");
             document.getElementById("hubScreen").classList.remove("hidden");
+        }
+
+        function logoutAccount() {
+            localStorage.removeItem("toptop_logged_user");
+            location.reload();
         }
 
         function loadUserData() {
@@ -583,19 +706,20 @@
             return data ? JSON.parse(data) : [];
         }
 
-        function saveScoreToLeaderboard(name, finalScore) {
+        function saveScoreToLeaderboard(name, finalScore, avatar) {
             let list = getLeaderboard();
             let existingUser = list.find(item => item.name === name);
             
             let best = finalScore;
             if (existingUser) {
+                existingUser.avatar = avatar; // نوێکردنەوەی وێنە ئەگەر گۆڕابێت
                 if (finalScore > existingUser.score) {
                     existingUser.score = finalScore;
                 } else {
                     best = existingUser.score;
                 }
             } else {
-                list.push({ name: name, score: finalScore });
+                list.push({ name: name, score: finalScore, avatar: avatar });
             }
 
             list.sort((a, b) => b.score - a.score);
@@ -615,7 +739,16 @@
             }
 
             list.forEach((item, index) => {
-                container.innerHTML += `<div class="score-row"><span>${index + 1}. ${item.name}</span><span>${item.score} خاڵ</span></div>`;
+                let userAvatar = item.avatar || "https://via.placeholder.com/24?text=وێنە";
+                container.innerHTML += `
+                    <div class="score-row">
+                        <div class="leaderboard-user">
+                            <span>${index + 1}.</span>
+                            <img src="${userAvatar}" class="mini-avatar" alt="">
+                            <span style="color: #f8fafc; font-weight: bold;">${item.name}</span>
+                        </div>
+                        <span>${item.score} خاڵ</span>
+                    </div>`;
             });
         }
 
@@ -707,14 +840,12 @@
 
             let speed = baseSpeed * difficultyMultiplier;
 
-            // جووڵەی کۆسپ
             obstacleLeft -= speed;
             if (obstacleLeft < -25) {
                 obstacleLeft = 370;
             }
             document.getElementById("obstacle").style.left = obstacleLeft + "px";
 
-            // جووڵەی کوین
             coinLeft -= speed;
             if (coinLeft < -25) {
                 coinLeft = 400 + Math.random() * 120;
@@ -722,7 +853,6 @@
             }
             document.getElementById("coin").style.left = coinLeft + "px";
 
-            // جووڵەی قەڵغان
             shieldLeft -= speed;
             if (shieldLeft < -25) {
                 shieldLeft = 600 + Math.random() * 300;
@@ -742,7 +872,6 @@
                 document.getElementById("player").style.bottom = playerY + "px";
             }
 
-            // پشکنینی گرتنی کوین
             let coinElem = document.getElementById("coin");
             if (coinElem.style.display !== "none" && coinLeft > 25 && coinLeft < 60 && playerY > 30 && playerY < 90) {
                 coins++;
@@ -753,7 +882,6 @@
                 saveUserData();
             }
 
-            // پشکنینی گرتنی قەڵغان
             let shieldElem = document.getElementById("shieldItem");
             if (shieldElem.style.display !== "none" && shieldLeft > 25 && shieldLeft < 60 && playerY > 30 && playerY < 90) {
                 hasShield = true;
@@ -763,14 +891,13 @@
                 playSound('shield');
             }
 
-            // پشکنینی بەربوونەوە بە کۆسپ
             let currentObsHeight = parseInt(window.getComputedStyle(document.getElementById("obstacle")).getPropertyValue("height"));
             if (obstacleLeft > 25 && obstacleLeft < 55 && playerY < (currentObsHeight + 5)) {
                 if (hasShield) {
                     hasShield = false;
                     document.getElementById("shieldStatus").style.display = "none";
                     document.getElementById("player").style.backgroundColor = playerColor;
-                    obstacleLeft = 370; // کۆسپەکە تێپەڕێنە بۆ ئەوەی نەمریت
+                    obstacleLeft = 370;
                     playSound('hit');
                 } else {
                     gameOver();
@@ -794,7 +921,7 @@
             clearInterval(scoreInterval);
             playSound('hit');
             
-            let bestScore = saveScoreToLeaderboard(currentUsername, score);
+            let bestScore = saveScoreToLeaderboard(currentUsername, score, currentUserAvatar);
             saveUserData();
             
             document.getElementById("finalScore").innerText = score;
@@ -806,4 +933,3 @@
 
 </body>
 </html>
-
