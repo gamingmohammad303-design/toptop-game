@@ -164,10 +164,24 @@
             left: 390px;
             box-shadow: 0 0 8px #eab308;
         }
+        #shieldItem {
+            width: 22px;
+            height: 22px;
+            background-color: #3b82f6;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 60px;
+            left: 450px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            box-shadow: 0 0 10px #3b82f6;
+        }
         .score-box {
             display: flex;
             justify-content: space-between;
-            font-size: 14px;
+            font-size: 13px;
             margin-bottom: 10px;
             font-weight: bold;
             color: #eab308;
@@ -349,12 +363,12 @@
             
             <div class="game-card">
                 <h3>یاری بازدانی خێرا (تۆپتۆپ)</h3>
-                <p>کۆسپەکان ببڕە و کوینەکان کۆبکەرەوە!</p>
+                <p>کۆسپەکان ببڕە و کوین و قەڵغان کۆبکەرەوە!</p>
                 <button class="btn" style="margin-top: 5px; padding: 8px;" onclick="startToptopGame()">دەستپێکردنی یاری</button>
             </div>
         </div>
 
-        <!-- 3. شاشەی سێتینگ (نوێکراوە) -->
+        <!-- 3. شاشەی سێتینگ -->
         <div id="settingsScreen" class="hidden">
             <div class="top-bar">
                 <button class="back-btn" onclick="returnToHub()">← گەڕانەوە</button>
@@ -395,12 +409,14 @@
             <div class="score-box">
                 <span>خاڵ: <span id="score">0</span></span>
                 <span>💰 کوین: <span id="coins">0</span></span>
+                <span id="shieldStatus" style="color: #3b82f6; display: none;">🛡️ قەڵغان هەیە</span>
             </div>
 
             <div class="game-arena" id="gameArena">
                 <div id="player"></div>
                 <div id="obstacle"></div>
                 <div id="coin"></div>
+                <div id="shieldItem">🛡️</div>
 
                 <div id="gameOverScreen" class="hidden">
                     <h2>یاری تەواو بوو!</h2>
@@ -428,6 +444,8 @@
         
         let obstacleLeft = 370;
         let coinLeft = 390;
+        let shieldLeft = 450;
+        let hasShield = false;
         
         let playerY = 10;
         let playerVelocityY = 0;
@@ -440,7 +458,6 @@
         let scoreInterval;
         let soundEnabled = true;
 
-        // ڕێکخستنە نوێیەکان
         let difficultyMultiplier = 1.0;
         let selectedTheme = "classic";
 
@@ -473,6 +490,14 @@
                 gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
                 oscillator.start();
                 oscillator.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'shield') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.2);
             } else if (type === 'hit') {
                 oscillator.type = 'sawtooth';
                 oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
@@ -507,7 +532,9 @@
 
         function changeSkin(color) {
             playerColor = color;
-            document.getElementById("player").style.backgroundColor = color;
+            if (!hasShield) {
+                document.getElementById("player").style.backgroundColor = color;
+            }
             
             document.querySelectorAll('.skin-btn').forEach(btn => btn.classList.remove('active'));
             if(color === '#38bdf8') document.getElementById('skin_sky').classList.add('active');
@@ -627,16 +654,21 @@
         function resetGameVariables() {
             score = 0;
             coins = 0;
+            hasShield = false;
             obstacleLeft = 370;
             coinLeft = 390;
+            shieldLeft = 450;
             playerY = 10;
             playerVelocityY = 0;
             isJumping = false;
             document.getElementById("score").innerText = 0;
             document.getElementById("coins").innerText = 0;
+            document.getElementById("shieldStatus").style.display = "none";
             document.getElementById("obstacle").style.left = obstacleLeft + "px";
             document.getElementById("coin").style.left = coinLeft + "px";
             document.getElementById("coin").style.display = "block";
+            document.getElementById("shieldItem").style.left = shieldLeft + "px";
+            document.getElementById("shieldItem").style.display = "flex";
             document.getElementById("player").style.bottom = playerY + "px";
             updateEnvironment();
         }
@@ -652,7 +684,6 @@
                 arena.style.background = "linear-gradient(to bottom, #064e3b, #022c22)";
                 obs.style.backgroundColor = "#34d399";
             } else {
-                // Classic Theme
                 if (score >= 100) {
                     arena.style.background = "linear-gradient(to bottom, #7f1d1d, #450a0a)";
                     obs.style.backgroundColor = "#eab308";
@@ -676,18 +707,28 @@
 
             let speed = baseSpeed * difficultyMultiplier;
 
+            // جووڵەی کۆسپ
             obstacleLeft -= speed;
             if (obstacleLeft < -25) {
                 obstacleLeft = 370;
             }
             document.getElementById("obstacle").style.left = obstacleLeft + "px";
 
+            // جووڵەی کوین
             coinLeft -= speed;
             if (coinLeft < -25) {
                 coinLeft = 400 + Math.random() * 120;
                 document.getElementById("coin").style.display = "block";
             }
             document.getElementById("coin").style.left = coinLeft + "px";
+
+            // جووڵەی قەڵغان
+            shieldLeft -= speed;
+            if (shieldLeft < -25) {
+                shieldLeft = 600 + Math.random() * 300;
+                document.getElementById("shieldItem").style.display = "flex";
+            }
+            document.getElementById("shieldItem").style.left = shieldLeft + "px";
 
             if (isJumping) {
                 playerVelocityY -= gravity;
@@ -701,6 +742,7 @@
                 document.getElementById("player").style.bottom = playerY + "px";
             }
 
+            // پشکنینی گرتنی کوین
             let coinElem = document.getElementById("coin");
             if (coinElem.style.display !== "none" && coinLeft > 25 && coinLeft < 60 && playerY > 30 && playerY < 90) {
                 coins++;
@@ -711,10 +753,29 @@
                 saveUserData();
             }
 
+            // پشکنینی گرتنی قەڵغان
+            let shieldElem = document.getElementById("shieldItem");
+            if (shieldElem.style.display !== "none" && shieldLeft > 25 && shieldLeft < 60 && playerY > 30 && playerY < 90) {
+                hasShield = true;
+                shieldElem.style.display = "none";
+                document.getElementById("shieldStatus").style.display = "inline";
+                document.getElementById("player").style.backgroundColor = "#3b82f6";
+                playSound('shield');
+            }
+
+            // پشکنینی بەربوونەوە بە کۆسپ
             let currentObsHeight = parseInt(window.getComputedStyle(document.getElementById("obstacle")).getPropertyValue("height"));
             if (obstacleLeft > 25 && obstacleLeft < 55 && playerY < (currentObsHeight + 5)) {
-                gameOver();
-                return;
+                if (hasShield) {
+                    hasShield = false;
+                    document.getElementById("shieldStatus").style.display = "none";
+                    document.getElementById("player").style.backgroundColor = playerColor;
+                    obstacleLeft = 370; // کۆسپەکە تێپەڕێنە بۆ ئەوەی نەمریت
+                    playSound('hit');
+                } else {
+                    gameOver();
+                    return;
+                }
             }
 
             animationFrameId = requestAnimationFrame(gameLoop);
@@ -745,4 +806,3 @@
 
 </body>
 </html>
-
