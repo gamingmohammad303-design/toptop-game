@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- 1. کتێبخانەکانی فایەربەیس (Firebase SDKs) -->
+    <!-- کتێبخانەکانی فایەربەیس -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -504,9 +504,8 @@
 
     </div>
 
-    <!-- 2. ڕێکخستن و دەستپێکردنی فایەربەیس و کۆدی یارییەکە -->
+    <!-- JavaScript -->
     <script>
-        // زانیارییەکانی بەستنەوە بە فایەربەیس
         const firebaseConfig = {
             apiKey: "AIzaSyDfrFkglZShCuZhCYwNQ8pEmKwNppWggBU",
             authDomain: "toptop-game-4e89f.firebaseapp.com",
@@ -517,7 +516,6 @@
             measurementId: "G-S6ERB47WJ8"
         };
 
-        // دەستپێکردنی فایەربەیس
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
@@ -720,8 +718,8 @@
             document.getElementById("totalCoinsHub").innerText = totalCoins;
         }
 
-        // ناردنی نمرە بۆ فایەربەیس بە شێوازی ڕاستەقینە
-        function saveScoreToLeaderboard(name, finalScore, avatar, callback) {
+        // ناردنی نمرە بۆ فایەربەیس بە شێوازێکی پارێزراو کە یارییەکە ڕاناگرێت
+        function saveScoreToLeaderboard(name, finalScore, avatar) {
             db.collection("scores").add({
                 name: name,
                 score: finalScore,
@@ -729,16 +727,14 @@
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             })
             .then(() => {
-                console.log("نمرە بە سەرکەوتوویی نێردرا بۆ فایەربەیس!");
-                if (callback) callback();
+                console.log("نمرە سەرکەوتووانە نێردرا!");
+                updateLeaderboardUI();
             })
             .catch((error) => {
-                console.error("هەڵە لە ناردنی نمرە بۆ فایەربەیس: ", error);
-                if (callback) callback();
+                console.error("هەڵە لە ناردنی نمرە: ", error);
             });
         }
 
-        // خوێندنەوەی باشترین نمرەکانی فایەربەیس بۆ لیدەربۆرد
         function updateLeaderboardUI() {
             let container = document.getElementById("leaderboardList");
             container.innerHTML = `<div class="score-row"><span>بارکردن...</span><span>0</span></div>`;
@@ -944,13 +940,13 @@
             
             saveUserData();
             
-            // ناردنی نمرە بۆ فایەربەیس و نوێکردنەوەی شاشە
-            saveScoreToLeaderboard(currentUsername, score, currentUserAvatar, () => {
-                document.getElementById("finalScore").innerText = score;
-                document.getElementById("bestScore").innerText = score; // یان دەتوانیت نیشان بدەیت
-                document.getElementById("finalCoins").innerText = coins;
-                document.getElementById("gameOverScreen").classList.remove("hidden");
-            });
+            // ناردنی نمرە بۆ فایەربەیس لە پشتەوە (Background) و نیشدانی شاشەی کۆتایی دەستبەجێ
+            saveScoreToLeaderboard(currentUsername, score, currentUserAvatar);
+            
+            document.getElementById("finalScore").innerText = score;
+            document.getElementById("bestScore").innerText = score;
+            document.getElementById("finalCoins").innerText = coins;
+            document.getElementById("gameOverScreen").classList.remove("hidden");
         }
     </script>
 </body>
