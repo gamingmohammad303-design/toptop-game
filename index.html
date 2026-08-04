@@ -179,6 +179,23 @@
             padding: 20px; z-index: 50; border-radius: 16px;
         }
         .flappy-overlay.show { display: flex; }
+
+        /* Snake Game Canvas & Controls */
+        #snakeCanvas {
+            width: 100%; height: 260px; background: #18181b;
+            border: 3px solid #10b981; border-radius: 16px;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); touch-action: manipulation;
+        }
+        .snake-controls {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+            width: 180px; margin: 10px auto 0 auto;
+        }
+        .snake-btn {
+            background: #27272a; border: 1px solid #10b981; color: #fff;
+            padding: 12px; border-radius: 10px; font-size: 18px; font-weight: bold;
+            cursor: pointer; text-align: center;
+        }
+        .snake-btn:active { background: #10b981; color: #000; }
     </style>
 </head>
 <body>
@@ -292,6 +309,18 @@
                 <button class="btn" style="background: linear-gradient(135deg, #f59e0b, #b45309);" onclick="openFlappyLanding()">کردنەوەی بەش</button>
             </div>
 
+            <!-- Game 4 (Snake Game - NEW) -->
+            <div class="game-catalog-card">
+                <div class="game-thumbnail" style="background: radial-gradient(circle, #10b981, #064e3b);">🐍</div>
+                <h3 style="color: #fbbf24; font-size: 16px; margin: 0 0 4px 0;">یاری مارەکە (Snake Game)</h3>
+                <p style="font-size: 11px; color: #d6d3d1; margin: 0 0 10px 0;">سێوەکان بخۆ، درێژ ببەرەوە و کۆینی زیاتر بەدەستبێنە!</p>
+                <div class="game-meta-info">
+                    <span>📅 دەرچوون: 2026/08/05</span>
+                    <span style="color: #34d399; font-weight: bold;">جۆری: کلاسیک</span>
+                </div>
+                <button class="btn" style="background: linear-gradient(135deg, #10b981, #047857);" onclick="openSnakeLanding()">کردنەوەی بەش</button>
+            </div>
+
             <div class="card">
                 <h3>🏆 ڕیزبەندی پێشبڕکێ</h3>
                 <div class="leaderboard-list" id="leaderboardList"></div>
@@ -332,6 +361,18 @@
                 <p>دیواری قاوەیی دارین، کۆنترۆڵی زۆر ئاسان و ئاستی گونجاو!</p>
                 <button class="btn" style="background: linear-gradient(135deg, #f59e0b, #b45309); font-size: 18px;" onclick="startFlappyGame()">▶ یاری بکە (فول سکرین)</button>
                 <button class="btn" style="background: #8b5cf6;" onclick="openFlappyShop()">🛒 شوپینگ (کڕینی مریشک و دیوار)</button>
+                <button class="btn" style="background: #3f3f46;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
+            </div>
+        </div>
+
+        <!-- Snake Landing Page (NEW) -->
+        <div id="snakeLandingScreen" class="screen">
+            <div class="brand-title">یاری مارەکە 🐍</div>
+            <div class="game-catalog-card" style="margin-top: 20px;">
+                <div class="game-thumbnail" style="background: radial-gradient(circle, #10b981, #064e3b);">🐍</div>
+                <h3>پەڕەی تایبەتی یاری مارەکە</h3>
+                <p>مارەکە ڕێنمایی بکە بۆ خواردنی سێوەکان. ئاگاداربە خۆت لە دیوار و جەستەی خۆت مەدە!</p>
+                <button class="btn" style="background: linear-gradient(135deg, #10b981, #047857); font-size: 18px;" onclick="startSnakeGame()">▶ یاری بکە</button>
                 <button class="btn" style="background: #3f3f46;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
             </div>
         </div>
@@ -513,6 +554,37 @@
                 </div>
             </div>
         </div>
+
+        <!-- Snake Game Fullscreen Screen (NEW) -->
+        <div id="snakeScreen" class="screen">
+            <div class="top-bar" style="margin-bottom: 6px;">
+                <button class="btn" style="width: auto; padding: 6px 12px; margin: 0; background: #3f3f46;" onclick="exitSnakeGame()">⬅️ دەرچوون</button>
+                <span style="font-weight: bold; color: #fbbf24;">خاڵ: <span id="snakeScore">0</span> | 💰 کۆین: <span id="snakeCoins">0</span></span>
+            </div>
+            
+            <div style="position: relative; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <canvas id="snakeCanvas"></canvas>
+
+                <!-- Touch Controls for Mobile -->
+                <div class="snake-controls">
+                    <div></div>
+                    <button class="snake-btn" onclick="setSnakeDir('UP')">⬆️</button>
+                    <div></div>
+                    <button class="snake-btn" onclick="setSnakeDir('LEFT')">⬅️</button>
+                    <button class="snake-btn" onclick="setSnakeDir('DOWN')">⬇️</button>
+                    <button class="snake-btn" onclick="setSnakeDir('RIGHT')">➡️</button>
+                </div>
+
+                <!-- Snake Game Over Overlay -->
+                <div id="snakeGameOverOverlay" class="flappy-overlay">
+                    <h2 style="color: #f87171; margin-top: 0;">یاری تەواو بوو! 🐍</h2>
+                    <p style="font-size: 14px; margin-bottom: 15px;">خاڵ: <span id="snakeFinalScore" style="color: #fbbf24; font-weight: bold;">0</span></p>
+                    
+                    <button class="btn" style="background: linear-gradient(135deg, #10b981, #059669); margin-bottom: 8px;" onclick="startSnakeGame()">🔄 یاری دەکەیتەوە</button>
+                    <button class="btn" style="background: #3f3f46;" onclick="exitSnakeGame()">🏠 گەڕانەوە بۆ لاپەڕەی یاری</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -589,7 +661,7 @@
             let noteIdx = 0;
 
             bgMusicInterval = setInterval(() => {
-                if (!musicEnabled || (!isGameActive && flappyState !== "PLAYING")) return;
+                if (!musicEnabled || (!isGameActive && flappyState !== "PLAYING" && !isSnakeActive)) return;
                 if (audioCtx.state === 'suspended') audioCtx.resume();
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -610,7 +682,7 @@
             musicEnabled = (val === 'on');
             localStorage.setItem("top_top_music", val);
             if (!musicEnabled) stopBackgroundMusic();
-            else if (isGameActive || flappyState === "PLAYING") startBackgroundMusic();
+            else if (isGameActive || flappyState === "PLAYING" || isSnakeActive) startBackgroundMusic();
         }
 
         function toggleSoundEffects(val) {
@@ -644,6 +716,7 @@
         function openJumperLanding() { switchScreen("jumperLandingScreen"); }
         function openQuizLanding() { switchScreen("quizLandingScreen"); }
         function openFlappyLanding() { switchScreen("flappyLandingScreen"); }
+        function openSnakeLanding() { switchScreen("snakeLandingScreen"); }
 
         function switchAuthMode(mode) {
             if (mode === 'login') {
@@ -745,7 +818,8 @@
             document.getElementById("hubTotalCoins").innerText = totalCoins;
             document.getElementById("shopTotalCoins").innerText = totalCoins;
             document.getElementById("flappyShopCoins").innerText = totalCoins;
-            
+            if(document.getElementById("snakeCoins")) document.getElementById("snakeCoins").innerText = totalCoins;
+
             applyPlayerShapeUI();
 
             let avatarEl = document.getElementById("hubUserAvatar");
@@ -825,7 +899,7 @@
 
         function openShopScreen() { loadUserData(); switchScreen("shopScreen"); }
         function openSettingsScreen() { loadUserData(); switchScreen("settingsScreen"); }
-        function backToHub() { stopGameSession(); exitFlappyGame(); loadUserData(); switchScreen("hubScreen"); }
+        function backToHub() { stopGameSession(); exitFlappyGame(); exitSnakeGame(); loadUserData(); switchScreen("hubScreen"); }
 
         function updateShopUI() {
             let skins = [
@@ -1254,6 +1328,152 @@
                 btn.onclick = () => { if (idx === q.answer) quizScore++; currentQ++; if (currentQ < quizData.length) loadQuizQuestion(); else alert("تەواو بوو! نمرە: " + quizScore); };
                 optionsEl.appendChild(btn);
             });
+        }
+
+        // ==================== Game 4: Snake Game Engine (NEW) ====================
+        const sCanvas = document.getElementById("snakeCanvas");
+        const sCtx = sCanvas ? sCanvas.getContext("2d") : null;
+        let snake = [], snakeDir = "RIGHT", nextSnakeDir = "RIGHT";
+        let food = { x: 0, y: 0 }, snakeScore = 0;
+        let isSnakeActive = false, snakeTimer = null;
+        const gridBox = 15;
+
+        function resizeSnakeCanvas() {
+            if(!sCanvas) return;
+            sCanvas.width = Math.floor(sCanvas.parentElement.clientWidth / gridBox) * gridBox;
+            sCanvas.height = 250;
+        }
+
+        function startSnakeGame() {
+            document.getElementById("snakeGameOverOverlay").classList.remove("show");
+            switchScreen("snakeScreen");
+            resizeSnakeCanvas();
+
+            snake = [
+                { x: 5 * gridBox, y: 5 * gridBox },
+                { x: 4 * gridBox, y: 5 * gridBox },
+                { x: 3 * gridBox, y: 5 * gridBox }
+            ];
+            snakeDir = "RIGHT";
+            nextSnakeDir = "RIGHT";
+            snakeScore = 0;
+            document.getElementById("snakeScore").innerText = snakeScore;
+            document.getElementById("snakeCoins").innerText = totalCoins;
+
+            spawnSnakeFood();
+            isSnakeActive = true;
+            clearInterval(snakeTimer);
+            startBackgroundMusic();
+            snakeTimer = setInterval(updateSnakeLoop, 110);
+        }
+
+        function setSnakeDir(dir) {
+            if (dir === "LEFT" && snakeDir !== "RIGHT") nextSnakeDir = "LEFT";
+            else if (dir === "UP" && snakeDir !== "DOWN") nextSnakeDir = "UP";
+            else if (dir === "RIGHT" && snakeDir !== "LEFT") nextSnakeDir = "RIGHT";
+            else if (dir === "DOWN" && snakeDir !== "UP") nextSnakeDir = "DOWN";
+        }
+
+        window.addEventListener("keydown", (e) => {
+            if (!isSnakeActive) return;
+            if (e.key === "ArrowLeft" || e.key === "a") setSnakeDir("LEFT");
+            else if (e.key === "ArrowUp" || e.key === "w") setSnakeDir("UP");
+            else if (e.key === "ArrowRight" || e.key === "d") setSnakeDir("RIGHT");
+            else if (e.key === "ArrowDown" || e.key === "s") setSnakeDir("DOWN");
+        });
+
+        function spawnSnakeFood() {
+            let cols = Math.floor(sCanvas.width / gridBox);
+            let rows = Math.floor(sCanvas.height / gridBox);
+            food = {
+                x: Math.floor(Math.random() * cols) * gridBox,
+                y: Math.floor(Math.random() * rows) * gridBox
+            };
+        }
+
+        function updateSnakeLoop() {
+            if (!isSnakeActive) return;
+            snakeDir = nextSnakeDir;
+            let headX = snake[0].x;
+            let headY = snake[0].y;
+
+            if (snakeDir === "LEFT") headX -= gridBox;
+            if (snakeDir === "UP") headY -= gridBox;
+            if (snakeDir === "RIGHT") headX += gridBox;
+            if (snakeDir === "DOWN") headY += gridBox;
+
+            // Wall Collision
+            if (headX < 0 || headX >= sCanvas.width || headY < 0 || headY >= sCanvas.height) {
+                return snakeGameOver();
+            }
+
+            // Self Collision
+            for (let i = 0; i < snake.length; i++) {
+                if (headX === snake[i].x && headY === snake[i].y) {
+                    return snakeGameOver();
+                }
+            }
+
+            // Eat Food
+            let newHead = { x: headX, y: headY };
+            if (headX === food.x && headY === food.y) {
+                snakeScore++;
+                totalCoins += 2;
+                playSound('coin');
+                document.getElementById("snakeScore").innerText = snakeScore;
+                document.getElementById("snakeCoins").innerText = totalCoins;
+                localStorage.setItem("coins_" + currentUser, totalCoins);
+                spawnSnakeFood();
+            } else {
+                snake.pop();
+            }
+
+            snake.unshift(newHead);
+            drawSnakeGame();
+        }
+
+        function drawSnakeGame() {
+            sCtx.fillStyle = "#18181b";
+            sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
+
+            // Draw Grid Lines
+            sCtx.strokeStyle = "rgba(255,255,255,0.03)";
+            for (let x = 0; x < sCanvas.width; x += gridBox) {
+                sCtx.beginPath(); sCtx.moveTo(x, 0); sCtx.lineTo(x, sCanvas.height); sCtx.stroke();
+            }
+            for (let y = 0; y < sCanvas.height; y += gridBox) {
+                sCtx.beginPath(); sCtx.moveTo(0, y); sCtx.lineTo(sCanvas.width, y); sCtx.stroke();
+            }
+
+            // Draw Food (Apple)
+            sCtx.fillStyle = "#ef4444";
+            sCtx.beginPath();
+            sCtx.arc(food.x + gridBox/2, food.y + gridBox/2, gridBox/2 - 1, 0, Math.PI * 2);
+            sCtx.fill();
+
+            // Draw Snake
+            for (let i = 0; i < snake.length; i++) {
+                sCtx.fillStyle = i === 0 ? "#34d399" : "#10b981";
+                sCtx.fillRect(snake[i].x + 1, snake[i].y + 1, gridBox - 2, gridBox - 2);
+            }
+        }
+
+        function snakeGameOver() {
+            isSnakeActive = false;
+            clearInterval(snakeTimer);
+            playSound('gameover');
+            stopBackgroundMusic();
+            document.getElementById("snakeFinalScore").innerText = snakeScore;
+            document.getElementById("snakeGameOverOverlay").classList.add("show");
+        }
+
+        function exitSnakeGame() {
+            isSnakeActive = false;
+            clearInterval(snakeTimer);
+            stopBackgroundMusic();
+            document.getElementById("snakeGameOverOverlay").classList.remove("show");
+            loadUserData();
+            switchScreen("snakeLandingScreen");
         }
     </script>
 </body>
