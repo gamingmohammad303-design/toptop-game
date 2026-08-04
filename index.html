@@ -9,26 +9,40 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
-        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        /* ڕێگریکردن لە گەورەبوونی شاشە لە سەفاری (Safari Zoom Prevention) */
+        * { 
+            box-sizing: border-box; 
+            user-select: none; 
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent; 
+            touch-action: manipulation; /* بەربەستکردنی دوو جار داگرتن بۆ Zoom */
+        }
+        
         html, body {
             width: 100vw; height: 100vh; margin: 0; padding: 0;
             background-color: #0c0a09; color: #f8fafc;
             font-family: 'Noto Sans Arabic', sans-serif;
-            overflow: hidden; touch-action: manipulation;
+            overflow: hidden; 
+            touch-action: none; /* هەموو ڕەفتارەکانی Zoom دەبەستێت */
         }
+
         .container {
             width: 100vw; height: 100vh;
             background: linear-gradient(135deg, #1c1917, #0c0a09);
             display: flex; flex-direction: column; padding: 12px; position: relative; overflow: hidden;
+            touch-action: none;
         }
+
         .brand-title {
             text-align: center; font-size: 26px; font-weight: 900;
             background: linear-gradient(135deg, #f59e0b, #d97706, #b45309);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             margin: 4px 0 10px 0; filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.3));
         }
+
         .screen { display: none; flex: 1; flex-direction: column; height: 100%; overflow-y: auto; }
         .screen.active { display: flex; }
+
         .form-group { margin-bottom: 12px; text-align: right; }
         label { display: block; font-size: 12px; margin-bottom: 6px; color: #fcd34d; }
         input, select {
@@ -36,20 +50,24 @@
             border: 1px solid #d97706; border-radius: 12px; color: #fff;
             font-size: 14px; outline: none; font-family: 'Noto Sans Arabic', sans-serif;
         }
+
         .btn {
             width: 100%; background: linear-gradient(135deg, #d97706, #b45309);
             color: #ffffff; border: none; padding: 12px; font-size: 15px;
             font-weight: bold; border-radius: 12px; cursor: pointer; margin-top: 8px;
             box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
             transition: transform 0.1s ease;
+            touch-action: manipulation;
         }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn:active { transform: scale(0.96); }
+
         .top-bar {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 12px; background: rgba(39, 39, 42, 0.9);
             padding: 10px 16px; border-radius: 14px; border: 1px solid #d97706;
         }
+
         .card {
             background: rgba(39, 39, 42, 0.8); border-radius: 14px;
             padding: 14px; margin-bottom: 12px; text-align: right;
@@ -63,6 +81,7 @@
             margin: 6px 0 10px 0; border-bottom: 2px solid rgba(251, 191, 36, 0.3);
             padding-bottom: 4px; display: flex; justify-content: space-between; align-items: center;
         }
+
         .game-catalog-card {
             background: linear-gradient(145deg, #27272a, #18181b);
             border: 1px solid #d97706; border-radius: 18px; padding: 14px;
@@ -86,9 +105,7 @@
             position: relative; overflow: hidden; margin-bottom: 10px;
         }
 
-        #player {
-            width: 32px; height: 32px; position: absolute; bottom: 10px; left: 40px;
-        }
+        #player { width: 32px; height: 32px; position: absolute; bottom: 10px; left: 40px; }
         #player.shape-circle { border-radius: 50%; background: #38bdf8; box-shadow: 0 0 15px #38bdf8; }
         #player.shape-square { border-radius: 4px; background: #a855f7; box-shadow: 0 0 15px #a855f7; }
         #player.shape-triangle {
@@ -100,10 +117,6 @@
             box-shadow: 0 0 15px #eab308;
         }
         #player.shape-diamond { background: #06b6d4; transform: rotate(45deg); box-shadow: 0 0 15px #06b6d4; }
-
-        #player.shielded { outline: 4px solid #10b981; filter: drop-shadow(0 0 12px #10b981); }
-        #player.magnetized { outline: 4px solid #f59e0b; filter: drop-shadow(0 0 12px #f59e0b); }
-        #player.speedboosted { outline: 4px solid #eab308; filter: drop-shadow(0 0 15px #eab308); }
 
         #obstacle {
             width: 22px; height: 40px; background: linear-gradient(135deg, #f87171, #b91c1c);
@@ -160,23 +173,25 @@
         }
         .quiz-img-container img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Canvas Style */
+        /* Canvas Style - ڕێگریکردن لە گەورەبوون (Preventing Zoom) */
         .flappy-container {
             flex: 1; width: 100%; display: flex; flex-direction: column;
             justify-content: center; align-items: center; position: relative;
+            touch-action: none;
         }
         #flappyCanvas {
             width: 100%; height: 100%; max-height: calc(100vh - 120px);
             background: #451a03; border: 3px solid #b45309; border-radius: 16px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8); touch-action: manipulation;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8); 
+            touch-action: none; /* هەموو جۆرە ڕەتکردنەوە و گەورەکردنێکی سەفاری لێرەدا دەوەستێت */
         }
 
-        /* Overlay for Flappy Bird Game Over */
         .flappy-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(12, 10, 9, 0.9); display: none;
             flex-direction: column; justify-content: center; align-items: center;
             padding: 20px; z-index: 50; border-radius: 16px;
+            touch-action: manipulation;
         }
         .flappy-overlay.show { display: flex; }
     </style>
@@ -284,7 +299,7 @@
             <div class="game-catalog-card">
                 <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐓</div>
                 <h3 style="color: #fbbf24; font-size: 16px; margin: 0 0 4px 0;">یاری باڵندە و مریشکەکان (HD)</h3>
-                <p style="font-size: 11px; color: #d6d3d1; margin: 0 0 10px 0;">مریشک و قازەکان بفرێنە لەسەر دیواری قاوەیی دارین! (ئاستی ئاسان)</p>
+                <p style="font-size: 11px; color: #d6d3d1; margin: 0 0 10px 0;">مریشک و قازەکان بفرێنە لەسەر دیواری قاوەیی دارین!</p>
                 <div class="game-meta-info">
                     <span>📅 دەرچوون: 2026/08/04</span>
                     <span style="color: #10b981; font-weight: bold;">جۆری: ئاسان</span>
@@ -502,7 +517,6 @@
             <div class="flappy-container">
                 <canvas id="flappyCanvas"></canvas>
 
-                <!-- Game Over Box with requested buttons -->
                 <div id="flappyGameOverOverlay" class="flappy-overlay">
                     <h2 style="color: #f87171; margin-top: 0;">یاری تەواو بوو! 🐔</h2>
                     <p style="font-size: 14px; margin-bottom: 15px;">کۆینی کۆکراوە: <span id="flappyFinalScore" style="color: #fbbf24; font-weight: bold;">0</span></p>
@@ -516,6 +530,16 @@
     </div>
 
     <script>
+        // JavaScript Blocked Double-Tap Event
+        document.addEventListener('touchend', function (event) {
+            let now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault(); // ڕێگری لە Double Tap Zoom
+            }
+            lastTouchEnd = now;
+        }, false);
+        let lastTouchEnd = 0;
+
         let currentUser = "";
         let totalCoins = 0;
         let selectedShape = "circle";
@@ -1041,7 +1065,7 @@
             loadUserData(); renderFlappyShop();
         }
 
-        // ==================== Flappy Bird Engine (EASY DIFFICULTY) ====================
+        // ==================== Flappy Bird Engine ====================
         const fCanvas = document.getElementById("flappyCanvas");
         const fCtx = fCanvas.getContext("2d");
 
@@ -1056,8 +1080,8 @@
 
         const fBird = {
             x: 50, y: 150, radius: 14, 
-            gravity: 0.22, // Reduced gravity for smoother/easier fall
-            jump: 5.5,     // Soft, manageable jump height
+            gravity: 0.22, 
+            jump: 5.5,     
             velocity: 0,
             draw() {
                 fCtx.save();
@@ -1088,15 +1112,15 @@
         const fPipes = {
             position: [], 
             w: 48, 
-            gap: 140, // Expanded gap for easier passage
-            dx: 2.0,  // Reduced pipe movement speed
+            gap: 140, 
+            dx: 2.0,  
             draw() {
                 for (let i = 0; i < this.position.length; i++) {
                     let p = this.position[i];
                     let topY = p.y;
                     let bottomY = p.y + 250 + this.gap;
 
-                    // Wood Brown Wall Texture
+                    // Wood Brown Wall
                     fCtx.fillStyle = "#5c2c06";
                     fCtx.fillRect(p.x, topY, this.w, 250);
                     fCtx.strokeStyle = "#b45309";
@@ -1146,7 +1170,6 @@
             fCtx.fillStyle = bgObj.color;
             fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
 
-            // Wood / Wall Lines
             fCtx.strokeStyle = "rgba(255,255,255,0.06)";
             fCtx.lineWidth = 2;
             for (let y = 0; y < fCanvas.height; y += 35) {
@@ -1208,7 +1231,12 @@
             }
         }
 
-        fCanvas.addEventListener("pointerdown", (e) => { e.preventDefault(); handleFlappyAction(); });
+        // Event listener 
+        fCanvas.addEventListener("pointerdown", (e) => { 
+            e.preventDefault(); 
+            handleFlappyAction(); 
+        });
+
         window.addEventListener("keydown", (e) => {
             if (e.code === "Space" && document.getElementById("flappyScreen").classList.contains("active")) {
                 e.preventDefault(); handleFlappyAction();
