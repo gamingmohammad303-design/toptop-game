@@ -139,6 +139,15 @@
         .tab-btn.active { background: #3b82f6; color: #fff; }
         .leaderboard-list { max-height: 120px; overflow-y: auto; font-size: 12px; }
         .leaderboard-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(59, 130, 246, 0.2); }
+        
+        /* Quiz Image Styles */
+        .quiz-img-container {
+            width: 100%; height: 170px; border-radius: 12px; overflow: hidden;
+            margin-bottom: 14px; border: 2px solid #3b82f6; background: #0f172a;
+        }
+        .quiz-img-container img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
     </style>
 </head>
 <body>
@@ -223,14 +232,14 @@
                 <button class="btn" onclick="startGamePlay()">یاری بکە</button>
             </div>
 
-            <!-- Game 2: Quiz -->
+            <!-- Game 2: Quiz & Photos -->
             <div class="game-catalog-card">
-                <div class="game-thumbnail" style="background: radial-gradient(circle, #ec4899, #831843);">❓</div>
-                <h3 style="color: #f59e0b; font-size: 16px; margin: 0 0 4px 0;">یاری پرسیار و وەڵام</h3>
-                <p style="font-size: 11px; color: #93c5fd; margin: 0 0 10px 0;">زانیارییە گشتییەکانت تاقی بکەرەوە و نمرە بەدەستبهێنە</p>
+                <div class="game-thumbnail" style="background: radial-gradient(circle, #ec4899, #831843);">📸</div>
+                <h3 style="color: #f59e0b; font-size: 16px; margin: 0 0 4px 0;">یاری وێنە و شوێنەکانی کوردستان</h3>
+                <p style="font-size: 11px; color: #93c5fd; margin: 0 0 10px 0;">ئەم شوێنە کێیە یان هی کام شارە؟ زانیارییەکانت تاقی بکەرەوە</p>
                 <div class="game-meta-info">
                     <span>📅 دەرچوون: 2026/06/02</span>
-                    <span style="color: #ec4899; font-weight: bold;">جۆری: فکری</span>
+                    <span style="color: #ec4899; font-weight: bold;">جۆری: وێنەیی</span>
                 </div>
                 <button class="btn" style="background: linear-gradient(135deg, #ec4899, #be185d);" onclick="startQuizPlay()">یاری بکە</button>
             </div>
@@ -327,13 +336,16 @@
             <button class="btn" style="background: #334155; margin-top: 10px;" onclick="backToHub()">گەڕانەوە بۆ سەرەتا</button>
         </div>
 
-        <!-- Quiz Screen -->
+        <!-- Quiz Screen (Photo & Places Mode) -->
         <div id="quizScreen" class="screen">
-            <div class="brand-title" style="font-size: 22px;">یاری پرسیار و وەڵام</div>
-            <div class="card" style="text-align: center; margin-top: 10px;">
-                <h3 id="quizQuestion" style="font-size: 16px; margin-bottom: 20px; color: #38bdf8;">پرسیار لێرە دەردەکەوێت...</h3>
+            <div class="brand-title" style="font-size: 20px;">یاری وێنە و شوێنەکانی کوردستان</div>
+            <div class="card" style="text-align: center; margin-top: 5px; padding: 12px;">
+                <div class="quiz-img-container">
+                    <img id="quizImage" src="" alt="وێنەی پرسیار">
+                </div>
+                <h3 id="quizQuestion" style="font-size: 15px; margin-bottom: 12px; color: #38bdf8;">پرسیار لێرە دەردەکەوێت...</h3>
                 <div id="quizOptions"></div>
-                <div id="quizScoreResult" style="font-weight: bold; margin-top: 15px; font-size: 16px; color: #f59e0b;"></div>
+                <div id="quizScoreResult" style="font-weight: bold; margin-top: 12px; font-size: 15px; color: #f59e0b;"></div>
             </div>
             <button class="btn" style="background: #334155; margin-top: auto;" onclick="backToHub()">گەڕانەوە بۆ سەرەکی</button>
         </div>
@@ -885,11 +897,32 @@
             document.getElementById("gameOverBox").classList.add("show");
         }
 
-        // Quiz Game Logic
+        // Photo & Places Quiz Game Logic
         const quizData = [
-            { question: "پایتەختی کوردستان کام شارە؟", options: ["هەولێر", "سلێمانی", "دهۆک", "کەرکووک"], answer: 0 },
-            { question: "ژمارە ٥ لەگەڵ ٣ چەند دەكات؟", options: ["٦", "٧", "٨", "٩"], answer: 2 },
-            { question: "گەورەترین هەسارەی کۆمەڵەی خۆر کامەیە؟", options: ["زەوی", "کەیوان", "مەریخ", "موشتەری"], answer: 3 }
+            { 
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Erbil_Citadel_gate.jpg/800px-Erbil_Citadel_gate.jpg", 
+                question: "ئەم قەڵایە مێژووییە دەکەوێتە کام شارەوە؟", 
+                options: ["هەولێر", "سلێمانی", "دهۆک", "کەرکووک"], 
+                answer: 0 
+            },
+            { 
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Duhok_Dam.jpg/800px-Duhok_Dam.jpg", 
+                question: "ئەم شوێنە ناسراوە (بەنداوی دهۆک) دەکەوێتە کام شار؟", 
+                options: ["سلێمانی", "هەولێر", "دهۆک", "هەڵەبجە"], 
+                answer: 2 
+            },
+            { 
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Slemani_Azadi_Park.jpg/800px-Slemani_Azadi_Park.jpg", 
+                question: "ئەم پارکە ناسراوە دەکەوێتە کام شار؟", 
+                options: ["دهۆک", "سلێمانی", "هەولێر", "زاخۆ"], 
+                answer: 1 
+            },
+            { 
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Amedi_town.jpg/800px-Amedi_town.jpg", 
+                question: "شاری دێرینی ئامێدی سەر بە قەزای کام پارێزگایە؟", 
+                options: ["هەولێر", "سلێمانی", "دهۆک", "هەڵەبجە"], 
+                answer: 2 
+            }
         ];
         let currentQ = 0;
         let quizScore = 0;
@@ -904,6 +937,7 @@
 
         function loadQuizQuestion() {
             const currentQuiz = quizData[currentQ];
+            document.getElementById("quizImage").src = currentQuiz.image;
             document.getElementById("quizQuestion").innerText = currentQuiz.question;
             const optionsEl = document.getElementById("quizOptions");
             optionsEl.innerHTML = "";
@@ -925,6 +959,7 @@
             if (currentQ < quizData.length) {
                 loadQuizQuestion();
             } else {
+                document.getElementById("quizImage").style.display = "none";
                 document.getElementById("quizQuestion").innerText = "یارییەکە تەواو بوو!";
                 document.getElementById("quizOptions").innerHTML = "";
                 document.getElementById("quizScoreResult").innerText = `نمرەی کۆتایی: ${quizScore} لە ${quizData.length}`;
