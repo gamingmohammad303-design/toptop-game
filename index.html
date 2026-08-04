@@ -140,7 +140,6 @@
         .leaderboard-list { max-height: 120px; overflow-y: auto; font-size: 12px; }
         .leaderboard-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(59, 130, 246, 0.2); }
         
-        /* Quiz Image Styles */
         .quiz-img-container {
             width: 100%; height: 170px; border-radius: 12px; overflow: hidden;
             margin-bottom: 14px; border: 2px solid #3b82f6; background: #0f172a;
@@ -897,31 +896,31 @@
             document.getElementById("gameOverBox").classList.add("show");
         }
 
-        // Photo & Places Quiz Game Logic (Lیره دەتوانیت ناوی وێنەکان بگۆریت بە ناوی ئەو وێنەیەی کە لە گیتهەب بارکردووە)
+        // Quiz Game Logic with exact GitHub image names
         const quizData = [
             { 
-                image: "qala1.jpg", 
-                question: "ئەم قەڵایە مێژووییە دەکەوێتە کام شارەوە؟", 
-                options: ["هەولێر", "سلێمانی", "دهۆک", "کەرکووک"], 
+                image: "IMG_0562.jpeg", 
+                question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", 
+                options: ["شوێنی یەکەم", "شوێنی دووەم", "شوێنی سێیەم", "شوێنی چوارەم"], 
                 answer: 0 
             },
             { 
-                image: "qala2.jpg", 
-                question: "ئەم شوێنە ناسراوە دەکەوێتە کام شار؟", 
-                options: ["سلێمانی", "هەولێر", "دهۆک", "هەڵەبجە"], 
-                answer: 2 
-            },
-            { 
-                image: "qala3.jpg", 
-                question: "ئەم پارکە ناسراوە دەکەوێتە کام شار؟", 
-                options: ["دهۆک", "سلێمانی", "هەولێر", "زاخۆ"], 
+                image: "IMG_0563.jpeg", 
+                question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", 
+                options: ["شوێنی یەکەم", "شوێنی دووەم", "شوێنی سێیەم", "شوێنی چوارەم"], 
                 answer: 1 
             },
             { 
-                image: "qala4.jpg", 
-                question: "شاری دێرینی ئامێدی سەر بە قەزای کام پارێزگایە؟", 
-                options: ["هەولێر", "سلێمانی", "دهۆک", "هەڵەبجە"], 
+                image: "IMG_0564.jpeg", 
+                question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", 
+                options: ["شوێنی یەکەم", "شوێنی دووەم", "شوێنی سێیەم", "شوێنی چوارەم"], 
                 answer: 2 
+            },
+            { 
+                image: "IMG_0565.jpeg", 
+                question: "ئەم وێنەیە کام شوێن یان دیمەن نیشان دەدات؟", 
+                options: ["شوێنی یەکەم", "شوێنی دووەم", "شوێنی سێیەم", "شوێنی چوارەم"], 
+                answer: 3 
             }
         ];
         let currentQ = 0;
