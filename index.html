@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>یاری تۆپ تۆپ - بەشی دەنگ و پاوەرئەپ</title>
+    <title>یاری تۆپ تۆپ - وێنەی ڕاستەوخۆ</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
@@ -29,7 +29,7 @@
         }
         .screen { display: none; flex: 1; flex-direction: column; }
         .screen.active { display: flex; }
-        .form-group { margin-bottom: 15px; text-align: right; }
+        .form-group { margin-bottom: 12px; text-align: right; }
         label { display: block; font-size: 12px; margin-bottom: 6px; color: #93c5fd; }
         input, select {
             width: 100%; padding: 12px 14px; background: #1e293b;
@@ -43,7 +43,6 @@
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
         .btn:active { transform: scale(0.97); }
-        .btn:disabled { background: #334155; opacity: 0.6; cursor: not-allowed; box-shadow: none; }
         .top-bar {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 15px; background: rgba(30, 41, 59, 0.8);
@@ -60,16 +59,11 @@
             background: linear-gradient(to bottom, #172554, #020617);
             border: 2px solid #3b82f6; border-radius: 16px; height: 260px;
             position: relative; overflow: hidden; margin-bottom: 12px;
-            transition: background 0.3s;
-        }
-        .arena.speeding {
-            background: linear-gradient(to bottom, #3b0764, #1e1b4b);
-            border-color: #a855f7;
         }
         #player {
             width: 32px; height: 32px; background: #38bdf8;
             border-radius: 50%; position: absolute; bottom: 10px; left: 40px;
-            box-shadow: 0 0 15px #38bdf8; transition: border 0.2s, box-shadow 0.2s;
+            box-shadow: 0 0 15px #38bdf8;
         }
         #player.shielded { border: 3px solid #10b981; box-shadow: 0 0 20px #10b981; }
         #player.magnetized { border: 3px solid #f59e0b; box-shadow: 0 0 20px #f59e0b; }
@@ -111,6 +105,12 @@
             background: #1e293b; border: 1px solid #3b82f6; border-radius: 12px;
             padding: 10px; text-align: center;
         }
+        .avatar-preview {
+            width: 70px; height: 70px; border-radius: 50%; background: #334155;
+            margin: 0 auto 10px auto; display: flex; justify-content: center; align-items: center;
+            overflow: hidden; border: 2px solid #3b82f6; cursor: pointer; position: relative;
+        }
+        .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
 <body>
@@ -119,18 +119,40 @@
         <!-- Auth Screen -->
         <div id="authScreen" class="screen active">
             <div class="brand-title">تۆپ تۆپ</div>
-            <div class="form-group">
-                <label>ناوی بەکارهێنەر</label>
-                <input type="text" id="usernameInput" placeholder="تکایە ناوت بنووسە...">
+            <div class="card">
+                <h3>تۆمارکردنی حیسابی نوێ</h3>
+                <p>وێنەی پڕۆفایلەکەت لە ئامێرەکەتەوە هەڵبژێرە</p>
+                
+                <div class="avatar-preview" id="avatarPreviewContainer" onclick="document.getElementById('fileInput').click()">
+                    <span id="avatarPlaceholderText" style="font-size: 24px;">📷</span>
+                    <img id="avatarImgTag" style="display:none;" />
+                </div>
+                <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
+
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>ناوی بەکارهێنەر (Username)</label>
+                    <input type="text" id="regUsername" placeholder="ناوی بەکارهێنەر...">
+                </div>
+                <div class="form-group">
+                    <label>ڕێکەوتی لەدایکبوون</label>
+                    <input type="date" id="regBirthdate">
+                </div>
+                <div class="form-group">
+                    <label>وشەی نهێنی (Password)</label>
+                    <input type="password" id="regPassword" placeholder="وشەی نهێنی بنووسە...">
+                </div>
+                <button class="btn" onclick="registerUser()">تۆمارکردن و دەستپێکردن</button>
             </div>
-            <button class="btn" onclick="registerUser()">دەستپێکردن</button>
         </div>
 
         <!-- Hub Screen -->
         <div id="hubScreen" class="screen">
             <div class="brand-title">تۆپ تۆپ</div>
             <div class="top-bar">
-                <span id="hubUsernameText" style="font-weight: bold; color: #38bdf8;"></span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div id="hubUserAvatar" style="width: 32px; height: 32px; border-radius: 50%; background: #38bdf8; overflow: hidden; display: flex; justify-content: center; align-items: center; font-size: 12px; border: 1px solid #3b82f6;">👤</div>
+                    <span id="hubUsernameText" style="font-weight: bold; color: #38bdf8;"></span>
+                </div>
                 <span>💰 کۆین: <span id="hubTotalCoins">0</span></span>
             </div>
             <div style="display: flex; gap: 8px; margin-bottom: 10px;">
@@ -142,6 +164,7 @@
                 <p>🛡️ قەڵغان، 🧲 موگناتیس و ⚡ بروسکە کۆبکەرەوە!</p>
                 <button class="btn" onclick="startGamePlay()">دەستپێکردنی یاری</button>
             </div>
+            <button class="btn" style="background: #b91c1c; margin-top: auto;" onclick="logoutUser()">دەرچوون لە حیساب</button>
         </div>
 
         <!-- Shop Screen -->
@@ -219,6 +242,7 @@
         let totalCoins = 0;
         let playerColor = "#38bdf8";
         let ownedSkins = ["default"];
+        let tempAvatarBase64 = "";
 
         let isGameActive = false;
         let score = 0;
@@ -249,7 +273,7 @@
         let powerupTimer;
         let gameDifficulty = "normal";
 
-        // Audio System Setup
+        // Audio System
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type) {
@@ -259,7 +283,6 @@
             const gain = audioCtx.createGain();
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-
             const now = audioCtx.currentTime;
 
             if (type === 'jump') {
@@ -268,57 +291,52 @@
                 osc.frequency.exponentialRampToValueAtTime(400, now + 0.12);
                 gain.gain.setValueAtTime(0.15, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
-                osc.start(now);
-                osc.stop(now + 0.12);
+                osc.start(now); osc.stop(now + 0.12);
             } else if (type === 'coin') {
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(987.77, now); // B5 note
-                osc.frequency.setValueAtTime(1318.51, now + 0.08); // E6 note
+                osc.frequency.setValueAtTime(987.77, now);
+                osc.frequency.setValueAtTime(1318.51, now + 0.08);
                 gain.gain.setValueAtTime(0.12, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-                osc.start(now);
-                osc.stop(now + 0.2);
+                osc.start(now); osc.stop(now + 0.2);
             } else if (type === 'powerup') {
                 osc.type = 'triangle';
                 osc.frequency.setValueAtTime(300, now);
                 osc.frequency.exponentialRampToValueAtTime(800, now + 0.25);
                 gain.gain.setValueAtTime(0.2, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-                osc.start(now);
-                osc.stop(now + 0.25);
+                osc.start(now); osc.stop(now + 0.25);
             } else if (type === 'gameover') {
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(300, now);
                 osc.frequency.exponentialRampToValueAtTime(80, now + 0.4);
                 gain.gain.setValueAtTime(0.2, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-                osc.start(now);
-                osc.stop(now + 0.4);
+                osc.start(now); osc.stop(now + 0.4);
             } else if (type === 'buy') {
                 osc.type = 'triangle';
                 osc.frequency.setValueAtTime(440, now);
                 osc.frequency.exponentialRampToValueAtTime(880, now + 0.2);
                 gain.gain.setValueAtTime(0.15, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-                osc.start(now);
-                osc.stop(now + 0.2);
+                osc.start(now); osc.stop(now + 0.2);
             } else if (type === 'select') {
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(600, now);
                 gain.gain.setValueAtTime(0.1, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-                osc.start(now);
-                osc.stop(now + 0.1);
+                osc.start(now); osc.stop(now + 0.1);
             }
         }
 
         window.onload = function() {
-            let savedName = localStorage.getItem("top_top_user");
-            if (savedName) {
-                currentUser = savedName;
-                document.getElementById("hubUsernameText").innerText = currentUser;
+            let savedUser = localStorage.getItem("top_top_active_user");
+            if (savedUser) {
+                currentUser = savedUser;
                 loadUserData();
                 switchScreen("hubScreen");
+            } else {
+                switchScreen("authScreen");
             }
         };
 
@@ -327,26 +345,73 @@
             document.getElementById(id).classList.add("active");
         }
 
-        function registerUser() {
-            let name = document.getElementById("usernameInput").value.trim();
-            if (name) {
-                currentUser = name;
-                localStorage.setItem("top_top_user", currentUser);
-                document.getElementById("hubUsernameText").innerText = currentUser;
-                loadUserData();
-                switchScreen("hubScreen");
+        function handleImageUpload(event) {
+            let file = event.target.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    tempAvatarBase64 = e.target.result;
+                    let imgTag = document.getElementById("avatarImgTag");
+                    let textTag = document.getElementById("avatarPlaceholderText");
+                    imgTag.src = tempAvatarBase64;
+                    imgTag.style.display = "block";
+                    textTag.style.display = "none";
+                }
+                reader.readAsDataURL(file);
             }
         }
 
+        function registerUser() {
+            let name = document.getElementById("regUsername").value.trim();
+            let pass = document.getElementById("regPassword").value.trim();
+            let birthdate = document.getElementById("regBirthdate").value;
+
+            if (!name || !pass) {
+                alert("تکایە ناوی بەکارهێنەر و وشەی نهێنی پڕبکەرەوە!");
+                return;
+            }
+
+            let userProfile = {
+                username: name,
+                password: pass,
+                birthdate: birthdate,
+                avatar: tempAvatarBase64 || ""
+            };
+
+            localStorage.setItem("user_profile_" + name, JSON.stringify(userProfile));
+            localStorage.setItem("top_top_active_user", name);
+
+            currentUser = name;
+            loadUserData();
+            switchScreen("hubScreen");
+        }
+
+        function logoutUser() {
+            localStorage.removeItem("top_top_active_user");
+            currentUser = "";
+            switchScreen("authScreen");
+        }
+
         function loadUserData() {
+            let profileData = localStorage.getItem("user_profile_" + currentUser);
+            let profile = profileData ? JSON.parse(profileData) : {};
+
             totalCoins = parseInt(localStorage.getItem("coins_" + currentUser) || "0");
             playerColor = localStorage.getItem("color_" + currentUser) || "#38bdf8";
             ownedSkins = JSON.parse(localStorage.getItem("owned_skins_" + currentUser) || '["default"]');
 
+            document.getElementById("hubUsernameText").innerText = currentUser;
             document.getElementById("hubTotalCoins").innerText = totalCoins;
             document.getElementById("shopTotalCoins").innerText = totalCoins;
             document.getElementById("player").style.background = playerColor;
             document.getElementById("player").style.boxShadow = `0 0 15px ${playerColor}`;
+
+            let avatarEl = document.getElementById("hubUserAvatar");
+            if (profile.avatar) {
+                avatarEl.innerHTML = `<img src="${profile.avatar}" style="width:100%; height:100%; object-fit:cover;">`;
+            } else {
+                avatarEl.innerHTML = currentUser.charAt(0).toUpperCase();
+            }
 
             updateShopUI();
         }
@@ -511,7 +576,6 @@
             }
             document.getElementById("coinItem").style.left = coinX + "px";
 
-            // Spaced out powerups (Shield, Magnet, Speed)
             shieldX -= speed;
             if (shieldX < -30) shieldX = 1000 + Math.random() * 800;
             document.getElementById("shieldItem").style.left = shieldX + "px";
@@ -530,7 +594,6 @@
                 document.getElementById("player").style.bottom = playerY + "px";
             }
 
-            // Coin Collect
             if (document.getElementById("coinItem").style.display !== "none" && coinX > 25 && coinX < 60 && playerY > 25 && playerY < 85) {
                 coins++; totalCoins++;
                 playSound('coin');
@@ -538,7 +601,6 @@
                 document.getElementById("coinItem").style.display = "none";
             }
 
-            // Shield Collect
             if (shieldX > 25 && shieldX < 60 && playerY > 30) {
                 shieldActive = true; shieldTimeLeft = 6;
                 playSound('powerup');
@@ -547,7 +609,6 @@
                 shieldX = -40;
             }
 
-            // Magnet Collect
             if (magnetX > 25 && magnetX < 60 && playerY > 30) {
                 magnetActive = true; magnetTimeLeft = 8;
                 playSound('powerup');
@@ -556,7 +617,6 @@
                 magnetX = -40;
             }
 
-            // Speed Collect ⚡
             if (speedX > 25 && speedX < 60 && playerY > 30) {
                 speedActive = true; speedTimeLeft = 5;
                 playSound('powerup');
@@ -567,7 +627,6 @@
                 speedX = -40;
             }
 
-            // Obstacle Collision
             if (obstacleX > 25 && obstacleX < 55 && playerY < 45) {
                 if (shieldActive) {
                     obstacleX = 360; 
@@ -590,3 +649,4 @@
     </script>
 </body>
 </html>
+
