@@ -7,6 +7,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- 1. کتێبخانەکانی فایەربەیس (Firebase SDKs) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
     <style>
         body {
             background-color: #0f172a;
@@ -410,7 +415,7 @@
             <div class="leaderboard-box">
                 <h4>🏆 باشترین یاریزانەکان</h4>
                 <div id="leaderboardList">
-                    <div class="score-row"><span>هیچ تۆمارێک نییە</span><span>0</span></div>
+                    <div class="score-row"><span>بارکردن...</span><span>0</span></div>
                 </div>
             </div>
             
@@ -499,7 +504,23 @@
 
     </div>
 
+    <!-- 2. ڕێکخستن و دەستپێکردنی فایەربەیس و کۆدی یارییەکە -->
     <script>
+        // زانیارییەکانی بەستنەوە بە فایەربەیس
+        const firebaseConfig = {
+            apiKey: "AIzaSyDfrFkglZShCuZhCYwNQ8pEmKwNppWggBU",
+            authDomain: "toptop-game-4e89f.firebaseapp.com",
+            projectId: "toptop-game-4e89f",
+            storageBucket: "toptop-game-4e89f.firebasestorage.app",
+            messagingSenderId: "786973684229",
+            appId: "1:786973684229:web:a327a180f44ca18f8fa26c",
+            measurementId: "G-S6ERB47WJ8"
+        };
+
+        // دەستپێکردنی فایەربەیس
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         let currentUsername = "";
         let currentUserAvatar = "";
         let score = 0;
@@ -529,7 +550,6 @@
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         let tempAvatarBase64 = "https://via.placeholder.com/80?text=وێنە";
         
-        // پشکنینی پاشەکەوت لە براوسەردا لە کاتی کردنەوەی پەڕەکەدا
         window.onload = function() {
             let savedUser = localStorage.getItem("toptop_logged_user");
             if (savedUser) {
@@ -672,7 +692,6 @@
             currentUsername = username;
             currentUserAvatar = tempAvatarBase64;
             
-            // پاشەکەوتکردنی داتا لەسەر براوسەر
             localStorage.setItem("toptop_logged_user", currentUsername);
             localStorage.setItem("toptop_avatar_" + currentUsername, currentUserAvatar);
 
@@ -701,54 +720,56 @@
             document.getElementById("totalCoinsHub").innerText = totalCoins;
         }
 
-        function getLeaderboard() {
-            let data = localStorage.getItem("toptop_leaderboard");
-            return data ? JSON.parse(data) : [];
+        // ناردنی نمرە بۆ فایەربەیس بە شێوازی ڕاستەقینە
+        function saveScoreToLeaderboard(name, finalScore, avatar, callback) {
+            db.collection("scores").add({
+                name: name,
+                score: finalScore,
+                avatar: avatar,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                console.log("نمرە بە سەرکەوتوویی نێردرا بۆ فایەربەیس!");
+                if (callback) callback();
+            })
+            .catch((error) => {
+                console.error("هەڵە لە ناردنی نمرە بۆ فایەربەیس: ", error);
+                if (callback) callback();
+            });
         }
 
-        function saveScoreToLeaderboard(name, finalScore, avatar) {
-            let list = getLeaderboard();
-            let existingUser = list.find(item => item.name === name);
-            
-            let best = finalScore;
-            if (existingUser) {
-                existingUser.avatar = avatar; // نوێکردنەوەی وێنە ئەگەر گۆڕابێت
-                if (finalScore > existingUser.score) {
-                    existingUser.score = finalScore;
-                } else {
-                    best = existingUser.score;
-                }
-            } else {
-                list.push({ name: name, score: finalScore, avatar: avatar });
-            }
-
-            list.sort((a, b) => b.score - a.score);
-            list = list.slice(0, 3);
-            localStorage.setItem("toptop_leaderboard", JSON.stringify(list));
-            return best;
-        }
-
+        // خوێندنەوەی باشترین نمرەکانی فایەربەیس بۆ لیدەربۆرد
         function updateLeaderboardUI() {
-            let list = getLeaderboard();
             let container = document.getElementById("leaderboardList");
-            container.innerHTML = "";
+            container.innerHTML = `<div class="score-row"><span>بارکردن...</span><span>0</span></div>`;
 
-            if (list.length === 0) {
-                container.innerHTML = `<div class="score-row"><span>هیچ تۆمارێک نییە</span><span>0</span></div>`;
-                return;
-            }
+            db.collection("scores").orderBy("score", "desc").limit(3).get()
+            .then((querySnapshot) => {
+                container.innerHTML = "";
+                if (querySnapshot.empty) {
+                    container.innerHTML = `<div class="score-row"><span>هیچ تۆمارێک نییە</span><span>0</span></div>`;
+                    return;
+                }
 
-            list.forEach((item, index) => {
-                let userAvatar = item.avatar || "https://via.placeholder.com/24?text=وێنە";
-                container.innerHTML += `
-                    <div class="score-row">
-                        <div class="leaderboard-user">
-                            <span>${index + 1}.</span>
-                            <img src="${userAvatar}" class="mini-avatar" alt="">
-                            <span style="color: #f8fafc; font-weight: bold;">${item.name}</span>
-                        </div>
-                        <span>${item.score} خاڵ</span>
-                    </div>`;
+                let rank = 1;
+                querySnapshot.forEach((doc) => {
+                    let data = doc.data();
+                    let userAvatar = data.avatar || "https://via.placeholder.com/24?text=وێنە";
+                    container.innerHTML += `
+                        <div class="score-row">
+                            <div class="leaderboard-user">
+                                <span>${rank}.</span>
+                                <img src="${userAvatar}" class="mini-avatar" alt="">
+                                <span style="color: #f8fafc; font-weight: bold;">${data.name}</span>
+                            </div>
+                            <span>${data.score} خاڵ</span>
+                        </div>`;
+                    rank++;
+                });
+            })
+            .catch((error) => {
+                console.error("هەڵە لە هێنانی لیدەربۆرد: ", error);
+                container.innerHTML = `<div class="score-row"><span>هەڵە لە هێنانی داتا</span><span>0</span></div>`;
             });
         }
 
@@ -921,25 +942,16 @@
             clearInterval(scoreInterval);
             playSound('hit');
             
-            let bestScore = saveScoreToLeaderboard(currentUsername, score, currentUserAvatar);
             saveUserData();
             
-            document.getElementById("finalScore").innerText = score;
-            document.getElementById("bestScore").innerText = bestScore;
-            document.getElementById("finalCoins").innerText = coins;
-            document.getElementById("gameOverScreen").classList.remove("hidden");
+            // ناردنی نمرە بۆ فایەربەیس و نوێکردنەوەی شاشە
+            saveScoreToLeaderboard(currentUsername, score, currentUserAvatar, () => {
+                document.getElementById("finalScore").innerText = score;
+                document.getElementById("bestScore").innerText = score; // یان دەتوانیت نیشان بدەیت
+                document.getElementById("finalCoins").innerText = coins;
+                document.getElementById("gameOverScreen").classList.remove("hidden");
+            });
         }
-   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDfrFkglZShCuZhCYwNQ8pEmKwNppWggBU",
-  authDomain: "toptop-game-4e89f.firebaseapp.com",
-  projectId: "toptop-game-4e89f",
-  storageBucket: "toptop-game-4e89f.firebasestorage.app",
-  messagingSenderId: "786973684229",
-  appId: "1:786973684229:web:a327a180f44ca18f8fa26c",
-  measurementId: "G-S6ERB47WJ8"
-}; </script>
-
+    </script>
 </body>
 </html>
-
