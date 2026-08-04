@@ -160,7 +160,7 @@
         }
         .quiz-img-container img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Fullscreen Canvas Style for Flappy Bird */
+        /* Canvas Style */
         .flappy-container {
             flex: 1; width: 100%; display: flex; flex-direction: column;
             justify-content: center; align-items: center; position: relative;
@@ -170,6 +170,15 @@
             background: #451a03; border: 3px solid #b45309; border-radius: 16px;
             box-shadow: 0 0 20px rgba(0,0,0,0.8); touch-action: manipulation;
         }
+
+        /* Overlay for Flappy Bird Game Over */
+        .flappy-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(12, 10, 9, 0.9); display: none;
+            flex-direction: column; justify-content: center; align-items: center;
+            padding: 20px; z-index: 50; border-radius: 16px;
+        }
+        .flappy-overlay.show { display: flex; }
     </style>
 </head>
 <body>
@@ -275,10 +284,10 @@
             <div class="game-catalog-card">
                 <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐓</div>
                 <h3 style="color: #fbbf24; font-size: 16px; margin: 0 0 4px 0;">یاری باڵندە و مریشکەکان (HD)</h3>
-                <p style="font-size: 11px; color: #d6d3d1; margin: 0 0 10px 0;">مریشک و قازەکان بفرێنە لەسەر دیواری قاوەیی دارین! (120 FPS)</p>
+                <p style="font-size: 11px; color: #d6d3d1; margin: 0 0 10px 0;">مریشک و قازەکان بفرێنە لەسەر دیواری قاوەیی دارین! (ئاستی ئاسان)</p>
                 <div class="game-meta-info">
                     <span>📅 دەرچوون: 2026/08/04</span>
-                    <span style="color: #f59e0b; font-weight: bold;">جۆری: پێشکەوتوو</span>
+                    <span style="color: #10b981; font-weight: bold;">جۆری: ئاسان</span>
                 </div>
                 <button class="btn" style="background: linear-gradient(135deg, #f59e0b, #b45309);" onclick="openFlappyLanding()">کردنەوەی بەش</button>
             </div>
@@ -320,7 +329,7 @@
             <div class="game-catalog-card" style="margin-top: 10px;">
                 <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐓</div>
                 <h3>شاشەی یاری مریشک و قازەکان</h3>
-                <p>دیواری قاوەیی کوالێتی بەرز، خێرایی 120 FPS و کارەکتەری بەهێز!</p>
+                <p>دیواری قاوەیی دارین، کۆنترۆڵی زۆر ئاسان و ئاستی گونجاو!</p>
                 <button class="btn" style="background: linear-gradient(135deg, #f59e0b, #b45309); font-size: 18px;" onclick="startFlappyGame()">▶ یاری بکە (فول سکرین)</button>
                 <button class="btn" style="background: #8b5cf6;" onclick="openFlappyShop()">🛒 شوپینگ (کڕینی مریشک و دیوار)</button>
                 <button class="btn" style="background: #3f3f46;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
@@ -405,8 +414,8 @@
             <div class="card">
                 <h3>🎮 ئاستی سەختی یاری</h3>
                 <select id="difficultySelect" onchange="changeDifficulty(this.value)">
-                    <option value="easy">ئاستی ئاسان</option>
-                    <option value="normal" selected>ئاستی ئاسایی</option>
+                    <option value="easy" selected>ئاستی ئاسان</option>
+                    <option value="normal">ئاستی ئاسایی</option>
                     <option value="hard">ئاستی قورس</option>
                 </select>
             </div>
@@ -492,6 +501,16 @@
             </div>
             <div class="flappy-container">
                 <canvas id="flappyCanvas"></canvas>
+
+                <!-- Game Over Box with requested buttons -->
+                <div id="flappyGameOverOverlay" class="flappy-overlay">
+                    <h2 style="color: #f87171; margin-top: 0;">یاری تەواو بوو! 🐔</h2>
+                    <p style="font-size: 14px; margin-bottom: 15px;">کۆینی کۆکراوە: <span id="flappyFinalScore" style="color: #fbbf24; font-weight: bold;">0</span></p>
+                    
+                    <button class="btn" style="background: linear-gradient(135deg, #10b981, #059669); margin-bottom: 8px;" onclick="resetFlappyGame()">🔄 یاری دەکەیتەوە</button>
+                    <button class="btn" style="background: #8b5cf6; margin-bottom: 8px;" onclick="exitFlappyGameToShop()">🛒 شوپینگ (فرۆشگا)</button>
+                    <button class="btn" style="background: #3f3f46;" onclick="exitFlappyGame()">🏠 گەڕانەوە بۆ بەشی سەرەتا</button>
+                </div>
             </div>
         </div>
     </div>
@@ -505,9 +524,9 @@
         let settingsTempAvatar = "";
 
         // Flappy Shop Variables
-        let selectedBird = "goose"; // goose, chicken, purple_goose, gold_goose, eagle
+        let selectedBird = "goose"; 
         let ownedBirds = ["goose"];
-        let selectedBg = "brown_wall"; // brown_wall, night, morning, snow
+        let selectedBg = "brown_wall"; 
         let ownedBgs = ["brown_wall"];
 
         let isGameActive = false;
@@ -521,23 +540,8 @@
         const jumpStrength = 11;
 
         let obstacleX = 800;
-        let coinX = 950;
-        let shieldX = 1400;
-        let magnetX = 2000;
-        let speedX = 2800;
-
-        let shieldActive = false;
-        let magnetActive = false;
-        let speedActive = false;
-
-        let shieldTimeLeft = 0;
-        let magnetTimeLeft = 0;
-        let speedTimeLeft = 0;
-
         let gameAnimFrame;
-        let scoreIntervalTimer;
-        let powerupTimer;
-        let gameDifficulty = "normal";
+        let gameDifficulty = "easy";
 
         let musicEnabled = true;
         let sfxEnabled = true;
@@ -895,7 +899,7 @@
             switchScreen("gameScreen");
             applyPlayerShapeUI();
 
-            score = 0; coins = 0; obstacleX = 800; coinX = 950;
+            score = 0; coins = 0; obstacleX = 800;
             isGameActive = true;
             cancelAnimationFrame(gameAnimFrame);
             startBackgroundMusic();
@@ -1037,7 +1041,7 @@
             loadUserData(); renderFlappyShop();
         }
 
-        // ==================== Flappy Bird High FPS Engine ====================
+        // ==================== Flappy Bird Engine (EASY DIFFICULTY) ====================
         const fCanvas = document.getElementById("flappyCanvas");
         const fCtx = fCanvas.getContext("2d");
 
@@ -1051,7 +1055,10 @@
         }
 
         const fBird = {
-            x: 50, y: 150, radius: 14, gravity: 0.35, jump: 7.0, velocity: 0,
+            x: 50, y: 150, radius: 14, 
+            gravity: 0.22, // Reduced gravity for smoother/easier fall
+            jump: 5.5,     // Soft, manageable jump height
+            velocity: 0,
             draw() {
                 fCtx.save();
                 fCtx.translate(this.x, this.y);
@@ -1066,23 +1073,34 @@
             update() {
                 this.velocity += this.gravity;
                 this.y += this.velocity;
-                if (this.y + this.radius >= fCanvas.height - 20) { this.y = fCanvas.height - 20 - this.radius; flappyGameOver(); }
-                if (this.y - this.radius <= 0) { this.y = this.radius; this.velocity = 0; }
+                if (this.y + this.radius >= fCanvas.height - 15) { 
+                    this.y = fCanvas.height - 15 - this.radius; 
+                    flappyGameOver(); 
+                }
+                if (this.y - this.radius <= 0) { 
+                    this.y = this.radius; 
+                    this.velocity = 0; 
+                }
             },
             reset() { this.y = fCanvas.height / 2; this.velocity = 0; }
         };
 
         const fPipes = {
-            position: [], w: 50, gap: 110, dx: 3.0,
+            position: [], 
+            w: 48, 
+            gap: 140, // Expanded gap for easier passage
+            dx: 2.0,  // Reduced pipe movement speed
             draw() {
                 for (let i = 0; i < this.position.length; i++) {
                     let p = this.position[i];
                     let topY = p.y;
                     let bottomY = p.y + 250 + this.gap;
 
-                    fCtx.fillStyle = "#3f2305";
+                    // Wood Brown Wall Texture
+                    fCtx.fillStyle = "#5c2c06";
                     fCtx.fillRect(p.x, topY, this.w, 250);
-                    fCtx.strokeStyle = "#f59e0b";
+                    fCtx.strokeStyle = "#b45309";
+                    fCtx.lineWidth = 3;
                     fCtx.strokeRect(p.x, topY, this.w, 250);
 
                     fCtx.fillRect(p.x, bottomY, this.w, fCanvas.height);
@@ -1091,23 +1109,28 @@
             },
             update() {
                 if (flappyState !== "PLAYING") return;
-                if (this.position.length === 0 || this.position[this.position.length - 1].x < fCanvas.width - 180) {
+                
+                if (this.position.length === 0 || this.position[this.position.length - 1].x < fCanvas.width - 200) {
                     this.position.push({
                         x: fCanvas.width,
-                        y: -Math.floor(Math.random() * 150) - 80
+                        y: -Math.floor(Math.random() * 120) - 90
                     });
                 }
                 for (let i = 0; i < this.position.length; i++) {
                     let p = this.position[i];
                     let bottomY = p.y + 250 + this.gap;
 
+                    // Collision Check
                     if (fBird.x + fBird.radius > p.x && fBird.x - fBird.radius < p.x + this.w) {
-                        if (fBird.y - fBird.radius < p.y + 250 || fBird.y + fBird.radius > bottomY) { flappyGameOver(); }
+                        if (fBird.y - fBird.radius < p.y + 250 || fBird.y + fBird.radius > bottomY) { 
+                            flappyGameOver(); 
+                        }
                     }
                     p.x -= this.dx;
                     if (p.x + this.w <= 0) {
                         this.position.shift();
-                        flappyScore++; totalCoins++;
+                        flappyScore++; 
+                        totalCoins++;
                         playSound('coin');
                         document.getElementById("flappyScore").innerText = flappyScore;
                         localStorage.setItem("coins_" + currentUser, totalCoins);
@@ -1123,10 +1146,10 @@
             fCtx.fillStyle = bgObj.color;
             fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
 
-            // نەخشی دیواری قاوەیی HD
-            fCtx.strokeStyle = "rgba(255,255,255,0.05)";
+            // Wood / Wall Lines
+            fCtx.strokeStyle = "rgba(255,255,255,0.06)";
             fCtx.lineWidth = 2;
-            for (let y = 0; y < fCanvas.height; y += 30) {
+            for (let y = 0; y < fCanvas.height; y += 35) {
                 fCtx.beginPath(); fCtx.moveTo(0, y); fCtx.lineTo(fCanvas.width, y); fCtx.stroke();
             }
         }
@@ -1135,9 +1158,12 @@
             flappyState = "GAMEOVER";
             playSound('gameover');
             stopBackgroundMusic();
+            document.getElementById("flappyFinalScore").innerText = flappyScore;
+            document.getElementById("flappyGameOverOverlay").classList.add("show");
         }
 
         function resetFlappyGame() {
+            document.getElementById("flappyGameOverOverlay").classList.remove("show");
             fBird.reset(); fPipes.reset();
             flappyScore = 0; document.getElementById("flappyScore").innerText = 0;
             flappyState = "PLAYING";
@@ -1145,6 +1171,7 @@
         }
 
         function startFlappyGame() {
+            document.getElementById("flappyGameOverOverlay").classList.remove("show");
             switchScreen("flappyScreen");
             resizeCanvas();
             flappyState = "START";
@@ -1156,6 +1183,7 @@
         }
 
         function exitFlappyGame() {
+            document.getElementById("flappyGameOverOverlay").classList.remove("show");
             flappyState = "START";
             cancelAnimationFrame(flappyAnim);
             stopBackgroundMusic();
@@ -1163,10 +1191,21 @@
             switchScreen("flappyLandingScreen");
         }
 
+        function exitFlappyGameToShop() {
+            document.getElementById("flappyGameOverOverlay").classList.remove("show");
+            flappyState = "START";
+            cancelAnimationFrame(flappyAnim);
+            stopBackgroundMusic();
+            openFlappyShop();
+        }
+
         function handleFlappyAction() {
-            if (flappyState === "START") { flappyState = "PLAYING"; startBackgroundMusic(); }
-            else if (flappyState === "PLAYING") { fBird.flap(); }
-            else if (flappyState === "GAMEOVER") { resetFlappyGame(); }
+            if (flappyState === "START") { 
+                flappyState = "PLAYING"; 
+                startBackgroundMusic(); 
+            } else if (flappyState === "PLAYING") { 
+                fBird.flap(); 
+            }
         }
 
         fCanvas.addEventListener("pointerdown", (e) => { e.preventDefault(); handleFlappyAction(); });
@@ -1180,20 +1219,17 @@
             fCtx.clearRect(0, 0, fCanvas.width, fCanvas.height);
             drawBackgroundWall();
             fPipes.draw(); fPipes.update();
-            fBird.draw(); fBird.update();
+            fBird.draw(); 
+            
+            if (flappyState === "PLAYING") {
+                fBird.update();
+            }
 
             if (flappyState === "START") {
                 fCtx.fillStyle = "rgba(0,0,0,0.4)";
                 fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
                 fCtx.fillStyle = "#fff"; fCtx.font = "bold 20px 'Noto Sans Arabic'"; fCtx.textAlign = "center";
-                fCtx.fillText("داگرە بۆ دەستپێکردن", fCanvas.width / 2, fCanvas.height / 2);
-            } else if (flappyState === "GAMEOVER") {
-                fCtx.fillStyle = "rgba(0,0,0,0.6)";
-                fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
-                fCtx.fillStyle = "#ef4444"; fCtx.font = "bold 24px 'Noto Sans Arabic'"; fCtx.textAlign = "center";
-                fCtx.fillText("دۆڕایت!", fCanvas.width / 2, fCanvas.height / 2 - 20);
-                fCtx.fillStyle = "#fff"; fCtx.font = "14px 'Noto Sans Arabic'";
-                fCtx.fillText("کرتە بکەرەوە بۆ دووبارەکردنەوە", fCanvas.width / 2, fCanvas.height / 2 + 20);
+                fCtx.fillText("داگرە بۆ دەستپێکردن 🐔", fCanvas.width / 2, fCanvas.height / 2);
             }
 
             flappyAnim = requestAnimationFrame(flappyLoop);
