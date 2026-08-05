@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تۆپ تۆپ - بەشی یارییەکان</title>
+    <title>تۆپ تۆپ - لۆبی نوێ و ڕێکخراو</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
@@ -22,135 +22,153 @@
             display: flex; flex-direction: column; padding: 12px; position: relative; overflow: hidden;
         }
         .brand-title {
-            text-align: center; font-size: 26px; font-weight: 900;
+            text-align: center; font-size: 24px; font-weight: 900;
             background: linear-gradient(135deg, #f59e0b, #d97706, #b45309);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin: 4px 0 10px 0; filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.4));
+            margin: 2px 0 8px 0; filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.4));
         }
-        .screen { display: none; flex: 1; flex-direction: column; height: 100%; overflow-y: auto; }
+        .screen { display: none; flex: 1; flex-direction: column; height: 100%; overflow-y: auto; padding-bottom: 20px; }
         .screen.active { display: flex; }
-        .form-group { margin-bottom: 12px; text-align: right; }
-        label { display: block; font-size: 12px; margin-bottom: 6px; color: #fcd34d; }
+        .form-group { margin-bottom: 10px; text-align: right; }
+        label { display: block; font-size: 11px; margin-bottom: 4px; color: #fcd34d; }
         input, select {
-            width: 100%; padding: 12px 14px; background: #27272a;
-            border: 1px solid #d97706; border-radius: 12px; color: #fff;
-            font-size: 14px; outline: none; font-family: 'Noto Sans Arabic', sans-serif;
+            width: 100%; padding: 10px 12px; background: #27272a;
+            border: 1px solid #d97706; border-radius: 10px; color: #fff;
+            font-size: 13px; outline: none; font-family: 'Noto Sans Arabic', sans-serif;
         }
         .btn {
             width: 100%; background: linear-gradient(135deg, #d97706, #b45309);
-            color: #ffffff; border: none; padding: 12px; font-size: 15px;
-            font-weight: bold; border-radius: 12px; cursor: pointer; margin-top: 8px;
-            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
+            color: #ffffff; border: none; padding: 11px; font-size: 14px;
+            font-weight: bold; border-radius: 10px; cursor: pointer; margin-top: 6px;
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
             transition: transform 0.1s ease;
         }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn:active { transform: scale(0.96); }
-        .top-bar {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 12px; background: rgba(39, 39, 42, 0.9);
-            padding: 10px 16px; border-radius: 14px; border: 1px solid #d97706;
-            box-shadow: 0 0 10px rgba(217, 119, 6, 0.2);
+        
+        /* New Layout: Top Profile & Stats Bar */
+        .hub-header-panel {
+            background: rgba(39, 39, 42, 0.95); border: 1px solid #d97706;
+            border-radius: 14px; padding: 10px 14px; display: flex;
+            justify-content: space-between; align-items: center; margin-bottom: 10px;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.2);
         }
+        .hub-user-info { display: flex; align-items: center; gap: 10px; }
+        .hub-avatar-box {
+            width: 38px; height: 38px; border-radius: 50%; background: #d97706;
+            overflow: hidden; display: flex; justify-content: center; align-items: center;
+            font-size: 14px; border: 2px solid #fcd34d;
+        }
+        .hub-coins-badge {
+            background: rgba(217, 119, 6, 0.2); border: 1px solid #f59e0b;
+            padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; color: #fbbf24;
+        }
+
         .card {
-            background: rgba(39, 39, 42, 0.85); border-radius: 14px;
-            padding: 14px; margin-bottom: 12px; text-align: right;
-            border: 1px solid #d97706; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            background: rgba(39, 39, 42, 0.85); border-radius: 12px;
+            padding: 12px; margin-bottom: 10px; text-align: right;
+            border: 1px solid #d97706; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
-        .card h3 { margin: 0 0 6px 0; color: #fbbf24; font-size: 15px; }
-        .card p { margin: 0 0 8px 0; font-size: 12px; color: #d6d3d1; }
+        .card h3 { margin: 0 0 4px 0; color: #fbbf24; font-size: 14px; }
+        .card p { margin: 0 0 6px 0; font-size: 11px; color: #d6d3d1; }
         
         .section-header {
-            font-size: 18px; font-weight: 900; color: #fbbf24;
-            margin: 6px 0 10px 0; border-bottom: 2px solid rgba(251, 191, 36, 0.4);
-            padding-bottom: 4px; display: flex; justify-content: space-between; align-items: center;
+            font-size: 15px; font-weight: 900; color: #fbbf24;
+            margin: 6px 0 8px 0; border-bottom: 2px solid rgba(251, 191, 36, 0.3);
+            padding-bottom: 3px; display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* New Grid Layout for Games Catalog */
+        .games-grid-layout {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;
         }
         .game-catalog-card {
             background: linear-gradient(145deg, #27272a, #18181b);
-            border: 1px solid #d97706; border-radius: 18px; padding: 14px;
-            margin-bottom: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.6); text-align: center;
+            border: 1px solid #d97706; border-radius: 14px; padding: 10px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.5); text-align: center;
+            display: flex; flex-direction: column; justify-content: space-between;
         }
         .game-thumbnail {
-            width: 75px; height: 75px; background: radial-gradient(circle, #f59e0b, #78350f);
-            border-radius: 50%; margin: 0 auto 10px auto; display: flex;
-            justify-content: center; align-items: center; font-size: 34px;
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.5); border: 3px solid #fcd34d;
+            width: 50px; height: 50px; background: radial-gradient(circle, #f59e0b, #78350f);
+            border-radius: 50%; margin: 0 auto 6px auto; display: flex;
+            justify-content: center; align-items: center; font-size: 22px;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.4); border: 2px solid #fcd34d;
         }
         .game-meta-info {
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 11px; color: #a1a1aa; background: rgba(24, 24, 27, 0.9);
-            padding: 6px 12px; border-radius: 8px; margin-bottom: 10px;
-            border: 1px solid rgba(217, 119, 6, 0.3);
+            font-size: 9px; color: #a1a1aa; background: rgba(24, 24, 27, 0.9);
+            padding: 4px 6px; border-radius: 6px; margin: 6px 0;
+            border: 1px solid rgba(217, 119, 6, 0.2);
         }
 
         .arena {
             background: linear-gradient(to bottom, #1c1917, #0c0a09);
-            border: 2px solid #d97706; border-radius: 16px; height: 240px;
-            position: relative; overflow: hidden; margin-bottom: 10px;
-            box-shadow: 0 0 15px rgba(217, 119, 6, 0.2);
+            border: 2px solid #d97706; border-radius: 14px; height: 220px;
+            position: relative; overflow: hidden; margin-bottom: 8px;
+            box-shadow: 0 0 12px rgba(217, 119, 6, 0.2);
         }
 
         #player {
-            width: 32px; height: 32px; position: absolute; bottom: 10px; left: 40px;
+            width: 30px; height: 30px; position: absolute; bottom: 10px; left: 40px;
         }
-        #player.shape-circle { border-radius: 50%; background: #38bdf8; box-shadow: 0 0 15px #38bdf8; }
-        #player.shape-square { border-radius: 4px; background: #a855f7; box-shadow: 0 0 15px #a855f7; }
+        #player.shape-circle { border-radius: 50%; background: #38bdf8; box-shadow: 0 0 12px #38bdf8; }
+        #player.shape-square { border-radius: 4px; background: #a855f7; box-shadow: 0 0 12px #a855f7; }
         #player.shape-triangle {
-            width: 0; height: 0; border-left: 16px solid transparent; border-right: 16px solid transparent;
-            border-bottom: 32px solid #f97316; background: transparent !important; filter: drop-shadow(0 0 8px #f97316);
+            width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent;
+            border-bottom: 30px solid #f97316; background: transparent !important; filter: drop-shadow(0 0 6px #f97316);
         }
         #player.shape-star {
             background: #eab308; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            box-shadow: 0 0 15px #eab308;
+            box-shadow: 0 0 12px #eab308;
         }
-        #player.shape-diamond { background: #06b6d4; transform: rotate(45deg); box-shadow: 0 0 15px #06b6d4; }
+        #player.shape-diamond { background: #06b6d4; transform: rotate(45deg); box-shadow: 0 0 12px #06b6d4; }
 
         #obstacle {
-            width: 22px; height: 40px; background: linear-gradient(135deg, #f87171, #b91c1c);
-            border-radius: 8px; position: absolute; bottom: 10px; left: 800px;
+            width: 20px; height: 36px; background: linear-gradient(135deg, #f87171, #b91c1c);
+            border-radius: 6px; position: absolute; bottom: 10px; left: 800px;
         }
         #coinItem {
-            width: 20px; height: 20px; background: radial-gradient(circle, #fde047, #ca8a04);
-            border-radius: 50%; position: absolute; bottom: 55px; left: 950px; box-shadow: 0 0 12px #facc15;
+            width: 18px; height: 18px; background: radial-gradient(circle, #fde047, #ca8a04);
+            border-radius: 50%; position: absolute; bottom: 50px; left: 950px; box-shadow: 0 0 10px #facc15;
         }
 
         .game-stats {
-            display: flex; justify-content: space-between; font-size: 12px;
-            font-weight: bold; color: #f59e0b; margin-bottom: 6px; flex-wrap: wrap; gap: 4px;
+            display: flex; justify-content: space-between; font-size: 11px;
+            font-weight: bold; color: #f59e0b; margin-bottom: 4px;
         }
         .jump-control-btn {
-            width: 85px; height: 85px; background: linear-gradient(135deg, #d97706, #b45309);
-            color: #ffffff; border: 4px solid #fcd34d; border-radius: 50%;
-            font-size: 18px; font-weight: bold; cursor: pointer; display: flex;
+            width: 75px; height: 75px; background: linear-gradient(135deg, #d97706, #b45309);
+            color: #ffffff; border: 3px solid #fcd34d; border-radius: 50%;
+            font-size: 16px; font-weight: bold; cursor: pointer; display: flex;
             justify-content: center; align-items: center; margin: 0 auto; touch-action: manipulation;
-            box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
         }
         #gameOverBox {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(12, 10, 9, 0.95); display: none;
-            flex-direction: column; justify-content: center; align-items: center; padding: 20px; z-index: 100;
+            flex-direction: column; justify-content: center; align-items: center; padding: 15px; z-index: 100;
         }
         #gameOverBox.show { display: flex; }
         .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .shop-item {
-            background: #27272a; border: 1px solid #d97706; border-radius: 12px;
+            background: #27272a; border: 1px solid #d97706; border-radius: 10px;
             padding: 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
         }
         .avatar-preview {
-            width: 60px; height: 60px; border-radius: 50%; background: #3f3f46;
-            margin: 0 auto 8px auto; display: flex; justify-content: center; align-items: center;
+            width: 50px; height: 50px; border-radius: 50%; background: #3f3f46;
+            margin: 0 auto 6px auto; display: flex; justify-content: center; align-items: center;
             overflow: hidden; border: 2px solid #d97706; cursor: pointer; position: relative;
-            box-shadow: 0 0 10px rgba(217, 119, 6, 0.3);
+            box-shadow: 0 0 8px rgba(217, 119, 6, 0.3);
         }
         .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
-        .tab-switcher { display: flex; gap: 5px; margin-bottom: 10px; }
-        .tab-btn { flex: 1; background: #27272a; border: 1px solid #d97706; color: #fcd34d; padding: 8px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; }
-        .tab-btn.active { background: #d97706; color: #fff; box-shadow: 0 0 10px rgba(217, 119, 6, 0.4); }
-        .leaderboard-list { max-height: 100px; overflow-y: auto; font-size: 12px; }
-        .leaderboard-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(217, 119, 6, 0.2); }
+        .tab-switcher { display: flex; gap: 4px; margin-bottom: 8px; }
+        .tab-btn { flex: 1; background: #27272a; border: 1px solid #d97706; color: #fcd34d; padding: 7px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 12px; }
+        .tab-btn.active { background: #d97706; color: #fff; box-shadow: 0 0 8px rgba(217, 119, 6, 0.4); }
+        .leaderboard-list { max-height: 90px; overflow-y: auto; font-size: 11px; }
+        .leaderboard-item { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid rgba(217, 119, 6, 0.2); }
         
         .quiz-img-container {
-            width: 100%; height: 160px; border-radius: 12px; overflow: hidden;
-            margin-bottom: 10px; border: 2px solid #d97706; background: #18181b;
+            width: 100%; height: 140px; border-radius: 10px; overflow: hidden;
+            margin-bottom: 8px; border: 2px solid #d97706; background: #18181b;
         }
         .quiz-img-container img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -159,31 +177,31 @@
             justify-content: center; align-items: center; position: relative;
         }
         #flappyCanvas {
-            width: 100%; height: 100%; max-height: calc(100vh - 120px);
-            background: #451a03; border: 3px solid #d97706; border-radius: 16px;
-            box-shadow: 0 0 20px rgba(217, 119, 6, 0.3); touch-action: manipulation;
+            width: 100%; height: 100%; max-height: calc(100vh - 100px);
+            background: #451a03; border: 2px solid #d97706; border-radius: 14px;
+            box-shadow: 0 0 15px rgba(217, 119, 6, 0.3); touch-action: manipulation;
         }
 
         .flappy-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(12, 10, 9, 0.9); display: none;
             flex-direction: column; justify-content: center; align-items: center;
-            padding: 20px; z-index: 50; border-radius: 16px;
+            padding: 15px; z-index: 50; border-radius: 14px;
         }
         .flappy-overlay.show { display: flex; }
 
         #snakeCanvas {
-            width: 100%; height: 260px; background: #18181b;
-            border: 3px solid #d97706; border-radius: 16px;
-            box-shadow: 0 0 20px rgba(217, 119, 6, 0.3); touch-action: manipulation;
+            width: 100%; height: 230px; background: #18181b;
+            border: 2px solid #d97706; border-radius: 14px;
+            box-shadow: 0 0 15px rgba(217, 119, 6, 0.3); touch-action: manipulation;
         }
         .snake-controls {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
-            width: 180px; margin: 10px auto 0 auto;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px;
+            width: 160px; margin: 8px auto 0 auto;
         }
         .snake-btn {
             background: #27272a; border: 1px solid #d97706; color: #fff;
-            padding: 12px; border-radius: 10px; font-size: 18px; font-weight: bold;
+            padding: 10px; border-radius: 8px; font-size: 16px; font-weight: bold;
             cursor: pointer; text-align: center;
         }
         .snake-btn:active { background: #d97706; color: #000; }
@@ -202,9 +220,9 @@
                 </div>
 
                 <div id="registerForm" style="display: none;">
-                    <p style="font-size: 12px;">وێنەی پڕۆفایلەکەت هەڵبژێرە و حیساب دروست بکە</p>
+                    <p>وێنەی پڕۆفایلەکەت هەڵبژێرە و حیساب دروست بکە</p>
                     <div class="avatar-preview" onclick="document.getElementById('fileInput').click()">
-                        <span id="avatarPlaceholderText" style="font-size: 24px;">📷</span>
+                        <span id="avatarPlaceholderText" style="font-size: 20px;">📷</span>
                         <img id="avatarImgTag" style="display:none;" />
                     </div>
                     <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
@@ -225,8 +243,8 @@
                 </div>
 
                 <div id="loginForm">
-                    <p style="font-size: 12px;">بۆ چوونەژوورەوە، ناوی بەکارهێنەر و وشەی نهێنی بنووسە</p>
-                    <div class="form-group" style="margin-top: 15px;">
+                    <p>بۆ چوونەژوورەوە، ناوی بەکارهێنەر و وشەی نهێنی بنووسە</p>
+                    <div class="form-group" style="margin-top: 10px;">
                         <label>ناوی بەکارهێنەر</label>
                         <input type="text" id="loginUsername" placeholder="ناوی بەکارهێنەر...">
                     </div>
@@ -239,81 +257,94 @@
             </div>
         </div>
 
-        <!-- Hub Screen -->
+        <!-- Hub Screen (Optimized Grid & Header Layout) -->
         <div id="hubScreen" class="screen">
             <div class="brand-title">تۆپ تۆپ</div>
-            <div class="top-bar">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <div id="hubUserAvatar" style="width: 32px; height: 32px; border-radius: 50%; background: #d97706; overflow: hidden; display: flex; justify-content: center; align-items: center; font-size: 12px; border: 1px solid #fcd34d;">👤</div>
-                    <span id="hubUsernameText" style="font-weight: bold; color: #fbbf24;"></span>
-                </div>
-                <span>💰 کۆین: <span id="hubTotalCoins">0</span></span>
-            </div>
             
-            <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-                <button class="btn" onclick="openSettingsScreen()" style="background: #3f3f46; margin-top:0;">⚙️ ڕێکخستن</button>
+            <!-- Modern Header Bar -->
+            <div class="hub-header-panel">
+                <div class="hub-user-info">
+                    <div class="hub-avatar-box" id="hubUserAvatar">👤</div>
+                    <div>
+                        <div style="font-size: 10px; color: #a1a1aa;">بەڕێز</div>
+                        <span id="hubUsernameText" style="font-weight: bold; color: #fbbf24; font-size: 13px;"></span>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div class="hub-coins-badge">💰 <span id="hubTotalCoins">0</span></div>
+                    <button class="btn" onclick="openSettingsScreen()" style="width: auto; padding: 6px 10px; margin: 0; background: #3f3f46; font-size: 12px;">⚙️</button>
+                </div>
             </div>
 
-            <div class="card" style="background: linear-gradient(135deg, #451a03, #78350f); border-color: #f59e0b;">
-                <h3 style="color: #fbbf24;">🎁 دیاریی ڕۆژانە و بەخت</h3>
-                <p id="dailyBonusText">سوپرايزی ئەمڕۆت وەربگرە و کۆینی خۆڕایی ببەرەوە!</p>
-                <button class="btn" id="claimBonusBtn" style="background: linear-gradient(135deg, #d97706, #b45309);" onclick="claimDailyBonus()">وەرگرتنی دیاری (بەختی دەستپێک) 🎲</button>
+            <!-- Daily Bonus Card -->
+            <div class="card" style="background: linear-gradient(135deg, #451a03, #78350f); border-color: #f59e0b; padding: 10px 12px;">
+                <h3 style="color: #fbbf24; font-size: 13px;">🎁 دیاریی ڕۆژانە و بەخت</h3>
+                <p style="font-size: 10px;" id="dailyBonusText">سوپرايزی ئەمڕۆت وەربگرە و کۆینی خۆڕایی ببەرەوە!</p>
+                <button class="btn" id="claimBonusBtn" style="background: linear-gradient(135deg, #d97706, #b45309); padding: 8px; font-size: 12px;" onclick="claimDailyBonus()">وەرگرتنی دیاری 🎲</button>
             </div>
 
             <div class="section-header">
-                <span>🎮 یارییەکان</span>
+                <span>🎮 بەشی یارییەکان</span>
             </div>
 
-            <!-- Game 1 -->
-            <div class="game-catalog-card">
-                <div class="game-thumbnail">🔵</div>
-                <h3 style="color: #fbbf24; font-size: 16px; margin: 0 0 4px 0;">یاری بازدان (تۆپ تۆپ)</h3>
-                <p style="font-size: 11px; color: #d6d3d1; margin: 0 0 10px 0;">قەڵغان و کۆین کۆبکەرەوە و خاڵ تۆمار بکە</p>
-                <div class="game-meta-info">
-                    <span>📅 دەرچوون: 2026/06/01</span>
-                    <span style="color: #fbbf24; font-weight: bold;">ئاست: ئاسایی</span>
+            <!-- Games Grid Layout -->
+            <div class="games-grid-layout">
+                <!-- Game 1 -->
+                <div class="game-catalog-card">
+                    <div>
+                        <div class="game-thumbnail">🔵</div>
+                        <h3 style="color: #fbbf24; font-size: 13px; margin: 0 0 2px 0;">بازدان</h3>
+                        <p style="font-size: 9px; color: #d6d3d1; margin: 0;">قەڵغان و کۆین کۆبکەرەوە</p>
+                    </div>
+                    <div>
+                        <div class="game-meta-info">ئاست: ئاسایی</div>
+                        <button class="btn" style="padding: 6px; font-size: 11px;" onclick="openJumperLanding()">یاریکردن</button>
+                    </div>
                 </div>
-                <button class="btn" onclick="openJumperLanding()">کردنەوەی بەش</button>
-            </div>
 
-            <!-- Game 2 -->
-            <div class="game-catalog-card">
-                <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">📸</div>
-                <h3 style="color: #fbbf24; font-size: 16px; margin: 0 0 4px 0;">یاری وێنە و شوێنەکانی جیهان</h3>
-                <p style="font-size: 11px; color: #d6d3d1; margin: 0 0 10px 0;">ئەم وێنەیە کامیانە و لە چ وڵاتێکە؟ زانیارییەکانت تاقی بکەرەوە</p>
-                <div class="game-meta-info">
-                    <span>📅 دەرچوون: 2026/06/02</span>
-                    <span style="color: #fbbf24; font-weight: bold;">جۆری: وێنەیی</span>
+                <!-- Game 2 -->
+                <div class="game-catalog-card">
+                    <div>
+                        <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">📸</div>
+                        <h3 style="color: #fbbf24; font-size: 13px; margin: 0 0 2px 0;">وێنەی جیهان</h3>
+                        <p style="font-size: 9px; color: #d6d3d1; margin: 0;">زانیارییەکانت تاقی بکەرەوە</p>
+                    </div>
+                    <div>
+                        <div class="game-meta-info">جۆری: وێنەیی</div>
+                        <button class="btn" style="padding: 6px; font-size: 11px;" onclick="openQuizLanding()">یاریکردن</button>
+                    </div>
                 </div>
-                <button class="btn" onclick="openQuizLanding()">کردنەوەی بەش</button>
-            </div>
 
-            <!-- Game 3 -->
-            <div class="game-catalog-card">
-                <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐓</div>
-                <h3 style="color: #fbbf24; font-size: 16px; margin: 0 0 4px 0;">یاری باڵندە و مریشکەکان (HD)</h3>
-                <p style="font-size: 11px; color: #d6d3d1; margin: 0 0 10px 0;">مریشک و قازەکان بفرێنە لەسەر دیواری قاوەیی دارین! (ئاستی ئاسان)</p>
-                <div class="game-meta-info">
-                    <span>📅 دەرچوون: 2026/08/04</span>
-                    <span style="color: #fbbf24; font-weight: bold;">جۆری: ئاسان</span>
+                <!-- Game 3 -->
+                <div class="game-catalog-card">
+                    <div>
+                        <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐓</div>
+                        <h3 style="color: #fbbf24; font-size: 13px; margin: 0 0 2px 0;">باڵندە (HD)</h3>
+                        <p style="font-size: 9px; color: #d6d3d1; margin: 0;">مریشک و قازەکان بفرێنە</p>
+                    </div>
+                    <div>
+                        <div class="game-meta-info">جۆری: ئاسان</div>
+                        <button class="btn" style="padding: 6px; font-size: 11px;" onclick="openFlappyLanding()">یاریکردن</button>
+                    </div>
                 </div>
-                <button class="btn" onclick="openFlappyLanding()">کردنەوەی بەش</button>
-            </div>
 
-            <!-- Game 4 (Snake Game) -->
-            <div class="game-catalog-card">
-                <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐍</div>
-                <h3 style="color: #fbbf24; font-size: 16px; margin: 0 0 4px 0;">یاری مارەکە (Snake Game)</h3>
-                <p style="font-size: 11px; color: #d6d3d1; margin: 0 0 10px 0;">سێوەکان بخۆ، درێژ ببەرەوە و کۆینی زیاتر بەدەستبێنە!</p>
-                <div class="game-meta-info">
-                    <span>📅 دەرچوون: 2026/08/05</span>
-                    <span style="color: #fbbf24; font-weight: bold;">جۆری: کلاسیک</span>
+                <!-- Game 4 (Snake Game) -->
+                <div class="game-catalog-card">
+                    <div>
+                        <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐍</div>
+                        <h3 style="color: #fbbf24; font-size: 13px; margin: 0 0 2px 0;">مارەکە</h3>
+                        <p style="font-size: 9px; color: #d6d3d1; margin: 0;">سێوەکان بخۆ و درێژ ببەرەوە</p>
+                    </div>
+                    <div>
+                        <div class="game-meta-info">جۆری: کلاسیک</div>
+                        <button class="btn" style="padding: 6px; font-size: 11px;" onclick="openSnakeLanding()">یاریکردن</button>
+                    </div>
                 </div>
-                <button class="btn" onclick="openSnakeLanding()">کردنەوەی بەش</button>
             </div>
 
-            <div class="card">
-                <h3>🏆 ڕیزبەندی پێشبڕکێ</h3>
+            <!-- Leaderboard Card -->
+            <div class="card" style="padding: 10px 12px;">
+                <h3 style="font-size: 13px;">🏆 ڕیزبەندی پێشبڕکێ</h3>
                 <div class="leaderboard-list" id="leaderboardList"></div>
             </div>
         </div>
@@ -321,10 +352,10 @@
         <!-- Jumper Landing Page -->
         <div id="jumperLandingScreen" class="screen">
             <div class="brand-title">یاری بازدان</div>
-            <div class="game-catalog-card" style="margin-top: 20px;">
+            <div class="game-catalog-card" style="margin-top: 15px; padding: 15px;">
                 <div class="game-thumbnail">🔵</div>
-                <h3>پەڕەی تایبەتی یاری بازدان</h3>
-                <p>ئامادەی بۆ خۆشی و ئاڵۆزییەکان؟ کلیک بکە بۆ دەستپێکردن یان سەردانی فرۆشگای تایبەتی شێوازەکان بکە.</p>
+                <h3 style="font-size: 14px; color: #fbbf24;">پەڕەی تایبەتی یاری بازدان</h3>
+                <p style="font-size: 11px;">ئامادەی بۆ خۆشی و ئاڵۆزییەکان؟ کلیک بکە بۆ دەستپێکردن یان سەردانی فرۆشگای تایبەتی شێوازەکان بکە.</p>
                 <button class="btn" onclick="startGamePlay()">▶ یاری بکە</button>
                 <button class="btn" style="background: #3f3f46;" onclick="openShopScreen()">🛒 شوپینگ (بازاڕی شێوازەکان)</button>
                 <button class="btn" style="background: #27272a;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
@@ -334,10 +365,10 @@
         <!-- Quiz Landing Page -->
         <div id="quizLandingScreen" class="screen">
             <div class="brand-title">یاری وێنەکان</div>
-            <div class="game-catalog-card" style="margin-top: 20px;">
+            <div class="game-catalog-card" style="margin-top: 15px; padding: 15px;">
                 <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">📸</div>
-                <h3>پەڕەی تایبەتی یاری وێنەکان</h3>
-                <p>زانیارییەکانت دەربارەی وڵاتان و شوێنەکان بەکاربهێنە و خاڵ تۆمار بکە.</p>
+                <h3 style="font-size: 14px; color: #fbbf24;">پەڕەی تایبەتی یاری وێنەکان</h3>
+                <p style="font-size: 11px;">زانیارییەکانت دەربارەی وڵاتان و شوێنەکان بەکاربهێنە و خاڵ تۆمار بکە.</p>
                 <button class="btn" onclick="startQuizPlay()">▶ یاری بکە</button>
                 <button class="btn" style="background: #27272a;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
             </div>
@@ -346,10 +377,10 @@
         <!-- Flappy Bird Landing Page -->
         <div id="flappyLandingScreen" class="screen">
             <div class="brand-title">یاری باڵندە و مریشکەکان</div>
-            <div class="game-catalog-card" style="margin-top: 10px;">
+            <div class="game-catalog-card" style="margin-top: 10px; padding: 15px;">
                 <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐓</div>
-                <h3>شاشەی یاری مریشک و قازەکان</h3>
-                <p>دیواری قاوەیی دارین، کۆنترۆڵی زۆر ئاسان و ئاستی گونجاو!</p>
+                <h3 style="font-size: 14px; color: #fbbf24;">شاشەی یاری مریشک و قازەکان</h3>
+                <p style="font-size: 11px;">دیواری قاوەیی دارین، کۆنترۆڵی زۆر ئاسان و ئاستی گونجاو!</p>
                 <button class="btn" onclick="startFlappyGame()">▶ یاری بکە (فول سکرین)</button>
                 <button class="btn" style="background: #3f3f46;" onclick="openFlappyShop()">🛒 شوپینگ (کڕینی مریشک و دیوار)</button>
                 <button class="btn" style="background: #27272a;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
@@ -359,80 +390,76 @@
         <!-- Snake Landing Page -->
         <div id="snakeLandingScreen" class="screen">
             <div class="brand-title">یاری مارەکە 🐍</div>
-            <div class="game-catalog-card" style="margin-top: 20px;">
+            <div class="game-catalog-card" style="margin-top: 15px; padding: 15px;">
                 <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐍</div>
-                <h3>پەڕەی تایبەتی یاری مارەکە</h3>
-                <p>مارەکە ڕێنمایی بکە بۆ خواردنی سێوەکان. ئاگاداربە خۆت لە دیوار و جەستەی خۆت مەدە!</p>
+                <h3 style="font-size: 14px; color: #fbbf24;">پەڕەی تایبەتی یاری مارەکە</h3>
+                <p style="font-size: 11px;">مارەکە ڕێنمایی بکە بۆ خواردنی سێوەکان. ئاگاداربە خۆت لە دیوار و جەستەی خۆت مەدە!</p>
                 <button class="btn" onclick="startSnakeGame()">▶ یاری بکە</button>
-                <button class="btn" style="background: #27272a;" onclick="backToHub()">گەڕانەوە بۆ لاپەڕەی یاری</button>
+                <button class="btn" style="background: #27272a;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
             </div>
         </div>
 
         <!-- Shop Screen for Jumper -->
         <div id="shopScreen" class="screen">
             <div class="brand-title">بازاڕی شێوازەکانی بازدان</div>
-            <div style="text-align: center; margin-bottom: 10px; color: #fbbf24; font-size: 14px;">
+            <div style="text-align: center; margin-bottom: 8px; color: #fbbf24; font-size: 12px;">
                 💰 کۆینی بەردەست: <span id="shopTotalCoins">0</span>
             </div>
             <div class="shop-grid">
                 <div class="shop-item">
-                    <div style="width:30px; height:30px; background:#38bdf8; border-radius:50%; margin:5px auto;"></div>
-                    <p style="font-size: 11px;">بازنەیی (بنەڕەتی)</p>
-                    <button class="btn" id="btn-skin-circle" style="padding: 5px; font-size: 11px;" onclick="selectShape('circle')">هەڵبژاردن</button>
+                    <div style="width:26px; height:26px; background:#38bdf8; border-radius:50%; margin:4px auto;"></div>
+                    <p style="font-size: 10px;">بازنەیی (بنەڕەتی)</p>
+                    <button class="btn" id="btn-skin-circle" style="padding: 4px; font-size: 10px;" onclick="selectShape('circle')">هەڵبژاردن</button>
                 </div>
                 <div class="shop-item">
-                    <div style="width:30px; height:30px; background:#a855f7; border-radius:4px; margin:5px auto;"></div>
-                    <p style="font-size: 11px;">چوارگۆشە</p>
-                    <button class="btn" id="btn-skin-square" style="padding: 5px; font-size: 11px;" onclick="handleShapeAction('square', 60)">کڕین (60💰)</button>
+                    <div style="width:26px; height:26px; background:#a855f7; border-radius:4px; margin:4px auto;"></div>
+                    <p style="font-size: 10px;">چوارگۆشە</p>
+                    <button class="btn" id="btn-skin-square" style="padding: 4px; font-size: 10px;" onclick="handleShapeAction('square', 60)">کڕین (60💰)</button>
                 </div>
                 <div class="shop-item">
-                    <div style="width:0; height:0; border-left:15px solid transparent; border-right:15px solid transparent; border-bottom:30px solid #f97316; margin:5px auto;"></div>
-                    <p style="font-size: 11px;">سێگۆشە</p>
-                    <button class="btn" id="btn-skin-triangle" style="padding: 5px; font-size: 11px;" onclick="handleShapeAction('triangle', 90)">کڕین (90💰)</button>
+                    <div style="width:0; height:0; border-left:13px solid transparent; border-right:13px solid transparent; border-bottom:26px solid #f97316; margin:4px auto;"></div>
+                    <p style="font-size: 10px;">سێگۆشە</p>
+                    <button class="btn" id="btn-skin-triangle" style="padding: 4px; font-size: 10px;" onclick="handleShapeAction('triangle', 90)">کڕین (90💰)</button>
                 </div>
                 <div class="shop-item">
-                    <div style="width:30px; height:30px; background:#eab308; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); margin:5px auto;"></div>
-                    <p style="font-size: 11px;">ئەستێرە</p>
-                    <button class="btn" id="btn-skin-star" style="padding: 5px; font-size: 11px;" onclick="handleShapeAction('star', 150)">کڕین (150💰)</button>
+                    <div style="width:26px; height:26px; background:#eab308; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); margin:4px auto;"></div>
+                    <p style="font-size: 10px;">ئەستێرە</p>
+                    <button class="btn" id="btn-skin-star" style="padding: 4px; font-size: 10px;" onclick="handleShapeAction('star', 150)">کڕین (150💰)</button>
                 </div>
                 <div class="shop-item">
-                    <div style="width:24px; height:24px; background:#06b6d4; transform:rotate(45deg); margin:8px auto;"></div>
-                    <p style="font-size: 11px;">ئەڵماس</p>
-                    <button class="btn" id="btn-skin-diamond" style="padding: 5px; font-size: 11px;" onclick="handleShapeAction('diamond', 220)">کڕین (220💰)</button>
+                    <div style="width:22px; height:22px; background:#06b6d4; transform:rotate(45deg); margin:6px auto;"></div>
+                    <p style="font-size: 10px;">ئەڵماس</p>
+                    <button class="btn" id="btn-skin-diamond" style="padding: 4px; font-size: 10px;" onclick="handleShapeAction('diamond', 220)">کڕین (220💰)</button>
                 </div>
             </div>
-            <button class="btn" style="background: #3f3f46; margin-top: 15px;" onclick="switchScreen('jumperLandingScreen')">گەڕانەوە بۆ لاپەڕەی یاری</button>
+            <button class="btn" style="background: #3f3f46; margin-top: 12px;" onclick="switchScreen('jumperLandingScreen')">گەڕانەوە</button>
         </div>
 
         <!-- Flappy Bird Shop Screen -->
         <div id="flappyShopScreen" class="screen">
             <div class="brand-title">فرۆشگای مریشک و دیوارەکان 🛒</div>
-            <div style="text-align: center; margin-bottom: 10px; color: #fbbf24; font-size: 14px;">
+            <div style="text-align: center; margin-bottom: 8px; color: #fbbf24; font-size: 12px;">
                 💰 کۆینی بەردەست: <span id="flappyShopCoins">0</span>
             </div>
             
-            <div class="section-header">
-                <span>🐔 کارەکتەرەکان</span>
-            </div>
+            <div class="section-header"><span>🐔 کارەکتەرەکان</span></div>
             <div class="shop-grid" id="birdShopGrid"></div>
 
-            <div class="section-header" style="margin-top:15px;">
-                <span>🧱 دیواری پاشبنەما (کەشو هەوا)</span>
-            </div>
+            <div class="section-header" style="margin-top:12px;"><span>🧱 دیواری پاشبنەما</span></div>
             <div class="shop-grid" id="bgShopGrid"></div>
 
-            <button class="btn" style="background: #3f3f46; margin-top: 15px;" onclick="switchScreen('flappyLandingScreen')">گەڕانەوە بۆ لۆبی یاری</button>
+            <button class="btn" style="background: #3f3f46; margin-top: 12px;" onclick="switchScreen('flappyLandingScreen')">گەڕانەوە</button>
         </div>
 
         <!-- Settings Screen -->
         <div id="settingsScreen" class="screen">
             <div class="brand-title">ڕێکخستنەکان</div>
             
-            <div class="card">
-                <h3>👤 دەستکاری زانیارییەکانی پڕۆفایل</h3>
-                <div class="avatar-preview" onclick="document.getElementById('settingsFileInput').click()" style="margin-bottom: 8px;">
+            <div class="card" style="padding: 10px 12px;">
+                <h3 style="font-size: 12px;">👤 دەستکاری پڕۆفایل</h3>
+                <div class="avatar-preview" onclick="document.getElementById('settingsFileInput').click()" style="margin: 6px auto;">
                     <img id="settingsAvatarPreview" src="" alt="Avatar" style="display:none;" />
-                    <span id="settingsAvatarPlaceholder" style="font-size: 24px;">📷</span>
+                    <span id="settingsAvatarPlaceholder" style="font-size: 20px;">📷</span>
                 </div>
                 <input type="file" id="settingsFileInput" accept="image/*" style="display:none;" onchange="handleSettingsImageUpload(event)">
                 
@@ -440,11 +467,11 @@
                     <label>ناوی بەکارهێنەر</label>
                     <input type="text" id="settingsUsernameInput" placeholder="ناوی نوێ...">
                 </div>
-                <button class="btn" style="margin-top: 5px;" onclick="saveProfileChanges()">پاشەکەوتکردنی گۆڕانکارییەکان</button>
+                <button class="btn" style="margin-top: 4px; padding: 8px; font-size: 12px;" onclick="saveProfileChanges()">پاشەکەوتکردن</button>
             </div>
 
-            <div class="card">
-                <h3>🎮 ئاستی سەختی یاری</h3>
+            <div class="card" style="padding: 10px 12px;">
+                <h3 style="font-size: 12px;">🎮 ئاستی سەختی یاری</h3>
                 <select id="difficultySelect" onchange="changeDifficulty(this.value)">
                     <option value="easy" selected>ئاستی ئاسان</option>
                     <option value="normal">ئاستی ئاسایی</option>
@@ -452,33 +479,33 @@
                 </select>
             </div>
 
-            <div class="card">
-                <h3>🎵 مۆسیقای پاشبنەما</h3>
+            <div class="card" style="padding: 10px 12px;">
+                <h3 style="font-size: 12px;">🎵 مۆسیقای پاشبنەما</h3>
                 <select id="musicToggleSelect" onchange="toggleBackgroundMusic(this.value)">
                     <option value="on" selected>هەڵکردن 🎵</option>
                     <option value="off">کوژاندنەوە 🔇</option>
                 </select>
             </div>
 
-            <div class="card">
-                <h3>🔊 دەنگەکانی یاری</h3>
+            <div class="card" style="padding: 10px 12px;">
+                <h3 style="font-size: 12px;">🔊 دەنگەکانی یاری</h3>
                 <select id="sfxToggleSelect" onchange="toggleSoundEffects(this.value)">
                     <option value="on" selected>هەڵکردن 🔊</option>
                     <option value="off">کوژاندنەوە 🔇</option>
                 </select>
             </div>
 
-            <div class="card" style="border-color: #f59e0b;">
-                <h3 style="color: #f59e0b;">🏆 خاڵەکان و داتاکان</h3>
-                <button class="btn" style="background: #b45309;" onclick="resetUserHighscore()">پاكکردنەوەی خاڵەکان (Reset Highscore)</button>
+            <div class="card" style="border-color: #f59e0b; padding: 10px 12px;">
+                <h3 style="color: #f59e0b; font-size: 12px;">🏆 خاڵەکان و داتاکان</h3>
+                <button class="btn" style="background: #b45309; padding: 8px; font-size: 12px;" onclick="resetUserHighscore()">پاكکردنەوەی خاڵەکان</button>
             </div>
 
-            <div class="card" style="border-color: #f87171;">
-                <h3 style="color: #f87171;">🚪 بەڕێوەبردنی حیساب</h3>
-                <button class="btn" style="background: linear-gradient(135deg, #ef4444, #b91c1c); margin-top: 5px;" onclick="logoutUser()">دەرچوون لە حیسابی ئێستا</button>
+            <div class="card" style="border-color: #f87171; padding: 10px 12px;">
+                <h3 style="color: #f87171; font-size: 12px;">🚪 بەڕێوەبردنی حیساب</h3>
+                <button class="btn" style="background: linear-gradient(135deg, #ef4444, #b91c1c); margin-top: 4px; padding: 8px; font-size: 12px;" onclick="logoutUser()">دەرچوون لە حیساب</button>
             </div>
 
-            <button class="btn" style="background: #3f3f46; margin-top: auto;" onclick="backToHub()">گەڕانەوە بۆ شاشەی سەرەکی</button>
+            <button class="btn" style="background: #3f3f46; margin-top: auto;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
         </div>
 
         <!-- Game Screen (Jumper) -->
@@ -494,56 +521,56 @@
                 <div id="coinItem"></div>
 
                 <div id="gameOverBox">
-                    <h2 style="color: #f87171;">یاری تەواو بوو!</h2>
-                    <p style="font-size: 13px;">خاڵی ئەمجارە: <span id="finalScore" style="color: #fbbf24;">0</span></p>
-                    <button class="btn" onclick="startGamePlay()">دووبارە</button>
-                    <button class="btn" style="background: #3f3f46;" onclick="switchScreen('jumperLandingScreen')">لاپەڕەی یاری</button>
+                    <h2 style="color: #f87171; font-size: 18px;">یاری تەواو بوو!</h2>
+                    <p style="font-size: 12px;">خاڵی ئەمجارە: <span id="finalScore" style="color: #fbbf24;">0</span></p>
+                    <button class="btn" style="padding: 8px; font-size: 12px;" onclick="startGamePlay()">دووبارە</button>
+                    <button class="btn" style="background: #3f3f46; padding: 8px; font-size: 12px;" onclick="switchScreen('jumperLandingScreen')">لاپەڕەی یاری</button>
                 </div>
             </div>
 
             <button class="jump-control-btn" onclick="jumpAction()">بازدان</button>
-            <button class="btn" style="background: #3f3f46; margin-top: 10px;" onclick="switchScreen('jumperLandingScreen')">گەڕانەوە</button>
+            <button class="btn" style="background: #3f3f46; margin-top: 8px;" onclick="switchScreen('jumperLandingScreen')">گەڕانەوە</button>
         </div>
 
         <!-- Quiz Screen -->
         <div id="quizScreen" class="screen">
-            <div class="brand-title" style="font-size: 20px;">یاری وێنە و شوێنەکانی جیهان</div>
-            <div class="card" style="text-align: center; margin-top: 5px; padding: 12px;">
+            <div class="brand-title" style="font-size: 18px;">یاری وێنە و شوێنەکانی جیهان</div>
+            <div class="card" style="text-align: center; margin-top: 4px; padding: 10px;">
                 <div class="quiz-img-container">
                     <img id="quizImage" src="" alt="وێنەی پرسیار">
                 </div>
-                <h3 id="quizQuestion" style="font-size: 15px; margin-bottom: 12px; color: #fbbf24;">پرسیار لێرە دەردەکەوێت...</h3>
+                <h3 id="quizQuestion" style="font-size: 13px; margin-bottom: 8px; color: #fbbf24;">پرسیار لێرە دەردەکەوێت...</h3>
                 <div id="quizOptions"></div>
-                <div id="quizScoreResult" style="font-weight: bold; margin-top: 12px; font-size: 15px; color: #f59e0b;"></div>
+                <div id="quizScoreResult" style="font-weight: bold; margin-top: 8px; font-size: 13px; color: #f59e0b;"></div>
             </div>
             <button class="btn" style="background: #3f3f46; margin-top: auto;" onclick="switchScreen('quizLandingScreen')">گەڕانەوە</button>
         </div>
 
         <!-- Flappy Bird Fullscreen -->
         <div id="flappyScreen" class="screen">
-            <div class="top-bar" style="margin-bottom: 6px;">
-                <button class="btn" style="width: auto; padding: 6px 12px; margin: 0; background: #3f3f46;" onclick="exitFlappyGame()">⬅️ دەرچوون</button>
-                <span style="font-weight: bold; color: #fbbf24;">کۆین: <span id="flappyScore">0</span></span>
+            <div class="hub-header-panel" style="margin-bottom: 6px;">
+                <button class="btn" style="width: auto; padding: 5px 10px; margin: 0; background: #3f3f46; font-size: 11px;" onclick="exitFlappyGame()">⬅️ دەرچوون</button>
+                <span style="font-weight: bold; color: #fbbf24; font-size: 12px;">کۆین: <span id="flappyScore">0</span></span>
             </div>
             <div class="flappy-container">
                 <canvas id="flappyCanvas"></canvas>
 
                 <div id="flappyGameOverOverlay" class="flappy-overlay">
-                    <h2 style="color: #f87171; margin-top: 0;">یاری تەواو بوو! 🐔</h2>
-                    <p style="font-size: 14px; margin-bottom: 15px;">کۆینی کۆکراوە: <span id="flappyFinalScore" style="color: #fbbf24; font-weight: bold;">0</span></p>
+                    <h2 style="color: #f87171; margin-top: 0; font-size: 18px;">یاری تەواو بوو! 🐔</h2>
+                    <p style="font-size: 12px; margin-bottom: 10px;">کۆینی کۆکراوە: <span id="flappyFinalScore" style="color: #fbbf24; font-weight: bold;">0</span></p>
                     
-                    <button class="btn" style="margin-bottom: 8px;" onclick="resetFlappyGame()">🔄 یاری دەکەیتەوە</button>
-                    <button class="btn" style="background: #8b5cf6; margin-bottom: 8px;" onclick="exitFlappyGameToShop()">🛒 شوپینگ (فرۆشگا)</button>
-                    <button class="btn" style="background: #3f3f46;" onclick="exitFlappyGame()">🏠 گەڕانەوە بۆ بەشی سەرەتا</button>
+                    <button class="btn" style="margin-bottom: 6px; padding: 8px; font-size: 12px;" onclick="resetFlappyGame()">🔄 یاری دەکەیتەوە</button>
+                    <button class="btn" style="background: #8b5cf6; margin-bottom: 6px; padding: 8px; font-size: 12px;" onclick="exitFlappyGameToShop()">🛒 فرۆشگا</button>
+                    <button class="btn" style="background: #3f3f46; padding: 8px; font-size: 12px;" onclick="exitFlappyGame()">🏠 گەڕانەوە بۆ لۆبی</button>
                 </div>
             </div>
         </div>
 
         <!-- Snake Game Fullscreen Screen -->
         <div id="snakeScreen" class="screen">
-            <div class="top-bar" style="margin-bottom: 6px;">
-                <button class="btn" style="width: auto; padding: 6px 12px; margin: 0; background: #3f3f46;" onclick="exitSnakeGame()">⬅️ دەرچوون</button>
-                <span style="font-weight: bold; color: #fbbf24;">خاڵ: <span id="snakeScore">0</span> | 💰 کۆین: <span id="snakeCoins">0</span></span>
+            <div class="hub-header-panel" style="margin-bottom: 6px;">
+                <button class="btn" style="width: auto; padding: 5px 10px; margin: 0; background: #3f3f46; font-size: 11px;" onclick="exitSnakeGame()">⬅️ دەرچوون</button>
+                <span style="font-weight: bold; color: #fbbf24; font-size: 11px;">خاڵ: <span id="snakeScore">0</span> | 💰: <span id="snakeCoins">0</span></span>
             </div>
             
             <div style="position: relative; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
@@ -560,11 +587,11 @@
                 </div>
 
                 <div id="snakeGameOverOverlay" class="flappy-overlay">
-                    <h2 style="color: #f87171; margin-top: 0;">یاری تەواو بوو! 🐍</h2>
-                    <p style="font-size: 14px; margin-bottom: 15px;">خاڵ: <span id="snakeFinalScore" style="color: #fbbf24; font-weight: bold;">0</span></p>
+                    <h2 style="color: #f87171; margin-top: 0; font-size: 18px;">یاری تەواو بوو! 🐍</h2>
+                    <p style="font-size: 12px; margin-bottom: 10px;">خاڵ: <span id="snakeFinalScore" style="color: #fbbf24; font-weight: bold;">0</span></p>
                     
-                    <button class="btn" style="margin-bottom: 8px;" onclick="startSnakeGame()">🔄 یاری دەکەیتەوە</button>
-                    <button class="btn" style="background: #3f3f46;" onclick="exitSnakeGame()">🏠 گەڕانەوە بۆ لاپەڕەی یاری</button>
+                    <button class="btn" style="margin-bottom: 6px; padding: 8px; font-size: 12px;" onclick="startSnakeGame()">🔄 یاری دەکەیتەوە</button>
+                    <button class="btn" style="background: #3f3f46; padding: 8px; font-size: 12px;" onclick="exitSnakeGame()">🏠 گەڕانەوە</button>
                 </div>
             </div>
         </div>
@@ -860,9 +887,9 @@
             let bonusBtn = document.getElementById("claimBonusBtn");
 
             if (lastClaimed === today) {
-                bonusBtn.disabled = true; bonusBtn.innerText = "سەیری بەیانی بکەرەوە ⏳";
+                bonusBtn.disabled = true; bonusBtn.innerText = "وەردەگیرا لە بەیانی ⏳";
             } else {
-                bonusBtn.disabled = false; bonusBtn.innerText = "وەرگرتنی دیاری (بەختی دەستپێک) 🎲";
+                bonusBtn.disabled = false; bonusBtn.innerText = "وەرگرتنی دیاری 🎲";
             }
         }
 
@@ -1030,9 +1057,9 @@
                 let card = document.createElement("div");
                 card.className = "shop-item";
                 card.innerHTML = `
-                    <div style="font-size:32px; margin-bottom:4px;">${b.icon}</div>
-                    <p style="font-size:11px; margin:2px 0;">${b.name}</p>
-                    <button class="btn" style="padding:4px; font-size:11px; background:${isSelected ? '#10b981' : ''}" ${isSelected ? 'disabled' : ''}>
+                    <div style="font-size:26px; margin-bottom:2px;">${b.icon}</div>
+                    <p style="font-size:10px; margin:2px 0;">${b.name}</p>
+                    <button class="btn" style="padding:4px; font-size:10px; background:${isSelected ? '#10b981' : ''}" ${isSelected ? 'disabled' : ''}>
                         ${isSelected ? 'هەڵبژێردراوە' : isOwned ? 'هەڵبژاردن' : 'کڕین (' + b.price + '💰)'}
                     </button>
                 `;
@@ -1048,9 +1075,9 @@
                 let card = document.createElement("div");
                 card.className = "shop-item";
                 card.innerHTML = `
-                    <div style="width:40px; height:25px; background:${bg.color}; border-radius:4px; margin:4px auto; border:1px solid #fff;"></div>
-                    <p style="font-size:11px; margin:2px 0;">${bg.name}</p>
-                    <button class="btn" style="padding:4px; font-size:11px; background:${isSelected ? '#10b981' : ''}" ${isSelected ? 'disabled' : ''}>
+                    <div style="width:36px; height:22px; background:${bg.color}; border-radius:4px; margin:4px auto; border:1px solid #fff;"></div>
+                    <p style="font-size:10px; margin:2px 0;">${bg.name}</p>
+                    <button class="btn" style="padding:4px; font-size:10px; background:${isSelected ? '#10b981' : ''}" ${isSelected ? 'disabled' : ''}>
                         ${isSelected ? 'هەڵبژێردراوە' : isOwned ? 'هەڵبژاردن' : 'کڕین (' + bg.price + '💰)'}
                     </button>
                 `;
@@ -1119,7 +1146,7 @@
                 fCtx.save();
                 fCtx.translate(this.x, this.y);
                 let birdObj = birdCatalog.find(b => b.id === selectedBird) || birdCatalog[0];
-                fCtx.font = "26px serif";
+                fCtx.font = "24px serif";
                 fCtx.textAlign = "center";
                 fCtx.textBaseline = "middle";
                 fCtx.fillText(birdObj.icon, 0, 0);
@@ -1281,7 +1308,7 @@
             if (flappyState === "START") {
                 fCtx.fillStyle = "rgba(0,0,0,0.4)";
                 fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
-                fCtx.fillStyle = "#fff"; fCtx.font = "bold 20px 'Noto Sans Arabic'"; fCtx.textAlign = "center";
+                fCtx.fillStyle = "#fff"; fCtx.font = "bold 18px 'Noto Sans Arabic'"; fCtx.textAlign = "center";
                 fCtx.fillText("داگرە بۆ دەستپێکردن 🐔", fCanvas.width / 2, fCanvas.height / 2);
             }
 
@@ -1320,7 +1347,7 @@
         function resizeSnakeCanvas() {
             if(!sCanvas) return;
             sCanvas.width = Math.floor(sCanvas.parentElement.clientWidth / gridBox) * gridBox;
-            sCanvas.height = 250;
+            sCanvas.height = 230;
         }
 
         function startSnakeGame() {
