@@ -46,7 +46,6 @@
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn:active { transform: scale(0.96); }
         
-        /* New Layout: Top Profile & Stats Bar */
         .hub-header-panel {
             background: rgba(39, 39, 42, 0.95); border: 1px solid #d97706;
             border-radius: 14px; padding: 10px 14px; display: flex;
@@ -78,7 +77,6 @@
             padding-bottom: 3px; display: flex; justify-content: space-between; align-items: center;
         }
 
-        /* New Grid Layout for Games Catalog */
         .games-grid-layout {
             display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;
         }
@@ -212,7 +210,7 @@
     <div class="container">
         <!-- Auth Screen -->
         <div id="authScreen" class="screen active">
-            <div class="brand-title">تۆپ تۆپ</div>
+            <div class="brand-title">تۆپ تۆپ (ئۆنلاین)</div>
             <div class="card">
                 <div class="tab-switcher">
                     <button class="tab-btn active" id="loginTabBtn" onclick="switchAuthMode('login')">چوونەژوورەوە</button>
@@ -257,11 +255,10 @@
             </div>
         </div>
 
-        <!-- Hub Screen (Optimized Grid & Header Layout) -->
+        <!-- Hub Screen -->
         <div id="hubScreen" class="screen">
             <div class="brand-title">تۆپ تۆپ</div>
             
-            <!-- Modern Header Bar -->
             <div class="hub-header-panel">
                 <div class="hub-user-info">
                     <div class="hub-avatar-box" id="hubUserAvatar">👤</div>
@@ -276,7 +273,6 @@
                 </div>
             </div>
 
-            <!-- Daily Bonus Card -->
             <div class="card" style="background: linear-gradient(135deg, #451a03, #78350f); border-color: #f59e0b; padding: 10px 12px;">
                 <h3 style="color: #fbbf24; font-size: 13px;">🎁 دیاریی ڕۆژانە و بەخت</h3>
                 <p style="font-size: 10px;" id="dailyBonusText">سوپرايزی ئەمڕۆت وەربگرە و کۆینی خۆڕایی ببەرەوە!</p>
@@ -287,9 +283,7 @@
                 <span>🎮 بەشی یارییەکان</span>
             </div>
 
-            <!-- Games Grid Layout -->
             <div class="games-grid-layout">
-                <!-- Game 1 -->
                 <div class="game-catalog-card">
                     <div>
                         <div class="game-thumbnail">🔵</div>
@@ -302,7 +296,6 @@
                     </div>
                 </div>
 
-                <!-- Game 2 -->
                 <div class="game-catalog-card">
                     <div>
                         <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">📸</div>
@@ -315,7 +308,6 @@
                     </div>
                 </div>
 
-                <!-- Game 3 -->
                 <div class="game-catalog-card">
                     <div>
                         <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐓</div>
@@ -328,7 +320,6 @@
                     </div>
                 </div>
 
-                <!-- Game 4 (Snake Game) -->
                 <div class="game-catalog-card">
                     <div>
                         <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐍</div>
@@ -342,14 +333,12 @@
                 </div>
             </div>
 
-            <!-- Leaderboard Card -->
             <div class="card" style="padding: 10px 12px;">
                 <h3 style="font-size: 13px;">🏆 ڕیزبەندی پێشبڕکێ</h3>
                 <div class="leaderboard-list" id="leaderboardList"></div>
             </div>
         </div>
 
-        <!-- Jumper Landing Page -->
         <div id="jumperLandingScreen" class="screen">
             <div class="brand-title">یاری بازدان</div>
             <div class="game-catalog-card" style="margin-top: 15px; padding: 15px;">
@@ -362,7 +351,6 @@
             </div>
         </div>
 
-        <!-- Quiz Landing Page -->
         <div id="quizLandingScreen" class="screen">
             <div class="brand-title">یاری وێنەکان</div>
             <div class="game-catalog-card" style="margin-top: 15px; padding: 15px;">
@@ -374,7 +362,6 @@
             </div>
         </div>
 
-        <!-- Flappy Bird Landing Page -->
         <div id="flappyLandingScreen" class="screen">
             <div class="brand-title">یاری باڵندە و مریشکەکان</div>
             <div class="game-catalog-card" style="margin-top: 10px; padding: 15px;">
@@ -387,7 +374,6 @@
             </div>
         </div>
 
-        <!-- Snake Landing Page -->
         <div id="snakeLandingScreen" class="screen">
             <div class="brand-title">یاری مارەکە 🐍</div>
             <div class="game-catalog-card" style="margin-top: 15px; padding: 15px;">
@@ -399,7 +385,6 @@
             </div>
         </div>
 
-        <!-- Shop Screen for Jumper -->
         <div id="shopScreen" class="screen">
             <div class="brand-title">بازاڕی شێوازەکانی بازدان</div>
             <div style="text-align: center; margin-bottom: 8px; color: #fbbf24; font-size: 12px;">
@@ -435,7 +420,6 @@
             <button class="btn" style="background: #3f3f46; margin-top: 12px;" onclick="switchScreen('jumperLandingScreen')">گەڕانەوە</button>
         </div>
 
-        <!-- Flappy Bird Shop Screen -->
         <div id="flappyShopScreen" class="screen">
             <div class="brand-title">فرۆشگای مریشک و دیوارەکان 🛒</div>
             <div style="text-align: center; margin-bottom: 8px; color: #fbbf24; font-size: 12px;">
@@ -451,7 +435,6 @@
             <button class="btn" style="background: #3f3f46; margin-top: 12px;" onclick="switchScreen('flappyLandingScreen')">گەڕانەوە</button>
         </div>
 
-        <!-- Settings Screen -->
         <div id="settingsScreen" class="screen">
             <div class="brand-title">ڕێکخستنەکان</div>
             
@@ -508,7 +491,6 @@
             <button class="btn" style="background: #3f3f46; margin-top: auto;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
         </div>
 
-        <!-- Game Screen (Jumper) -->
         <div id="gameScreen" class="screen">
             <div class="game-stats">
                 <span>خاڵ: <span id="currentScore">0</span></span>
@@ -532,7 +514,6 @@
             <button class="btn" style="background: #3f3f46; margin-top: 8px;" onclick="switchScreen('jumperLandingScreen')">گەڕانەوە</button>
         </div>
 
-        <!-- Quiz Screen -->
         <div id="quizScreen" class="screen">
             <div class="brand-title" style="font-size: 18px;">یاری وێنە و شوێنەکانی جیهان</div>
             <div class="card" style="text-align: center; margin-top: 4px; padding: 10px;">
@@ -546,7 +527,6 @@
             <button class="btn" style="background: #3f3f46; margin-top: auto;" onclick="switchScreen('quizLandingScreen')">گەڕانەوە</button>
         </div>
 
-        <!-- Flappy Bird Fullscreen -->
         <div id="flappyScreen" class="screen">
             <div class="hub-header-panel" style="margin-bottom: 6px;">
                 <button class="btn" style="width: auto; padding: 5px 10px; margin: 0; background: #3f3f46; font-size: 11px;" onclick="exitFlappyGame()">⬅️ دەرچوون</button>
@@ -566,7 +546,6 @@
             </div>
         </div>
 
-        <!-- Snake Game Fullscreen Screen -->
         <div id="snakeScreen" class="screen">
             <div class="hub-header-panel" style="margin-bottom: 6px;">
                 <button class="btn" style="width: auto; padding: 5px 10px; margin: 0; background: #3f3f46; font-size: 11px;" onclick="exitSnakeGame()">⬅️ دەرچوون</button>
@@ -576,7 +555,6 @@
             <div style="position: relative; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                 <canvas id="snakeCanvas"></canvas>
 
-                <!-- Touch Controls -->
                 <div class="snake-controls">
                     <div></div>
                     <button class="snake-btn" onclick="setSnakeDir('UP')">⬆️</button>
@@ -877,6 +855,7 @@
 
         function applyPlayerShapeUI() {
             let player = document.getElementById("player");
+            if (!player) return;
             player.className = "";
             player.classList.add("shape-" + selectedShape);
         }
@@ -967,6 +946,7 @@
             users.sort((a, b) => b.score - a.score);
 
             let listEl = document.getElementById("leaderboardList");
+            if (!listEl) return;
             listEl.innerHTML = "";
             users.forEach((u, idx) => {
                 let item = document.createElement("div");
@@ -1006,23 +986,34 @@
             let speed = 4.5;
             obstacleX -= speed;
             if (obstacleX < -30) obstacleX = 650 + Math.random() * 300;
-            document.getElementById("obstacle").style.left = obstacleX + "px";
+            let obsEl = document.getElementById("obstacle");
+            if(obsEl) obsEl.style.left = obstacleX + "px";
 
             if (isJumping) {
                 playerVelocityY -= gravity; playerY += playerVelocityY;
                 if (playerY <= 10) { playerY = 10; isJumping = false; playerVelocityY = 0; }
-                document.getElementById("player").style.bottom = playerY + "px";
+                let playerEl = document.getElementById("player");
+                if(playerEl) playerEl.style.bottom = playerY + "px";
             }
 
             if (obstacleX > 25 && obstacleX < 55 && playerY < 45) {
                 playSound('gameover');
                 isGameActive = false;
-                document.getElementById("finalScore").innerText = score;
+                let finalScoreEl = document.getElementById("finalScore");
+                if(finalScoreEl) finalScoreEl.innerText = Math.floor(score/10);
+                
+                let currentHighScore = parseInt(localStorage.getItem("highscore_" + currentUser) || "0");
+                let currentFinalScoreVal = Math.floor(score/10);
+                if (currentFinalScoreVal > currentHighScore) {
+                    localStorage.setItem("highscore_" + currentUser, currentFinalScoreVal);
+                }
+
                 document.getElementById("gameOverBox").classList.add("show");
                 return;
             }
             score++;
-            document.getElementById("currentScore").innerText = Math.floor(score/10);
+            let curScoreEl = document.getElementById("currentScore");
+            if(curScoreEl) curScoreEl.innerText = Math.floor(score/10);
             gameAnimFrame = requestAnimationFrame(gameLoopUpdate);
         }
 
@@ -1050,6 +1041,7 @@
 
         function renderFlappyShop() {
             let bContainer = document.getElementById("birdShopGrid");
+            if (!bContainer) return;
             bContainer.innerHTML = "";
             birdCatalog.forEach(b => {
                 let isOwned = ownedBirds.includes(b.id);
@@ -1068,6 +1060,7 @@
             });
 
             let bgContainer = document.getElementById("bgShopGrid");
+            if (!bgContainer) return;
             bgContainer.innerHTML = "";
             bgCatalog.forEach(bg => {
                 let isOwned = ownedBgs.includes(bg.id);
@@ -1126,13 +1119,14 @@
 
         // ==================== Flappy Bird Engine ====================
         const fCanvas = document.getElementById("flappyCanvas");
-        const fCtx = fCanvas.getContext("2d");
+        const fCtx = fCanvas ? fCanvas.getContext("2d") : null;
 
         let flappyScore = 0;
         let flappyState = "START";
         let flappyAnim;
 
         function resizeCanvas() {
+            if(!fCanvas) return;
             fCanvas.width = fCanvas.parentElement.clientWidth;
             fCanvas.height = fCanvas.parentElement.clientHeight;
         }
@@ -1143,6 +1137,7 @@
             jump: 5.5,
             velocity: 0,
             draw() {
+                if(!fCtx) return;
                 fCtx.save();
                 fCtx.translate(this.x, this.y);
                 let birdObj = birdCatalog.find(b => b.id === selectedBird) || birdCatalog[0];
@@ -1165,7 +1160,7 @@
                     this.velocity = 0; 
                 }
             },
-            reset() { this.y = fCanvas.height / 2; this.velocity = 0; }
+            reset() { if(fCanvas) this.y = fCanvas.height / 2; this.velocity = 0; }
         };
 
         const fPipes = {
@@ -1174,6 +1169,7 @@
             gap: 140,
             dx: 2.0,
             draw() {
+                if(!fCtx) return;
                 for (let i = 0; i < this.position.length; i++) {
                     let p = this.position[i];
                     let topY = p.y;
@@ -1213,7 +1209,8 @@
                         flappyScore++; 
                         totalCoins++;
                         playSound('coin');
-                        document.getElementById("flappyScore").innerText = flappyScore;
+                        let fScoreEl = document.getElementById("flappyScore");
+                        if(fScoreEl) fScoreEl.innerText = flappyScore;
                         localStorage.setItem("coins_" + currentUser, totalCoins);
                         i--;
                     }
@@ -1223,6 +1220,7 @@
         };
 
         function drawBackgroundWall() {
+            if(!fCtx) return;
             let bgObj = bgCatalog.find(b => b.id === selectedBg) || bgCatalog[0];
             fCtx.fillStyle = bgObj.color;
             fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
@@ -1238,14 +1236,17 @@
             flappyState = "GAMEOVER";
             playSound('gameover');
             stopBackgroundMusic();
-            document.getElementById("flappyFinalScore").innerText = flappyScore;
+            let fFinalEl = document.getElementById("flappyFinalScore");
+            if(fFinalEl) fFinalEl.innerText = flappyScore;
             document.getElementById("flappyGameOverOverlay").classList.add("show");
         }
 
         function resetFlappyGame() {
             document.getElementById("flappyGameOverOverlay").classList.remove("show");
             fBird.reset(); fPipes.reset();
-            flappyScore = 0; document.getElementById("flappyScore").innerText = 0;
+            flappyScore = 0; 
+            let fScoreEl = document.getElementById("flappyScore");
+            if(fScoreEl) fScoreEl.innerText = 0;
             flappyState = "PLAYING";
             startBackgroundMusic();
         }
@@ -1257,7 +1258,8 @@
             flappyState = "START";
             fBird.reset(); fPipes.reset();
             flappyScore = 0;
-            document.getElementById("flappyScore").innerText = 0;
+            let fScoreEl = document.getElementById("flappyScore");
+            if(fScoreEl) fScoreEl.innerText = 0;
             cancelAnimationFrame(flappyAnim);
             flappyLoop();
         }
@@ -1288,14 +1290,17 @@
             }
         }
 
-        fCanvas.addEventListener("pointerdown", (e) => { e.preventDefault(); handleFlappyAction(); });
+        if(fCanvas) {
+            fCanvas.addEventListener("pointerdown", (e) => { e.preventDefault(); handleFlappyAction(); });
+        }
         window.addEventListener("keydown", (e) => {
-            if (e.code === "Space" && document.getElementById("flappyScreen").classList.contains("active")) {
+            if (e.code === "Space" && document.getElementById("flappyScreen") && document.getElementById("flappyScreen").classList.contains("active")) {
                 e.preventDefault(); handleFlappyAction();
             }
         });
 
         function flappyLoop() {
+            if (!fCtx) return;
             fCtx.clearRect(0, 0, fCanvas.width, fCanvas.height);
             drawBackgroundWall();
             fPipes.draw(); fPipes.update();
@@ -1324,9 +1329,12 @@
         function startQuizPlay() { currentQ = 0; quizScore = 0; switchScreen("quizScreen"); loadQuizQuestion(); }
         function loadQuizQuestion() {
             let q = quizData[currentQ];
-            document.getElementById("quizImage").src = q.image;
-            document.getElementById("quizQuestion").innerText = q.question;
+            let qImg = document.getElementById("quizImage");
+            if(qImg) qImg.src = q.image;
+            let qQues = document.getElementById("quizQuestion");
+            if(qQues) qQues.innerText = q.question;
             let optionsEl = document.getElementById("quizOptions");
+            if(!optionsEl) return;
             optionsEl.innerHTML = "";
             q.options.forEach((opt, idx) => {
                 let btn = document.createElement("button");
@@ -1351,7 +1359,8 @@
         }
 
         function startSnakeGame() {
-            document.getElementById("snakeGameOverOverlay").classList.remove("show");
+            let sOverlay = document.getElementById("snakeGameOverOverlay");
+            if(sOverlay) sOverlay.classList.remove("show");
             switchScreen("snakeScreen");
             resizeSnakeCanvas();
 
@@ -1363,8 +1372,10 @@
             snakeDir = "RIGHT";
             nextSnakeDir = "RIGHT";
             snakeScore = 0;
-            document.getElementById("snakeScore").innerText = snakeScore;
-            document.getElementById("snakeCoins").innerText = totalCoins;
+            let sScoreEl = document.getElementById("snakeScore");
+            if(sScoreEl) sScoreEl.innerText = snakeScore;
+            let sCoinsEl = document.getElementById("snakeCoins");
+            if(sCoinsEl) sCoinsEl.innerText = totalCoins;
 
             spawnSnakeFood();
             isSnakeActive = true;
@@ -1389,6 +1400,7 @@
         });
 
         function spawnSnakeFood() {
+            if(!sCanvas) return;
             let cols = Math.floor(sCanvas.width / gridBox);
             let rows = Math.floor(sCanvas.height / gridBox);
             food = {
@@ -1423,8 +1435,10 @@
                 snakeScore++;
                 totalCoins += 2;
                 playSound('coin');
-                document.getElementById("snakeScore").innerText = snakeScore;
-                document.getElementById("snakeCoins").innerText = totalCoins;
+                let sScoreEl = document.getElementById("snakeScore");
+                if(sScoreEl) sScoreEl.innerText = snakeScore;
+                let sCoinsEl = document.getElementById("snakeCoins");
+                if(sCoinsEl) sCoinsEl.innerText = totalCoins;
                 localStorage.setItem("coins_" + currentUser, totalCoins);
                 spawnSnakeFood();
             } else {
@@ -1436,6 +1450,7 @@
         }
 
         function drawSnakeGame() {
+            if(!sCtx) return;
             sCtx.fillStyle = "#18181b";
             sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
 
@@ -1463,15 +1478,18 @@
             clearInterval(snakeTimer);
             playSound('gameover');
             stopBackgroundMusic();
-            document.getElementById("snakeFinalScore").innerText = snakeScore;
-            document.getElementById("snakeGameOverOverlay").classList.add("show");
+            let sFinalEl = document.getElementById("snakeFinalScore");
+            if(sFinalEl) sFinalEl.innerText = snakeScore;
+            let sOverOverlay = document.getElementById("snakeGameOverOverlay");
+            if(sOverOverlay) sOverOverlay.classList.add("show");
         }
 
         function exitSnakeGame() {
             isSnakeActive = false;
             clearInterval(snakeTimer);
             stopBackgroundMusic();
-            document.getElementById("snakeGameOverOverlay").classList.remove("show");
+            let sOverOverlay = document.getElementById("snakeGameOverOverlay");
+            if(sOverOverlay) sOverOverlay.classList.remove("show");
             loadUserData();
             switchScreen("snakeLandingScreen");
         }
