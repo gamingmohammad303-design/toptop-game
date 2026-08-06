@@ -606,7 +606,6 @@
       const analytics = getAnalytics(app);
       const db = getFirestore(app);
 
-      // Export db and functions to global scope for game logic
       window.db = db;
       window.firestoreFns = { doc, setDoc, getDoc, updateDoc, collection, getDocs };
     </script>
