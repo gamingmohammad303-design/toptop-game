@@ -775,7 +775,7 @@
                 switchScreen("hubScreen");
             } catch (error) {
                 console.error("Error registering user: ", error);
-                alert("هەڵەیەک ڕوویدا لە پەیوەندی کردن بە سێرڤەرەوە!");
+                alert("هەڵەیەک ڕوویدا لە پەیوەندی کردن بە سێرڤەرەوە! تکایە ڕێساکانی فايربيست (Firestore Rules) ئەکتۆڤ بکە بۆ allow read, write: if true;");
             }
         }
 
@@ -1215,7 +1215,7 @@
             },
             flap() { 
                 let nowTime = Date.now();
-                if (nowTime - lastFlapTime < 220) return; // ڕێگری لە خاوبوونەوە و دوو جار تاپ کردن بە یەکجار
+                if (nowTime - lastFlapTime < 220) return; 
                 lastFlapTime = nowTime;
                 this.velocity = -this.jump; 
                 playSound('jump'); 
