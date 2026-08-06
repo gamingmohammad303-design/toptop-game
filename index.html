@@ -575,10 +575,11 @@
         </div>
     </div>
 
-    <!-- Firebase SDK Scripts -->
+    <!-- Firebase SDK Scripts (Firestore Added) -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
       import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-analytics.js";
+      import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyDfrFkglZShCuZhCYwNQ8pEmKwNppWggBU",
@@ -592,9 +593,14 @@
 
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
+      const db = getFirestore(app);
+
+      // Export db and functions to global scope for game logic
+      window.db = db;
+      window.firestoreFns = { doc, setDoc, getDoc, updateDoc, collection, getDocs };
     </script>
 
-    <!-- Game Core Logic Script -->
+    <!-- Game Core Logic Script with Cloud Database Support -->
     <script>
         let currentUser = "";
         let totalCoins = 0;
@@ -767,37 +773,120 @@
             }
         }
 
-        function registerUser() {
+        // Cloud Firestore Synchronization Functions
+        async function registerUser() {
             let name = document.getElementById("regUsername").value.trim();
             let pass = document.getElementById("regPassword").value.trim();
             let birthdate = document.getElementById("regBirthdate").value;
 
             if (!name || !pass) { alert("تکایە ناوی بەکارهێنەر و وشەی نهێنی پڕبکەرەوە!"); return; }
-            if (localStorage.getItem("user_profile_" + name)) { alert("ئەم ناوی بەکارهێنەرە پێشتر تۆمار کراوە!"); return; }
+            
+            try {
+                const userRef = window.firestoreFns.doc(window.db, "users", name);
+                const userSnap = await window.firestoreFns.getDoc(userRef);
 
-            let userProfile = { username: name, password: pass, birthdate: birthdate, avatar: tempAvatarBase64 || "" };
-            localStorage.setItem("user_profile_" + name, JSON.stringify(userProfile));
-            localStorage.setItem("top_top_active_user", name);
-            currentUser = name;
-            loadUserData();
-            switchScreen("hubScreen");
+                if (userSnap.exists()) { alert("ئەم ناوی بەکارهێنەرە پێشتر تۆمار کراوە!"); return; }
+
+                let userProfile = {
+                    username: name,
+                    password: pass,
+                    birthdate: birthdate,
+                    avatar: tempAvatarBase64 || "",
+                    coins: 0,
+                    highscore: 0,
+                    shape: "circle",
+                    ownedShapes: ["circle"],
+                    flappyBird: "goose",
+                    ownedBirds: ["goose"],
+                    flappyBg: "brown_wall",
+                    ownedBgs: ["brown_wall"],
+                    lastBonus: ""
+                };
+
+                await window.firestoreFns.setDoc(userRef, userProfile);
+                localStorage.setItem("top_top_active_user", name);
+                currentUser = name;
+                await loadUserData();
+                switchScreen("hubScreen");
+            } catch (error) {
+                console.error("Error registering user: ", error);
+                alert("هەڵەیەک ڕوویدا لە پەیوەندی کردن بە سێرڤەرەوە!");
+            }
         }
 
-        function loginUser() {
+        async function loginUser() {
             let name = document.getElementById("loginUsername").value.trim();
             let pass = document.getElementById("loginPassword").value.trim();
             if (!name || !pass) { alert("تکایە ناو و وشەی نهێنی بنووسە!"); return; }
 
-            let profileData = localStorage.getItem("user_profile_" + name);
-            if (!profileData) { alert("ئەم ناوە بوونی نییە!"); return; }
+            try {
+                const userRef = window.firestoreFns.doc(window.db, "users", name);
+                const userSnap = await window.firestoreFns.getDoc(userRef);
 
-            let profile = JSON.parse(profileData);
-            if (profile.password !== pass) { alert("وشەی نهێنی هەڵەیە!"); return; }
+                if (!userSnap.exists()) { alert("ئەم ناوە بوونی نییە!"); return; }
 
-            localStorage.setItem("top_top_active_user", name);
-            currentUser = name;
-            loadUserData();
-            switchScreen("hubScreen");
+                let profile = userSnap.data();
+                if (profile.password !== pass) { alert("وشەی نهێنی هەڵەیە!"); return; }
+
+                localStorage.setItem("top_top_active_user", name);
+                currentUser = name;
+                await loadUserData();
+                switchScreen("hubScreen");
+            } catch (error) {
+                console.error("Error logging in: ", error);
+                alert("هەڵەیەک ڕوویدا لە چوونەژوورەوە بۆ ناو سێرڤەر!");
+            }
+        }
+
+        async function saveCloudData(updateData) {
+            if (!currentUser) return;
+            try {
+                const userRef = window.firestoreFns.doc(window.db, "users", currentUser);
+                await window.firestoreFns.updateDoc(userRef, updateData);
+            } catch (e) {
+                console.error("Error saving data to cloud: ", e);
+            }
+        }
+
+        async function loadUserData() {
+            if (!currentUser) return;
+            try {
+                const userRef = window.firestoreFns.doc(window.db, "users", currentUser);
+                const userSnap = await window.firestoreFns.getDoc(userRef);
+
+                if (userSnap.exists()) {
+                    let profile = userSnap.data();
+                    totalCoins = profile.coins || 0;
+                    selectedShape = profile.shape || "circle";
+                    ownedShapes = profile.ownedShapes || ["circle"];
+                    selectedBird = profile.flappyBird || "goose";
+                    ownedBirds = profile.ownedBirds || ["goose"];
+                    selectedBg = profile.flappyBg || "brown_wall";
+                    ownedBgs = profile.ownedBgs || ["brown_wall"];
+
+                    document.getElementById("hubUsernameText").innerText = currentUser;
+                    document.getElementById("hubTotalCoins").innerText = totalCoins;
+                    document.getElementById("shopTotalCoins").innerText = totalCoins;
+                    document.getElementById("flappyShopCoins").innerText = totalCoins;
+                    if(document.getElementById("snakeCoins")) document.getElementById("snakeCoins").innerText = totalCoins;
+
+                    applyPlayerShapeUI();
+
+                    let avatarEl = document.getElementById("hubUserAvatar");
+                    if (profile.avatar) {
+                        avatarEl.innerHTML = `<img src="${profile.avatar}" style="width:100%; height:100%; object-fit:cover;">`;
+                    } else {
+                        avatarEl.innerHTML = currentUser.charAt(0).toUpperCase();
+                    }
+
+                    document.getElementById("settingsUsernameInput").value = currentUser;
+                    updateShopUI();
+                    loadLeaderboard();
+                    checkDailyBonusCloud(profile.lastBonus);
+                }
+            } catch (e) {
+                console.error("Error loading user data:", e);
+            }
         }
 
         function logoutUser() {
@@ -807,67 +896,43 @@
             switchScreen("authScreen");
         }
 
-        function loadUserData() {
-            let profileData = localStorage.getItem("user_profile_" + currentUser);
-            let profile = profileData ? JSON.parse(profileData) : {};
-
-            totalCoins = parseInt(localStorage.getItem("coins_" + currentUser) || "0");
-            selectedShape = localStorage.getItem("shape_" + currentUser) || "circle";
-            ownedShapes = JSON.parse(localStorage.getItem("owned_shapes_" + currentUser) || '["circle"]');
-
-            selectedBird = localStorage.getItem("flappy_bird_" + currentUser) || "goose";
-            ownedBirds = JSON.parse(localStorage.getItem("owned_birds_" + currentUser) || '["goose"]');
-            
-            selectedBg = localStorage.getItem("flappy_bg_" + currentUser) || "brown_wall";
-            ownedBgs = JSON.parse(localStorage.getItem("owned_bgs_" + currentUser) || '["brown_wall"]');
-
-            document.getElementById("hubUsernameText").innerText = currentUser;
-            document.getElementById("hubTotalCoins").innerText = totalCoins;
-            document.getElementById("shopTotalCoins").innerText = totalCoins;
-            document.getElementById("flappyShopCoins").innerText = totalCoins;
-            if(document.getElementById("snakeCoins")) document.getElementById("snakeCoins").innerText = totalCoins;
-
-            applyPlayerShapeUI();
-
-            let avatarEl = document.getElementById("hubUserAvatar");
-            if (profile.avatar) {
-                avatarEl.innerHTML = `<img src="${profile.avatar}" style="width:100%; height:100%; object-fit:cover;">`;
-            } else {
-                avatarEl.innerHTML = currentUser.charAt(0).toUpperCase();
-            }
-
-            document.getElementById("settingsUsernameInput").value = currentUser;
-            updateShopUI();
-            loadLeaderboard();
-            checkDailyBonus();
-        }
-
-        function saveProfileChanges() {
+        async function saveProfileChanges() {
             let newName = document.getElementById("settingsUsernameInput").value.trim();
             if (!newName) { alert("تکایە ناوی بەکارهێنەر بە بەتاڵی جێمەهێڵە!"); return; }
 
-            let oldProfileData = localStorage.getItem("user_profile_" + currentUser);
-            let profile = oldProfileData ? JSON.parse(oldProfileData) : {};
+            try {
+                const oldUserRef = window.firestoreFns.doc(window.db, "users", currentUser);
+                const oldSnap = await window.firestoreFns.getDoc(oldUserRef);
+                
+                if (newName !== currentUser) {
+                    const newUserRef = window.firestoreFns.doc(window.db, "users", newName);
+                    const newSnap = await window.firestoreFns.getDoc(newUserRef);
+                    if (newSnap.exists()) { alert("ئەم ناوە پێشتر بەکارهێنراوە!"); return; }
 
-            if (newName !== currentUser) {
-                if (localStorage.getItem("user_profile_" + newName)) { alert("ئەم ناوە پێشتر بەکارهێنراوە!"); return; }
-                localStorage.removeItem("user_profile_" + currentUser);
-                currentUser = newName;
-                localStorage.setItem("top_top_active_user", currentUser);
+                    let data = oldSnap.data();
+                    data.username = newName;
+                    if (settingsTempAvatar) data.avatar = settingsTempAvatar;
+
+                    await window.firestoreFns.setDoc(newUserRef, data);
+                    // Clear old doc if necessary or keep it. For simplicity, we create new and switch user.
+                    currentUser = newName;
+                    localStorage.setItem("top_top_active_user", currentUser);
+                } else if (settingsTempAvatar) {
+                    await window.firestoreFns.updateDoc(oldUserRef, { avatar: settingsTempAvatar });
+                }
+
+                playSound('buy');
+                alert("زانیارییەکانت نوێکرانەوە!");
+                loadUserData();
+            } catch(e) {
+                console.error(e);
+                alert("هەڵە ڕوویدا لە گۆڕینی پڕۆفایلدا.");
             }
-
-            profile.username = currentUser;
-            if (settingsTempAvatar) profile.avatar = settingsTempAvatar;
-
-            localStorage.setItem("user_profile_" + currentUser, JSON.stringify(profile));
-            playSound('buy');
-            alert("زانیارییەکانت نوێکرانەوە!");
-            loadUserData();
         }
 
-        function resetUserHighscore() {
+        async function resetUserHighscore() {
             if (confirm("دڵنیایت لە سڕینەوەی بەرزترین خاڵەکانت؟")) {
-                localStorage.removeItem("highscore_" + currentUser);
+                await saveCloudData({ highscore: 0 });
                 alert("خاڵەکانت سڕدرانەوە!");
                 loadUserData();
             }
@@ -880,9 +945,8 @@
             player.classList.add("shape-" + selectedShape);
         }
 
-        function checkDailyBonus() {
+        function checkDailyBonusCloud(lastClaimed) {
             let today = new Date().toISOString().split('T')[0];
-            let lastClaimed = localStorage.getItem("daily_bonus_" + currentUser);
             let bonusBtn = document.getElementById("claimBonusBtn");
 
             if (lastClaimed === today) {
@@ -892,14 +956,13 @@
             }
         }
 
-        function claimDailyBonus() {
+        async function claimDailyBonus() {
             let today = new Date().toISOString().split('T')[0];
             let rewards = [100, 150, 200, 250];
             let randomReward = rewards[Math.floor(Math.random() * rewards.length)];
 
             totalCoins += randomReward;
-            localStorage.setItem("coins_" + currentUser, totalCoins);
-            localStorage.setItem("daily_bonus_" + currentUser, today);
+            await saveCloudData({ coins: totalCoins, lastBonus: today });
             playSound('buy');
             alert(`پیرۆزە! ${randomReward} کۆینت بەدەستهێنا! 🪙`);
             loadUserData();
@@ -932,19 +995,19 @@
             });
         }
 
-        function selectShape(shape) {
+        async function selectShape(shape) {
             selectedShape = shape;
-            localStorage.setItem("shape_" + currentUser, selectedShape);
+            await saveCloudData({ shape: selectedShape });
             playSound('buy');
             loadUserData();
         }
 
-        function handleShapeAction(shapeKey, price) {
+        async function handleShapeAction(shapeKey, price) {
             if (totalCoins >= price) {
                 totalCoins -= price;
                 ownedShapes.push(shapeKey);
-                localStorage.setItem("coins_" + currentUser, totalCoins);
-                localStorage.setItem("owned_shapes_" + currentUser, JSON.stringify(ownedShapes));
+                selectedShape = shapeKey;
+                await saveCloudData({ coins: totalCoins, ownedShapes: ownedShapes, shape: selectedShape });
                 selectShape(shapeKey);
             } else {
                 alert("کۆینی تەواوت نییە!");
@@ -953,27 +1016,28 @@
 
         function changeDifficulty(val) { gameDifficulty = val; }
 
-        function loadLeaderboard() {
-            let users = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                let key = localStorage.key(i);
-                if (key.startsWith("user_profile_")) {
-                    let uName = key.replace("user_profile_", "");
-                    let bestScore = parseInt(localStorage.getItem("highscore_" + uName) || "0");
-                    users.push({ name: uName, score: bestScore });
-                }
-            }
-            users.sort((a, b) => b.score - a.score);
+        async function loadLeaderboard() {
+            try {
+                const querySnapshot = await window.firestoreFns.getDocs(window.firestoreFns.collection(window.db, "users"));
+                let users = [];
+                querySnapshot.forEach((doc) => {
+                    let uData = doc.data();
+                    users.push({ name: uData.username || doc.id, score: uData.highscore || 0 });
+                });
+                users.sort((a, b) => b.score - a.score);
 
-            let listEl = document.getElementById("leaderboardList");
-            if (!listEl) return;
-            listEl.innerHTML = "";
-            users.forEach((u, idx) => {
-                let item = document.createElement("div");
-                item.className = "leaderboard-item";
-                item.innerHTML = `<span>${idx + 1}. ${u.name}</span> <span style="color: #fbbf24; font-weight: bold;">${u.score} خاڵ</span>`;
-                listEl.appendChild(item);
-            });
+                let listEl = document.getElementById("leaderboardList");
+                if (!listEl) return;
+                listEl.innerHTML = "";
+                users.forEach((u, idx) => {
+                    let item = document.createElement("div");
+                    item.className = "leaderboard-item";
+                    item.innerHTML = `<span>${idx + 1}. ${u.name}</span> <span style="color: #fbbf24; font-weight: bold;">${u.score} خاڵ</span>`;
+                    listEl.appendChild(item);
+                });
+            } catch (e) {
+                console.error("Error loading leaderboard: ", e);
+            }
         }
 
         // ==================== Jumper Game Engine ====================
@@ -1001,7 +1065,7 @@
             playSound('jump');
         }
 
-        function gameLoopUpdate() {
+        async function gameLoopUpdate() {
             if (!isGameActive) return;
             let speed = 4.5;
             obstacleX -= speed;
@@ -1020,12 +1084,17 @@
                 playSound('gameover');
                 isGameActive = false;
                 let finalScoreEl = document.getElementById("finalScore");
-                if(finalScoreEl) finalScoreEl.innerText = Math.floor(score/10);
-                
-                let currentHighScore = parseInt(localStorage.getItem("highscore_" + currentUser) || "0");
                 let currentFinalScoreVal = Math.floor(score/10);
-                if (currentFinalScoreVal > currentHighScore) {
-                    localStorage.setItem("highscore_" + currentUser, currentFinalScoreVal);
+                if(finalScoreEl) finalScoreEl.innerText = currentFinalScoreVal;
+                
+                // Fetch cloud highscore and update if higher
+                const userRef = window.firestoreFns.doc(window.db, "users", currentUser);
+                const userSnap = await window.firestoreFns.getDoc(userRef);
+                if (userSnap.exists()) {
+                    let currentHighScore = userSnap.data().highscore || 0;
+                    if (currentFinalScoreVal > currentHighScore) {
+                        await saveCloudData({ highscore: currentFinalScoreVal });
+                    }
                 }
 
                 document.getElementById("gameOverBox").classList.add("show");
@@ -1099,38 +1168,34 @@
             });
         }
 
-        function handleBirdBuy(bird) {
+        async function handleBirdBuy(bird) {
             if (ownedBirds.includes(bird.id)) {
                 selectedBird = bird.id;
-                localStorage.setItem("flappy_bird_" + currentUser, selectedBird);
+                await saveCloudData({ flappyBird: selectedBird });
                 playSound('buy');
             } else {
                 if (totalCoins >= bird.price) {
                     totalCoins -= bird.price;
                     ownedBirds.push(bird.id);
                     selectedBird = bird.id;
-                    localStorage.setItem("coins_" + currentUser, totalCoins);
-                    localStorage.setItem("owned_birds_" + currentUser, JSON.stringify(ownedBirds));
-                    localStorage.setItem("flappy_bird_" + currentUser, selectedBird);
+                    await saveCloudData({ coins: totalCoins, ownedBirds: ownedBirds, flappyBird: selectedBird });
                     playSound('buy');
                 } else { alert("کۆینی تەواوت نییە!"); }
             }
             loadUserData(); renderFlappyShop();
         }
 
-        function handleBgBuy(bg) {
+        async function handleBgBuy(bg) {
             if (ownedBgs.includes(bg.id)) {
                 selectedBg = bg.id;
-                localStorage.setItem("flappy_bg_" + currentUser, selectedBg);
+                await saveCloudData({ flappyBg: selectedBg });
                 playSound('buy');
             } else {
                 if (totalCoins >= bg.price) {
                     totalCoins -= bg.price;
                     ownedBgs.push(bg.id);
                     selectedBg = bg.id;
-                    localStorage.setItem("coins_" + currentUser, totalCoins);
-                    localStorage.setItem("owned_bgs_" + currentUser, JSON.stringify(ownedBgs));
-                    localStorage.setItem("flappy_bg_" + currentUser, selectedBg);
+                    await saveCloudData({ coins: totalCoins, ownedBgs: ownedBgs, flappyBg: selectedBg });
                     playSound('buy');
                 } else { alert("کۆینی تەواوت نییە!"); }
             }
@@ -1205,7 +1270,7 @@
                     fCtx.strokeRect(p.x, bottomY, this.w, fCanvas.height);
                 }
             },
-            update() {
+            async update() {
                 if (flappyState !== "PLAYING") return;
                 
                 if (this.position.length === 0 || this.position[this.position.length - 1].x < fCanvas.width - 200) {
@@ -1231,7 +1296,7 @@
                         playSound('coin');
                         let fScoreEl = document.getElementById("flappyScore");
                         if(fScoreEl) fScoreEl.innerText = flappyScore;
-                        localStorage.setItem("coins_" + currentUser, totalCoins);
+                        await saveCloudData({ coins: totalCoins });
                         i--;
                     }
                 }
@@ -1429,7 +1494,7 @@
             };
         }
 
-        function updateSnakeLoop() {
+        async function updateSnakeLoop() {
             if (!isSnakeActive) return;
             snakeDir = nextSnakeDir;
             let headX = snake[0].x;
@@ -1459,7 +1524,7 @@
                 if(sScoreEl) sScoreEl.innerText = snakeScore;
                 let sCoinsEl = document.getElementById("snakeCoins");
                 if(sCoinsEl) sCoinsEl.innerText = totalCoins;
-                localStorage.setItem("coins_" + currentUser, totalCoins);
+                await saveCloudData({ coins: totalCoins });
                 spawnSnakeFood();
             } else {
                 snake.pop();
