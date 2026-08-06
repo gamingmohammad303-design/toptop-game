@@ -575,6 +575,26 @@
         </div>
     </div>
 
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-analytics.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDfrFkglZShCuZhCYwNQ8pEmKwNppWggBU",
+        authDomain: "toptop-game-4e89f.firebaseapp.com",
+        projectId: "toptop-game-4e89f",
+        storageBucket: "toptop-game-4e89f.firebasestorage.app",
+        messagingSenderId: "786973684229",
+        appId: "1:786973684229:web:a327a180f44ca18f8fa26c",
+        measurementId: "G-S6ERB47WJ8"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
+
+    <!-- Game Core Logic Script -->
     <script>
         let currentUser = "";
         let totalCoins = 0;
@@ -687,53 +707,12 @@
             let savedUser = localStorage.getItem("top_top_active_user");
             if (savedUser) {
                 currentUser = savedUser;
-                fetchCloudUserData(currentUser, function(cloudData) {
-                    if (cloudData) {
-                        localStorage.setItem("user_profile_" + currentUser, JSON.stringify(cloudData.profile));
-                        localStorage.setItem("coins_" + currentUser, cloudData.coins);
-                        localStorage.setItem("shape_" + currentUser, cloudData.shape);
-                        localStorage.setItem("owned_shapes_" + currentUser, JSON.stringify(cloudData.ownedShapes));
-                        localStorage.setItem("highscore_" + currentUser, cloudData.highscore);
-                    }
-                    loadUserData();
-                    switchScreen("hubScreen");
-                });
+                loadUserData();
+                switchScreen("hubScreen");
             } else {
                 switchScreen("authScreen");
             }
         };
-
-        // ** سیستەمی ئۆنلاینی خێرا و سادە بۆ کلاود (JsonBin.io محەمەد) **
-        const BIN_ID = "66a0d4acd0ea12144d472c91"; // جایگوزینکراو بۆ بەستەری گشتی
-        const API_KEY = "$2a$10$9...سیستەمی خۆڕایی..."; // یان سیستەمی ڕاستەوخۆی Local Storage Sync
-
-        function fetchCloudUserData(username, callback) {
-            // بۆ ئەوەی بە تەواوی بێ کێشە و زۆر ئاسان کاربکات لە ناو مۆبایلەکان، 
-            // ئێمە داتا لەسەر سێرڤەری گشتی دەرەکی یان بە پشت بەستن بە localStorageـی هاوبەش دەهێنین:
-            let localData = localStorage.getItem("cloud_sync_" + username);
-            if (localData) {
-                callback(JSON.parse(localData));
-            } else {
-                let profile = JSON.parse(localStorage.getItem("user_profile_" + username) || "{}");
-                let coins = localStorage.getItem("coins_" + username) || "0";
-                let shape = localStorage.getItem("shape_" + username) || "circle";
-                let ownedShapes = JSON.parse(localStorage.getItem("owned_shapes_" + username) || '["circle"]');
-                let highscore = localStorage.getItem("highscore_" + username) || "0";
-                callback({ profile, coins, shape, ownedShapes, highscore });
-            }
-        }
-
-        function saveCloudUserData() {
-            if (!currentUser) return;
-            let profile = JSON.parse(localStorage.getItem("user_profile_" + currentUser) || "{}");
-            let coins = localStorage.getItem("coins_" + currentUser) || "0";
-            let shape = localStorage.getItem("shape_" + currentUser) || "circle";
-            let ownedShapes = JSON.parse(localStorage.getItem("owned_shapes_" + currentUser) || '["circle"]');
-            let highscore = localStorage.getItem("highscore_" + currentUser) || "0";
-
-            let fullData = { profile, coins, shape, ownedShapes, highscore };
-            localStorage.setItem("cloud_sync_" + currentUser, JSON.stringify(fullData));
-        }
 
         function switchScreen(id) {
             document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
@@ -800,7 +779,6 @@
             localStorage.setItem("user_profile_" + name, JSON.stringify(userProfile));
             localStorage.setItem("top_top_active_user", name);
             currentUser = name;
-            saveCloudUserData();
             loadUserData();
             switchScreen("hubScreen");
         }
@@ -862,7 +840,6 @@
             updateShopUI();
             loadLeaderboard();
             checkDailyBonus();
-            saveCloudUserData();
         }
 
         function saveProfileChanges() {
@@ -1049,7 +1026,6 @@
                 let currentFinalScoreVal = Math.floor(score/10);
                 if (currentFinalScoreVal > currentHighScore) {
                     localStorage.setItem("highscore_" + currentUser, currentFinalScoreVal);
-                    saveCloudUserData();
                 }
 
                 document.getElementById("gameOverBox").classList.add("show");
@@ -1256,7 +1232,6 @@
                         let fScoreEl = document.getElementById("flappyScore");
                         if(fScoreEl) fScoreEl.innerText = flappyScore;
                         localStorage.setItem("coins_" + currentUser, totalCoins);
-                        saveCloudUserData();
                         i--;
                     }
                 }
@@ -1284,7 +1259,6 @@
             let fFinalEl = document.getElementById("flappyFinalScore");
             if(fFinalEl) fFinalEl.innerText = flappyScore;
             document.getElementById("flappyGameOverOverlay").classList.add("show");
-            saveCloudUserData();
         }
 
         function resetFlappyGame() {
@@ -1486,7 +1460,6 @@
                 let sCoinsEl = document.getElementById("snakeCoins");
                 if(sCoinsEl) sCoinsEl.innerText = totalCoins;
                 localStorage.setItem("coins_" + currentUser, totalCoins);
-                saveCloudUserData();
                 spawnSnakeFood();
             } else {
                 snake.pop();
@@ -1529,7 +1502,6 @@
             if(sFinalEl) sFinalEl.innerText = snakeScore;
             let sOverOverlay = document.getElementById("snakeGameOverOverlay");
             if(sOverOverlay) sOverOverlay.classList.add("show");
-            saveCloudUserData();
         }
 
         function exitSnakeGame() {
