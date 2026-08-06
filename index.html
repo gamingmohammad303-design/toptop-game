@@ -339,6 +339,7 @@
             </div>
         </div>
 
+        <!-- Jumper Landing -->
         <div id="jumperLandingScreen" class="screen">
             <div class="brand-title">یاری بازدان</div>
             <div class="game-catalog-card" style="margin-top: 15px; padding: 15px;">
@@ -351,6 +352,7 @@
             </div>
         </div>
 
+        <!-- Quiz Landing -->
         <div id="quizLandingScreen" class="screen">
             <div class="brand-title">یاری وێنەکان</div>
             <div class="game-catalog-card" style="margin-top: 15px; padding: 15px;">
@@ -362,6 +364,7 @@
             </div>
         </div>
 
+        <!-- Flappy Landing -->
         <div id="flappyLandingScreen" class="screen">
             <div class="brand-title">یاری باڵندە و مریشکەکان</div>
             <div class="game-catalog-card" style="margin-top: 10px; padding: 15px;">
@@ -374,6 +377,7 @@
             </div>
         </div>
 
+        <!-- Snake Landing -->
         <div id="snakeLandingScreen" class="screen">
             <div class="brand-title">یاری مارەکە 🐍</div>
             <div class="game-catalog-card" style="margin-top: 15px; padding: 15px;">
@@ -385,6 +389,7 @@
             </div>
         </div>
 
+        <!-- Jumper Shop Screen -->
         <div id="shopScreen" class="screen">
             <div class="brand-title">بازاڕی شێوازەکانی بازدان</div>
             <div style="text-align: center; margin-bottom: 8px; color: #fbbf24; font-size: 12px;">
@@ -420,6 +425,7 @@
             <button class="btn" style="background: #3f3f46; margin-top: 12px;" onclick="switchScreen('jumperLandingScreen')">گەڕانەوە</button>
         </div>
 
+        <!-- Flappy Shop Screen -->
         <div id="flappyShopScreen" class="screen">
             <div class="brand-title">فرۆشگای مریشک و دیوارەکان 🛒</div>
             <div style="text-align: center; margin-bottom: 8px; color: #fbbf24; font-size: 12px;">
@@ -435,6 +441,7 @@
             <button class="btn" style="background: #3f3f46; margin-top: 12px;" onclick="switchScreen('flappyLandingScreen')">گەڕانەوە</button>
         </div>
 
+        <!-- Settings Screen -->
         <div id="settingsScreen" class="screen">
             <div class="brand-title">ڕێکخستنەکان</div>
             
@@ -491,6 +498,7 @@
             <button class="btn" style="background: #3f3f46; margin-top: auto;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
         </div>
 
+        <!-- Jumper Game Screen -->
         <div id="gameScreen" class="screen">
             <div class="game-stats">
                 <span>خاڵ: <span id="currentScore">0</span></span>
@@ -514,6 +522,7 @@
             <button class="btn" style="background: #3f3f46; margin-top: 8px;" onclick="switchScreen('jumperLandingScreen')">گەڕانەوە</button>
         </div>
 
+        <!-- Quiz Screen -->
         <div id="quizScreen" class="screen">
             <div class="brand-title" style="font-size: 18px;">یاری وێنە و شوێنەکانی جیهان</div>
             <div class="card" style="text-align: center; margin-top: 4px; padding: 10px;">
@@ -527,6 +536,7 @@
             <button class="btn" style="background: #3f3f46; margin-top: auto;" onclick="switchScreen('quizLandingScreen')">گەڕانەوە</button>
         </div>
 
+        <!-- Flappy Game Screen -->
         <div id="flappyScreen" class="screen">
             <div class="hub-header-panel" style="margin-bottom: 6px;">
                 <button class="btn" style="width: auto; padding: 5px 10px; margin: 0; background: #3f3f46; font-size: 11px;" onclick="exitFlappyGame()">⬅️ دەرچوون</button>
@@ -546,6 +556,7 @@
             </div>
         </div>
 
+        <!-- Snake Game Screen -->
         <div id="snakeScreen" class="screen">
             <div class="hub-header-panel" style="margin-bottom: 6px;">
                 <button class="btn" style="width: auto; padding: 5px 10px; margin: 0; background: #3f3f46; font-size: 11px;" onclick="exitSnakeGame()">⬅️ دەرچوون</button>
@@ -575,7 +586,7 @@
         </div>
     </div>
 
-    <!-- Firebase SDK Scripts (Firestore Added) -->
+    <!-- Firebase SDK Scripts -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
       import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-analytics.js";
@@ -773,7 +784,6 @@
             }
         }
 
-        // Cloud Firestore Synchronization Functions
         async function registerUser() {
             let name = document.getElementById("regUsername").value.trim();
             let pass = document.getElementById("regPassword").value.trim();
@@ -914,7 +924,6 @@
                     if (settingsTempAvatar) data.avatar = settingsTempAvatar;
 
                     await window.firestoreFns.setDoc(newUserRef, data);
-                    // Clear old doc if necessary or keep it. For simplicity, we create new and switch user.
                     currentUser = newName;
                     localStorage.setItem("top_top_active_user", currentUser);
                 } else if (settingsTempAvatar) {
@@ -1040,7 +1049,7 @@
             }
         }
 
-        // ==================== Jumper Game Engine ====================
+        // Jumper Game Engine
         function startGamePlay() {
             document.getElementById("gameOverBox").classList.remove("show");
             switchScreen("gameScreen");
@@ -1087,7 +1096,6 @@
                 let currentFinalScoreVal = Math.floor(score/10);
                 if(finalScoreEl) finalScoreEl.innerText = currentFinalScoreVal;
                 
-                // Fetch cloud highscore and update if higher
                 const userRef = window.firestoreFns.doc(window.db, "users", currentUser);
                 const userSnap = await window.firestoreFns.getDoc(userRef);
                 if (userSnap.exists()) {
@@ -1106,7 +1114,7 @@
             gameAnimFrame = requestAnimationFrame(gameLoopUpdate);
         }
 
-        // ==================== Flappy Shop Engine ====================
+        // Flappy Shop Engine
         const birdCatalog = [
             { id: "goose", name: "قازی ئاسایی 🪿", price: 0, icon: "🪿", color: "#ffffff" },
             { id: "chicken", name: "مریشکی کێوی 🐔", price: 150, icon: "🐔", color: "#e65100" },
@@ -1202,7 +1210,7 @@
             loadUserData(); renderFlappyShop();
         }
 
-        // ==================== Flappy Bird Engine ====================
+        // Flappy Bird Engine
         const fCanvas = document.getElementById("flappyCanvas");
         const fCtx = fCanvas ? fCanvas.getContext("2d") : null;
 
@@ -1429,7 +1437,7 @@
             });
         }
 
-        // ==================== Game 4: Snake Game Engine ====================
+        // Snake Game Engine
         const sCanvas = document.getElementById("snakeCanvas");
         const sCtx = sCanvas ? sCanvas.getContext("2d") : null;
         let snake = [], snakeDir = "RIGHT", nextSnakeDir = "RIGHT";
