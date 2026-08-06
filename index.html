@@ -163,12 +163,6 @@
         .tab-btn.active { background: #d97706; color: #fff; box-shadow: 0 0 8px rgba(217, 119, 6, 0.4); }
         .leaderboard-list { max-height: 90px; overflow-y: auto; font-size: 11px; }
         .leaderboard-item { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid rgba(217, 119, 6, 0.2); }
-        
-        .quiz-img-container {
-            width: 100%; height: 140px; border-radius: 10px; overflow: hidden;
-            margin-bottom: 8px; border: 2px solid #d97706; background: #18181b;
-        }
-        .quiz-img-container img { width: 100%; height: 100%; object-fit: cover; }
 
         .flappy-container {
             flex: 1; width: 100%; display: flex; flex-direction: column;
@@ -291,50 +285,43 @@
                         <p style="font-size: 9px; color: #d6d3d1; margin: 0;">قەڵغان و کۆین کۆبکەرەوە</p>
                     </div>
                     <div>
-                        <div class="game-meta-info">ئاست: ئاسایی</div>
+                        <div class="game-meta-info" id="hubJumperBest">بەرزترین خاڵ: 0</div>
                         <button class="btn" style="padding: 6px; font-size: 11px;" onclick="openJumperLanding()">یاریکردن</button>
                     </div>
                 </div>
 
                 <div class="game-catalog-card">
                     <div>
-                        <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">📸</div>
-                        <h3 style="color: #fbbf24; font-size: 13px; margin: 0 0 2px 0;">وێنەی جیهان</h3>
-                        <p style="font-size: 9px; color: #d6d3d1; margin: 0;">زانیارییەکانت تاقی بکەرەوە</p>
-                    </div>
-                    <div>
-                        <div class="game-meta-info">جۆری: وێنەیی</div>
-                        <button class="btn" style="padding: 6px; font-size: 11px;" onclick="openQuizLanding()">یاریکردن</button>
-                    </div>
-                </div>
-
-                <div class="game-catalog-card">
-                    <div>
                         <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐓</div>
-                        <h3 style="color: #fbbf24; font-size: 13px; margin: 0 0 2px 0;">باڵندە (HD)</h3>
+                        <h3 style="color: #fbbf24; font-size: 13px; margin: 0 0 2px 0;">مریشک (HD)</h3>
                         <p style="font-size: 9px; color: #d6d3d1; margin: 0;">مریشک و قازەکان بفرێنە</p>
                     </div>
                     <div>
-                        <div class="game-meta-info">جۆری: ئاسان</div>
+                        <div class="game-meta-info" id="hubFlappyBest">بەرزترین خاڵ: 0</div>
                         <button class="btn" style="padding: 6px; font-size: 11px;" onclick="openFlappyLanding()">یاریکردن</button>
                     </div>
                 </div>
 
-                <div class="game-catalog-card">
+                <div class="game-catalog-card" style="grid-column: span 2;">
                     <div>
-                        <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐍</div>
+                        <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f); width: 45px; height: 45px; font-size: 20px;">🐍</div>
                         <h3 style="color: #fbbf24; font-size: 13px; margin: 0 0 2px 0;">مارەکە</h3>
                         <p style="font-size: 9px; color: #d6d3d1; margin: 0;">سێوەکان بخۆ و درێژ ببەرەوە</p>
                     </div>
                     <div>
-                        <div class="game-meta-info">جۆری: کلاسیک</div>
-                        <button class="btn" style="padding: 6px; font-size: 11px;" onclick="openSnakeLanding()">یاریکردن</button>
+                        <div class="game-meta-info" id="hubSnakeBest" style="display:inline-block; padding: 4px 12px;">بەرزترین خاڵ: 0</div>
+                        <button class="btn" style="padding: 6px 16px; font-size: 11px; width: auto; display: inline-block; margin-right: 6px;" onclick="openSnakeLanding()">یاریکردن</button>
                     </div>
                 </div>
             </div>
 
             <div class="card" style="padding: 10px 12px;">
-                <h3 style="font-size: 13px;">🏆 ڕیزبەندی پێشبڕکێ</h3>
+                <h3 style="font-size: 13px;">🏆 ڕیزبەندی پێشبڕکێ (Top 1 & Top 2)</h3>
+                <div class="tab-switcher" style="margin-top: 6px;">
+                    <button class="tab-btn active" id="lbBtnJumper" onclick="switchLeaderboard('jumper')">بازدان</button>
+                    <button class="tab-btn" id="lbBtnFlappy" onclick="switchLeaderboard('flappy')">مریشک</button>
+                    <button class="tab-btn" id="lbBtnSnake" onclick="switchLeaderboard('snake')">مارەکە</button>
+                </div>
                 <div class="leaderboard-list" id="leaderboardList"></div>
             </div>
         </div>
@@ -345,32 +332,22 @@
             <div class="game-catalog-card" style="margin-top: 15px; padding: 15px;">
                 <div class="game-thumbnail">🔵</div>
                 <h3 style="font-size: 14px; color: #fbbf24;">پەڕەی تایبەتی یاری بازدان</h3>
-                <p style="font-size: 11px;">ئامادەی بۆ خۆشی و ئاڵۆزییەکان؟ کلیک بکە بۆ دەستپێکردن یان سەردانی فرۆشگای تایبەتی شێوازەکان بکە.</p>
+                <p style="font-size: 11px;">خاڵی تایبەتی ئەم یارییە جیاوازە! ئامادەی بۆ خۆشی و ئاڵۆزییەکان؟</p>
+                <div class="game-meta-info" style="margin: 10px 0;">ئاستی ئێستا: <span id="jumperLevelText" style="color:#fbbf24; font-weight:bold;">ئاسایی</span></div>
                 <button class="btn" onclick="startGamePlay()">▶ یاری بکە</button>
                 <button class="btn" style="background: #3f3f46;" onclick="openShopScreen()">🛒 شوپینگ (بازاڕی شێوازەکان)</button>
                 <button class="btn" style="background: #27272a;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
             </div>
         </div>
 
-        <!-- Quiz Landing -->
-        <div id="quizLandingScreen" class="screen">
-            <div class="brand-title">یاری وێنەکان</div>
-            <div class="game-catalog-card" style="margin-top: 15px; padding: 15px;">
-                <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">📸</div>
-                <h3 style="font-size: 14px; color: #fbbf24;">پەڕەی تایبەتی یاری وێنەکان</h3>
-                <p style="font-size: 11px;">زانیارییەکانت دەربارەی وڵاتان و شوێنەکان بەکاربهێنە و خاڵ تۆمار بکە.</p>
-                <button class="btn" onclick="startQuizPlay()">▶ یاری بکە</button>
-                <button class="btn" style="background: #27272a;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
-            </div>
-        </div>
-
         <!-- Flappy Landing -->
         <div id="flappyLandingScreen" class="screen">
-            <div class="brand-title">یاری باڵندە و مریشکەکان</div>
+            <div class="brand-title">یاری مریشک و باڵندەکان</div>
             <div class="game-catalog-card" style="margin-top: 10px; padding: 15px;">
                 <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐓</div>
                 <h3 style="font-size: 14px; color: #fbbf24;">شاشەی یاری مریشک و قازەکان</h3>
-                <p style="font-size: 11px;">دیواری قاوەیی دارین، کۆنترۆڵی زۆر ئاسان و ئاستی گونجاو!</p>
+                <p style="font-size: 11px;">دیواری قاوەیی دارین، کۆنترۆڵی خێرا ڕێگری لێکراوە و کوالێتی بەرزە!</p>
+                <div class="game-meta-info" style="margin: 10px 0;">ئاستی سەختی: <span id="flappyLevelText" style="color:#fbbf24; font-weight:bold;">مامناوەند</span></div>
                 <button class="btn" onclick="startFlappyGame()">▶ یاری بکە (فول سکرین)</button>
                 <button class="btn" style="background: #3f3f46;" onclick="openFlappyShop()">🛒 شوپینگ (کڕینی مریشک و دیوار)</button>
                 <button class="btn" style="background: #27272a;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
@@ -383,7 +360,8 @@
             <div class="game-catalog-card" style="margin-top: 15px; padding: 15px;">
                 <div class="game-thumbnail" style="background: radial-gradient(circle, #f59e0b, #78350f);">🐍</div>
                 <h3 style="font-size: 14px; color: #fbbf24;">پەڕەی تایبەتی یاری مارەکە</h3>
-                <p style="font-size: 11px;">مارەکە ڕێنمایی بکە بۆ خواردنی سێوەکان. ئاگاداربە خۆت لە دیوار و جەستەی خۆت مەدە!</p>
+                <p style="font-size: 11px;">مارەکە ڕێنمایی بکە بۆ خواردنی سێوەکان. سیستەمی خاڵی تایبەتی خۆی هەەیە!</p>
+                <div class="game-meta-info" style="margin: 10px 0;">ئاستی یاری: <span id="snakeLevelText" style="color:#fbbf24; font-weight:bold;">خێرا</span></div>
                 <button class="btn" onclick="startSnakeGame()">▶ یاری بکە</button>
                 <button class="btn" style="background: #27272a;" onclick="backToHub()">گەڕانەوە بۆ لۆبی</button>
             </div>
@@ -461,15 +439,6 @@
             </div>
 
             <div class="card" style="padding: 10px 12px;">
-                <h3 style="font-size: 12px;">🎮 ئاستی سەختی یاری</h3>
-                <select id="difficultySelect" onchange="changeDifficulty(this.value)">
-                    <option value="easy" selected>ئاستی ئاسان</option>
-                    <option value="normal">ئاستی ئاسایی</option>
-                    <option value="hard">ئاستی قورس</option>
-                </select>
-            </div>
-
-            <div class="card" style="padding: 10px 12px;">
                 <h3 style="font-size: 12px;">🎵 مۆسیقای پاشبنەما</h3>
                 <select id="musicToggleSelect" onchange="toggleBackgroundMusic(this.value)">
                     <option value="on" selected>هەڵکردن 🎵</option>
@@ -520,20 +489,6 @@
 
             <button class="jump-control-btn" onclick="jumpAction()">بازدان</button>
             <button class="btn" style="background: #3f3f46; margin-top: 8px;" onclick="switchScreen('jumperLandingScreen')">گەڕانەوە</button>
-        </div>
-
-        <!-- Quiz Screen -->
-        <div id="quizScreen" class="screen">
-            <div class="brand-title" style="font-size: 18px;">یاری وێنە و شوێنەکانی جیهان</div>
-            <div class="card" style="text-align: center; margin-top: 4px; padding: 10px;">
-                <div class="quiz-img-container">
-                    <img id="quizImage" src="" alt="وێنەی پرسیار">
-                </div>
-                <h3 id="quizQuestion" style="font-size: 13px; margin-bottom: 8px; color: #fbbf24;">پرسیار لێرە دەردەکەوێت...</h3>
-                <div id="quizOptions"></div>
-                <div id="quizScoreResult" style="font-weight: bold; margin-top: 8px; font-size: 13px; color: #f59e0b;"></div>
-            </div>
-            <button class="btn" style="background: #3f3f46; margin-top: auto;" onclick="switchScreen('quizLandingScreen')">گەڕانەوە</button>
         </div>
 
         <!-- Flappy Game Screen -->
@@ -636,11 +591,11 @@
 
         let obstacleX = 800;
         let gameAnimFrame;
-        let gameDifficulty = "easy";
 
         let musicEnabled = true;
         let sfxEnabled = true;
         let bgMusicInterval = null;
+        let currentLeaderboardTab = "jumper";
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -737,7 +692,6 @@
         }
 
         function openJumperLanding() { switchScreen("jumperLandingScreen"); }
-        function openQuizLanding() { switchScreen("quizLandingScreen"); }
         function openFlappyLanding() { switchScreen("flappyLandingScreen"); }
         function openSnakeLanding() { switchScreen("snakeLandingScreen"); }
 
@@ -803,6 +757,8 @@
                     avatar: tempAvatarBase64 || "",
                     coins: 0,
                     highscore: 0,
+                    flappyScore: 0,
+                    snakeScore: 0,
                     shape: "circle",
                     ownedShapes: ["circle"],
                     flappyBird: "goose",
@@ -879,6 +835,10 @@
                     document.getElementById("flappyShopCoins").innerText = totalCoins;
                     if(document.getElementById("snakeCoins")) document.getElementById("snakeCoins").innerText = totalCoins;
 
+                    document.getElementById("hubJumperBest").innerText = "بەرزترین خاڵ: " + (profile.highscore || 0);
+                    document.getElementById("hubFlappyBest").innerText = "بەرزترین خاڵ: " + (profile.flappyScore || 0);
+                    document.getElementById("hubSnakeBest").innerText = "بەرزترین خاڵ: " + (profile.snakeScore || 0);
+
                     applyPlayerShapeUI();
 
                     let avatarEl = document.getElementById("hubUserAvatar");
@@ -939,8 +899,8 @@
         }
 
         async function resetUserHighscore() {
-            if (confirm("دڵنیایت لە سڕینەوەی بەرزترین خاڵەکانت؟")) {
-                await saveCloudData({ highscore: 0 });
+            if (confirm("دڵنیایت لە سڕینەوەی بەرزترین خاڵەکانت لە هەموو یارییەکان؟")) {
+                await saveCloudData({ highscore: 0, flappyScore: 0, snakeScore: 0 });
                 alert("خاڵەکانت سڕدرانەوە!");
                 loadUserData();
             }
@@ -1022,7 +982,14 @@
             }
         }
 
-        function changeDifficulty(val) { gameDifficulty = val; }
+        function switchLeaderboard(tab) {
+            currentLeaderboardTab = tab;
+            document.getElementById("lbBtnJumper").classList.remove("active");
+            document.getElementById("lbBtnFlappy").classList.remove("active");
+            document.getElementById("lbBtnSnake").classList.remove("active");
+            document.getElementById("lbBtn" + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add("active");
+            loadLeaderboard();
+        }
 
         async function loadLeaderboard() {
             try {
@@ -1030,7 +997,12 @@
                 let users = [];
                 querySnapshot.forEach((doc) => {
                     let uData = doc.data();
-                    users.push({ name: uData.username || doc.id, score: uData.highscore || 0 });
+                    let sVal = 0;
+                    if (currentLeaderboardTab === 'jumper') sVal = uData.highscore || 0;
+                    else if (currentLeaderboardTab === 'flappy') sVal = uData.flappyScore || 0;
+                    else if (currentLeaderboardTab === 'snake') sVal = uData.snakeScore || 0;
+
+                    users.push({ name: uData.username || doc.id, score: sVal });
                 });
                 users.sort((a, b) => b.score - a.score);
 
@@ -1040,7 +1012,8 @@
                 users.forEach((u, idx) => {
                     let item = document.createElement("div");
                     item.className = "leaderboard-item";
-                    item.innerHTML = `<span>${idx + 1}. ${u.name}</span> <span style="color: #fbbf24; font-weight: bold;">${u.score} خاڵ</span>`;
+                    let rankBadge = idx === 0 ? "👑 Top 1" : idx === 1 ? "🥈 Top 2" : `${idx + 1}.`;
+                    item.innerHTML = `<span>${rankBadge} ${u.name}</span> <span style="color: #fbbf24; font-weight: bold;">${u.score} خاڵ</span>`;
                     listEl.appendChild(item);
                 });
             } catch (e) {
@@ -1216,6 +1189,7 @@
         let flappyScore = 0;
         let flappyState = "START";
         let flappyAnim;
+        let lastFlapTime = 0;
 
         function resizeCanvas() {
             if(!fCanvas) return;
@@ -1239,7 +1213,13 @@
                 fCtx.fillText(birdObj.icon, 0, 0);
                 fCtx.restore();
             },
-            flap() { this.velocity = -this.jump; playSound('jump'); },
+            flap() { 
+                let nowTime = Date.now();
+                if (nowTime - lastFlapTime < 220) return; // ڕێگری لە خاوبوونەوە و دوو جار تاپ کردن بە یەکجار
+                lastFlapTime = nowTime;
+                this.velocity = -this.jump; 
+                playSound('jump'); 
+            },
             update() {
                 this.velocity += this.gravity;
                 this.y += this.velocity;
@@ -1303,7 +1283,13 @@
                         playSound('coin');
                         let fScoreEl = document.getElementById("flappyScore");
                         if(fScoreEl) fScoreEl.innerText = flappyScore;
-                        await saveCloudData({ coins: totalCoins });
+
+                        const userRef = window.firestoreFns.doc(window.db, "users", currentUser);
+                        const userSnap = await window.firestoreFns.getDoc(userRef);
+                        let curBest = userSnap.exists() ? (userSnap.data().flappyScore || 0) : 0;
+                        let newBest = Math.max(curBest, flappyScore);
+
+                        await saveCloudData({ coins: totalCoins, flappyScore: newBest });
                         i--;
                     }
                 }
@@ -1412,30 +1398,6 @@
             flappyAnim = requestAnimationFrame(flappyLoop);
         }
 
-        // Quiz Logic
-        const quizData = [
-            { image: "images/IMG_0562.jpeg", question: "ئەم وێنەیە کام شوێن نیشان دەدات؟", options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], answer: 0 },
-            { image: "images/IMG_0563.jpeg", question: "ئەم وێنەیە کام شوێن نیشان دەدات؟", options: ["هەولێر", "سلێمانی", "زاخۆ", "دهۆک"], answer: 1 }
-        ];
-        let currentQ = 0, quizScore = 0;
-        function startQuizPlay() { currentQ = 0; quizScore = 0; switchScreen("quizScreen"); loadQuizQuestion(); }
-        function loadQuizQuestion() {
-            let q = quizData[currentQ];
-            let qImg = document.getElementById("quizImage");
-            if(qImg) qImg.src = q.image;
-            let qQues = document.getElementById("quizQuestion");
-            if(qQues) qQues.innerText = q.question;
-            let optionsEl = document.getElementById("quizOptions");
-            if(!optionsEl) return;
-            optionsEl.innerHTML = "";
-            q.options.forEach((opt, idx) => {
-                let btn = document.createElement("button");
-                btn.innerText = opt; btn.className = "btn";
-                btn.onclick = () => { if (idx === q.answer) quizScore++; currentQ++; if (currentQ < quizData.length) loadQuizQuestion(); else alert("تەواو بوو! نمرە: " + quizScore); };
-                optionsEl.appendChild(btn);
-            });
-        }
-
         // Snake Game Engine
         const sCanvas = document.getElementById("snakeCanvas");
         const sCtx = sCanvas ? sCanvas.getContext("2d") : null;
@@ -1531,7 +1493,13 @@
                 if(sScoreEl) sScoreEl.innerText = snakeScore;
                 let sCoinsEl = document.getElementById("snakeCoins");
                 if(sCoinsEl) sCoinsEl.innerText = totalCoins;
-                await saveCloudData({ coins: totalCoins });
+
+                const userRef = window.firestoreFns.doc(window.db, "users", currentUser);
+                const userSnap = await window.firestoreFns.getDoc(userRef);
+                let curBest = userSnap.exists() ? (userSnap.data().snakeScore || 0) : 0;
+                let newBest = Math.max(curBest, snakeScore);
+
+                await saveCloudData({ coins: totalCoins, snakeScore: newBest });
                 spawnSnakeFood();
             } else {
                 snake.pop();
